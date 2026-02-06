@@ -40,10 +40,43 @@ const Contact = () => {
     fetchContactData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault();
-      // Here you would connect to a backend or email service
-      setSubmitted(true);
+      
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      // Combine names
+      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+      
+      try {
+          const response = await fetch("https://formsubmit.co/ajax/rosanabernal26@gmail.com", {
+              method: "POST",
+              headers: { 
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                  name: fullName,
+                  email: data.email,
+                  subject: data.subject,
+                  message: data.message,
+                  _template: 'table', // Nice looking email table
+                  _subject: `New Contact from Website: ${data.subject}`
+              })
+          });
+
+          if (response.ok) {
+              setSubmitted(true);
+              form.reset();
+          } else {
+              alert("Something went wrong. Please try again later.");
+          }
+      } catch (error) {
+          alert("Error sending message. Please check your connection.");
+          console.error(error);
+      }
   };
 
   return (
@@ -95,28 +128,28 @@ const Contact = () => {
                 <div className="name-inputs-row">
                     <div className="name-field">
                         <label className="sub-label">First Name <span style={{color:'#888'}}>(required)</span></label>
-                        <input type='text' required />
+                        <input type='text' name="firstName" required />
                     </div>
                     <div className="name-field">
                         <label className="sub-label">Last Name <span style={{color:'#888'}}>(required)</span></label>
-                        <input type='text' required />
+                        <input type='text' name="lastName" required />
                     </div>
                 </div>
             </div>
             
             <div className='form-group'>
                 <label>Email Address <span style={{color:'#888', fontWeight:'normal', fontSize:'0.75rem'}}>(required)</span></label>
-                <input type='email' required />
+                <input type='email' name="email" required />
             </div>
 
             <div className='form-group'>
                 <label>Subject <span style={{color:'#888', fontWeight:'normal', fontSize:'0.75rem'}}>(required)</span></label>
-                <input type='text' required />
+                <input type='text' name="subject" required />
             </div>
 
             <div className='form-group'>
                 <label>Message <span style={{color:'#888', fontWeight:'normal', fontSize:'0.75rem'}}>(required)</span></label>
-                <textarea rows={5} required />
+                <textarea rows={5} name="message" required />
             </div>
             
             <button type='submit' className='btn-submit'>Submit</button>
