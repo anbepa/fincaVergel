@@ -15,6 +15,8 @@ const ImageWithLoader = ({ src, alt, className, style, ...props }) => {
       <img
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         className={`${className || ''} ${isLoaded ? 'img-loaded' : 'img-loading'}`}
         onLoad={() => setIsLoaded(true)}
         style={{

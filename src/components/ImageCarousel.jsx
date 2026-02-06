@@ -81,7 +81,12 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
                 key={index} 
                 className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
              >
-                <img src={img} alt={`${altTitle} ${index + 1}`} />
+                <img 
+                    src={img} 
+                    alt={`${altTitle} ${index + 1}`} 
+                    loading={index === 0 ? "eager" : "lazy"} 
+                    decoding="async"
+                />
                 {/* Caption Overlay */}
                 {captions && captions[img] && (
                     <div className="carousel-caption-overlay">

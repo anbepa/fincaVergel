@@ -1,22 +1,32 @@
 /* Footer Styles */
 footer {
+  width: 100%; /* Ensure full width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 40px;
+  padding: 40px 20px; /* Added horizontal padding for mobile safety */
   margin-top: auto;
   border-top: 1px solid #eee;
+  box-sizing: border-box; /* Prevent padding from causing overflow */
 }
 
 .social-links {
+  display: flex; /* Robust centering for icons */
+  justify-content: center;
+  gap: 15px; /* Use gap instead of margin on children */
   margin-bottom: 20px;
 }
 
 .social-links a {
-  margin: 0 10px;
+  /* margin: 0 10px;  Removed in favor of gap */
   font-size: 1.2rem;
   color: black;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .social-links a svg {
