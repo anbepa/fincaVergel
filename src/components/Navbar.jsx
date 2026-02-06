@@ -7,6 +7,12 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState(null);
   const [headerTitle, setHeaderTitle] = useState("");
+  const [labels, setLabels] = useState({
+      home: "Home",
+      about: "About us",
+      contact: "Contact",
+      admin: "ADMIN"
+  });
 
   useEffect(() => {
     fetchLayoutData();
@@ -27,6 +33,17 @@ const Navbar = () => {
              try {
                  const parsed = JSON.parse(data.content);
                  if (parsed.headerTitle) setHeaderTitle(parsed.headerTitle);
+                 
+                 // Parse Labels
+                 if (parsed.navLabels) {
+                     setLabels({
+                         home: parsed.navLabels.home || "Home",
+                         about: parsed.navLabels.about || "About us",
+                         contact: parsed.navLabels.contact || "Contact",
+                         admin: parsed.navLabels.admin || "ADMIN"
+                     });
+                 }
+
                  if (parsed.headerLogo) {
                      setLogoUrl(parsed.headerLogo);
                      foundLogo = true;
@@ -55,10 +72,10 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <ul className={`nav-links ${isOpen ? 'active' : ''}`}>
-          <li><Link to="/" onClick={closeMenu}>Home</Link></li>
-          <li><Link to="/aboutus" onClick={closeMenu}>About us</Link></li>
-          <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
-          <li><Link to="/admin" onClick={closeMenu} className="admin-link">ADMIN</Link></li>
+          <li><Link to="/" onClick={closeMenu}>{labels.home}</Link></li>
+          <li><Link to="/aboutus" onClick={closeMenu}>{labels.about}</Link></li>
+          <li><Link to="/contact" onClick={closeMenu}>{labels.contact}</Link></li>
+          <li><Link to="/admin" onClick={closeMenu} className="admin-link">{labels.admin}</Link></li>
         </ul>
 
         <div className="mobile-menu-btn" onClick={toggleMenu}>

@@ -8,6 +8,7 @@ const defaultImages = [];
 const Landing = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [socialLinks, setSocialLinks] = useState({ facebook: '', instagram: '' });
+  const [btnLabel, setBtnLabel] = useState("Get to know us");
   const [landingData, setLandingData] = useState({
     images: defaultImages,
     subtitle: "Costa Rican Specialty coffee",
@@ -70,6 +71,29 @@ const Landing = () => {
     };
 
     fetchLandingData();
+    // fetchLoyoutData logic was here but better to separate or reuse logic
+    const fetchLoyoutData = async () => {
+        const { data } = await supabase
+        .from('content_pages')
+        .select('*')
+        .eq('slug', 'layout')
+        .single();
+        
+        if (data && data.content && data.content.startsWith('{')) {
+            try {
+                const parsed = JSON.parse(data.content);
+                setSocialLinks({
+                    facebook: parsed.facebook || '',
+                    instagram: parsed.instagram || ''
+                });
+                if (parsed.navLabels && parsed.navLabels.landingBtn) {
+                    setBtnLabel(parsed.navLabels.landingBtn);
+                }
+            } catch (e) {
+                console.error("Error parsing layout JSON:", e);
+            }
+        }
+    };
     fetchLoyoutData();
     
     // Slider logic
@@ -95,7 +119,7 @@ const Landing = () => {
         <h2 className="landing-subtitle">{landingData.subtitle}</h2>
         <h1 className="landing-title">{landingData.title}</h1>
         <p className="landing-desc">{landingData.desc}</p>
-        <Link to="/home" className="btn-landing">Get to know us</Link>
+        <Link to="/home" className="btn-landing">{btnLabel}</Link>
         
         <div className="landing-socials">
              {/* Dynamic Social Icons from Admin */}

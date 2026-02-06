@@ -47,6 +47,15 @@ const EditPage = () => {
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerLogo, setHeaderLogo] = useState("");
   const [footerLogo, setFooterLogo] = useState("");
+  
+  // Custom Navigation Labels
+  const [navLabels, setNavLabels] = useState({
+      home: "Home",
+      about: "About us",
+      contact: "Contact",
+      admin: "ADMIN",
+      landingBtn: "Get to know us"
+  });
 
   useEffect(() => {
     fetchPageData();
@@ -136,6 +145,16 @@ const EditPage = () => {
                 setFacebookUrl(parsed.facebook || "");
                 setInstagramUrl(parsed.instagram || "");
                 setHeaderTitle(parsed.headerTitle || "sonora coffee");
+                
+                if (parsed.navLabels) {
+                    setNavLabels({
+                        home: parsed.navLabels.home || "Home",
+                        about: parsed.navLabels.about || "About us",
+                        contact: parsed.navLabels.contact || "Contact",
+                        admin: parsed.navLabels.admin || "ADMIN",
+                        landingBtn: parsed.navLabels.landingBtn || "Get to know us"
+                    });
+                }
                 
                 if (parsed.headerLogo) {
                     setHeaderLogo(parsed.headerLogo);
@@ -233,7 +252,8 @@ const EditPage = () => {
             instagram: instagramUrl,
             headerTitle: headerTitle,
             headerLogo: headerLogo,
-            footerLogo: footerLogo
+            footerLogo: footerLogo,
+            navLabels: navLabels
         });
         // Clear generic images array for layout to enforce JSON source of truth
         imagesToSave = []; 
@@ -396,6 +416,32 @@ const EditPage = () => {
                  <div className="mb-10">
                     <label className="edit-label">Instagram URL</label>
                     <input type="text" value={instagramUrl} onChange={e => setInstagramUrl(e.target.value)} className="edit-input" placeholder="https://instagram.com/..." />
+                </div>
+
+                <hr style={{margin:'20px 0', borderTop: '1px solid #ddd'}}/>
+                
+                <h3 style={{marginTop:0}}>Menu & Button Labels</h3>
+                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'15px'}}>
+                    <div>
+                        <label className="edit-label">Home Menu item</label>
+                        <input type="text" value={navLabels.home} onChange={e => setNavLabels({...navLabels, home: e.target.value})} className="edit-input" />
+                    </div>
+                    <div>
+                        <label className="edit-label">About Us Menu item</label>
+                        <input type="text" value={navLabels.about} onChange={e => setNavLabels({...navLabels, about: e.target.value})} className="edit-input" />
+                    </div>
+                    <div>
+                        <label className="edit-label">Contact Menu item</label>
+                        <input type="text" value={navLabels.contact} onChange={e => setNavLabels({...navLabels, contact: e.target.value})} className="edit-input" />
+                    </div>
+                    <div>
+                        <label className="edit-label">Admin Menu item</label>
+                        <input type="text" value={navLabels.admin} onChange={e => setNavLabels({...navLabels, admin: e.target.value})} className="edit-input" />
+                    </div>
+                    <div>
+                        <label className="edit-label">Landing Button (Get to know us)</label>
+                        <input type="text" value={navLabels.landingBtn} onChange={e => setNavLabels({...navLabels, landingBtn: e.target.value})} className="edit-input" />
+                    </div>
                 </div>
 
                 <hr style={{margin:'20px 0'}}/>
