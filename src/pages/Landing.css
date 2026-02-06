@@ -1,0 +1,162 @@
+/* Landing Page Styles */
+.landing-page {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  overflow: hidden;
+}
+
+.bg-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.bg-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.bg-slide.active {
+  opacity: 1;
+}
+
+/* 
+ * The White Box Container 
+ * Matches reference styling: Solid white, centered, padding.
+ */
+.landing-content {
+  text-align: center;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.92); /* Slight transparency */
+  backdrop-filter: blur(12px); /* Blur the background behind the card */
+  padding: 100px 40px; /* Increased padding for square look */
+  max-width: 550px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06); /* Very soft shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 2px; /* Subtle refinement */
+}
+
+.landing-title {
+  font-family: var(--font-condensed);
+  font-size: 3.5rem; /* Reduced from 5rem */
+  margin: 10px 0 20px 0;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #888; 
+  line-height: 1;
+}
+
+.landing-subtitle {
+  font-family: var(--font-serif);
+  font-size: 0.7rem; /* Slightly smaller */
+  margin-bottom: 5px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #999;
+}
+
+.landing-desc {
+  font-family: var(--font-serif);
+  font-size: 0.95rem; /* Slightly smaller */
+  line-height: 1.6;
+  margin-bottom: 30px; /* Reduced margin */
+  color: #777;
+  padding: 0 10px;
+  max-width: 500px; /* Tighter text block */
+}
+
+.btn-landing {
+  display: inline-block;
+  border: 1px solid #777;
+  padding: 12px 28px; /* Reduced padding */
+  color: #777;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.7rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-landing:hover {
+  background: #777;
+  color: white;
+  border-color: #777;
+}
+
+/* Social Icons Area */
+.landing-socials {
+  margin-top: 35px; /* Reduced margin */
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white; /* or transparent if just logo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 2.75rem;
+    margin: 15px 0;
+    line-height: 1;
+  }
+  
+  .landing-content {
+    padding: 50px 30px; /* Reduced padding for a squared aspect */
+    width: 90%; /* Wider width */
+    max-width: 400px; /* Cap width */
+    aspect-ratio: 1 / 1.1; /* Force nearly square shape if content fits */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .landing-desc {
+      font-size: 0.9rem;
+      margin-bottom: 25px;
+      line-height: 1.5;
+  }
+
+  .landing-socials {
+      margin-top: 25px;
+  }
+}

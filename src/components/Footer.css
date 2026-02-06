@@ -1,0 +1,35 @@
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 40px;
+  margin-top: auto;
+  border-top: 1px solid #eee;
+}
+
+.social-links {
+  margin-bottom: 20px;
+}
+
+.social-links a {
+  margin: 0 10px;
+  font-size: 1.2rem;
+  color: black;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-links a svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+footer p {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}

@@ -1,0 +1,136 @@
+/* Navbar Styles */
+.navbar {
+  width: 100%;
+  background: white;
+  position: relative;
+  z-index: 1000;
+  border-bottom: 1px solid transparent;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 100%; /* Allow full width */
+  margin: 0 auto;
+  padding: 30px 50px; /* Adjust padding to match visual reference */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-family: var(--font-condensed);
+  font-size: 3rem; /* Matches the large bold look in reference */
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: black;
+  text-decoration: none;
+  z-index: 1001;
+  line-height: 0.9;
+  white-space: nowrap; /* Keep on one line */
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px; /* Slightly tighter links */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  font-size: 0.75rem; /* Matches smaller, clean font in reference */
+  letter-spacing: 2px;
+  color: #333;
+  transition: color 0.3s;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-links li a:hover {
+  color: #999;
+}
+
+/* Mobile Hamburger */
+.mobile-menu-btn {
+  display: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.hamburger {
+  width: 30px;
+  height: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 6px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -6px);
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 15px 20px; /* Smaller padding for mobile */
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* ... existing nav-links styles (implied re-write or use tool to skip unchanged?) ... */ 
+  /* Better to rewrite the block getting changed to be safe */
+  
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 1000;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .nav-links li a {
+    font-size: 1.5rem; /* Larger links in mobile menu */
+  }
+
+  .brand {
+    font-size: 1.4rem; /* Adjusted to fit "THE VERGEL COFFEE" on narrow screens */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 80%; 
+    text-align: center;
+    /* Remove ellipsis if we want to ensure it's readable, adjusting size instead */
+    white-space: nowrap; 
+  }
+}}

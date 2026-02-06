@@ -1,0 +1,200 @@
+/* Project Layout Styles (Split View) */
+.project-split-layout {
+  position: relative; /* Context for absolute positioning of nav buttons */
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scroll on this specific layout */
+}
+
+@media (min-width: 900px) {
+  .project-split-layout {
+    flex-direction: row;
+    align-items: stretch;
+    padding-top: 100px;
+  }
+}
+
+/* Left Panel */
+.split-left-panel {
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.project-split-title {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 2.8rem;
+  margin: 0 0 30px 0; /* Reset margin to prevent cutoff */
+  line-height: 1; 
+  color: #333;
+}
+
+@media (max-width: 899px) {
+  .project-split-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    margin-top: 0;
+  }
+}
+
+.project-split-desc {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* 
+ * Standardized Content Styles 
+ * These classes allow the content in DB to be plain HTML/Text 
+ */
+.dynamic-content {
+  text-align: left;
+}
+
+.dynamic-content p {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.dynamic-content strong, 
+.dynamic-content b {
+  color: #333;
+  font-weight: 700;
+}
+
+.share-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #999;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+/* Right Panel */
+.split-right-panel {
+  width: 100%;
+}
+
+.split-right-panel.full-width {
+  width: 100%;
+  padding-left: 0;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .split-right-panel {
+    width: 60%; 
+    padding-left: 50px; 
+    padding-top: 8px; /* Precise adjustment: 8px padding pushes image down to align with Title Cap Height */
+  }
+  
+  .split-left-panel {
+    width: 40%; 
+    position: sticky;
+    top: 100px;
+    height: auto;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding-top: 0; /* Remove top padding so Title starts high */
+  }
+  
+  .split-right-panel.full-width {
+    padding-left: 0; 
+  }
+}
+
+.image-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-bottom: 80px;
+}
+
+.stack-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  
+  /* "Professional" styling enhancements */
+  border-radius: 4px; 
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.stack-image:hover {
+  transform: translateY(-4px); /* Slight lift */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15); /* Stronger shadow on hover */
+}
+
+@media (max-width: 899px) {
+  .split-left-panel {
+    padding: 30px 20px; /* More padding on mobile specifically */
+  }
+  
+  .project-split-layout {
+    padding-top: 0;
+  }
+}
+
+/* Navigation Buttons */
+.project-nav-fixed {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  display: flex;
+  gap: 2px;
+  z-index: 100;
+}
+
+@media (max-width: 899px) {
+  .project-nav-fixed {
+    position: fixed; /* Stick to bottom or specific area for mobile? Reference shows bottom usually, or floating */
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    justify-content: flex-end;
+    margin-bottom: 0;
+    z-index: 1000;
+  }
+}
+
+.nav-square-btn {
+  width: 45px; /* Slightly larger for touch */
+  height: 45px;
+  background-color: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.nav-square-btn:hover {
+  background-color: #000;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.layout-gallery-wrapper { width: 100%; }
