@@ -45,3 +45,15 @@ dist-ssr
 
 # macOS
 .DS_Store
+
+# Playwright artifacts
+.playwright-mcp/
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.webp
+*.gif
+*.ico
