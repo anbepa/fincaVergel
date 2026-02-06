@@ -49,29 +49,7 @@ const Landing = () => {
       }
     };
 
-    // Fetch Global Layout data for Social Links (Reusing Admin logic from Footer)
-    const fetchLoyoutData = async () => {
-        const { data } = await supabase
-        .from('content_pages')
-        .select('*')
-        .eq('slug', 'layout')
-        .single();
-        
-        if (data && data.content && data.content.startsWith('{')) {
-            try {
-                const parsed = JSON.parse(data.content);
-                setSocialLinks({
-                    facebook: parsed.facebook || '',
-                    instagram: parsed.instagram || ''
-                });
-            } catch (e) {
-                console.error("Error parsing layout JSON:", e);
-            }
-        }
-    };
-
-    fetchLandingData();
-    // fetchLoyoutData logic was here but better to separate or reuse logic
+    // Fetch Global Layout data for Social Links and Button Label
     const fetchLoyoutData = async () => {
         const { data } = await supabase
         .from('content_pages')
@@ -94,6 +72,8 @@ const Landing = () => {
             }
         }
     };
+
+    fetchLandingData();
     fetchLoyoutData();
     
     // Slider logic
