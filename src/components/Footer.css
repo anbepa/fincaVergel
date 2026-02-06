@@ -42,4 +42,7 @@ footer p {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
+  text-align: center; /* Force explicit center */
+  width: 100%; /* Ensure it spans if needed, but text inside centers */
+  max-width: 800px; /* Prevent too wide lines */
 }

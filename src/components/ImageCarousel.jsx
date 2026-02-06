@@ -106,7 +106,12 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
                     className={`thumbnail-item ${index === currentIndex ? 'active' : ''}`}
                     onClick={() => handleThumbnailClick(index)}
                 >
-                    <img src={img} alt={`Thumb ${index + 1}`} />
+                    <img 
+                      src={img} 
+                      alt={`Thumb ${index + 1}`} 
+                      loading="lazy"
+                      decoding="async"
+                    />
                 </div>
             ))}
         </div>
