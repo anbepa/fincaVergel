@@ -106,14 +106,24 @@
     
     padding: 8px 14px;
     border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
     border-left: 3px solid #66bb6a; /* Green accent bar */
     
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column; /* Allow tooltip to stack below */
+    align-items: flex-start;
+    gap: 0;
     
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     transform: translateZ(20px); /* Lift off the background in 3D */
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
 }
 
 .card-number {
@@ -135,6 +145,15 @@
     font-size: 1rem;
     color: #66bb6a;
     opacity: 0; /* Hidden until hover */
+    margin-left: auto; /* Push to right */
+}
+
+.card-tooltip {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0;
+    overflow: hidden;
+    line-height: 1.3;
 }
 
 /* --- Position Layout Override for Lines --- */
@@ -158,62 +177,158 @@
 .pos-staff { top: 9%; left: 55%; }
 
 
-/* Mobile */
+/* Mobile: Switch to List View */
 @media (max-width: 768px) {
-    /* Full width image as requested */
+    .plant-menu-container {
+        padding: 0;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        display: block; 
+        background: #f8fcf9;
+    }
+
     .plant-wrapper-3d {
         width: 100%; 
-        max-width: 500px; 
+        max-width: 100%;
+        transform: none !important; 
+        margin-bottom: -40px; /* Pull list up */
+        position: relative;
+        z-index: 2;
     }
 
-    /* Force all labels to center below/above the dot to stay inside screen */
+    .connections-layer { display: none; }
+
+    .plant-image {
+        max-height: 40vh; 
+        object-fit: contain;
+        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
+        /* Add a small fade at bottom to blend with list */
+        mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    }
+
+    .plant-overlays {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0; /* No gap, connected by line */
+        padding: 40px 15px 40px 15px;
+        background: linear-gradient(to bottom, rgba(232, 245, 233, 0) 0%, #f1f8e9 100%);
+        border-radius: 30px 30px 0 0;
+        margin-top: -30px;
+        z-index: 3;
+    }
+    
+    /* The Central "Stem" Line */
+    .plant-overlays::before {
+        content: "";
+        position: absolute;
+        left: 28px; /* Align with dots */
+        top: 20px;
+        bottom: 40px;
+        width: 3px;
+        background: repeating-linear-gradient(to bottom, #a5d6a7 0, #a5d6a7 10px, transparent 10px, transparent 15px);
+        z-index: 1;
+    }
+
+    .plant-link-spot {
+        position: relative !important;
+        top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+        width: 100%;
+        opacity: 1 !important;
+        transform: none !important;
+        margin-bottom: 25px;
+        padding-left: 50px; /* Space for line */
+    }
+    
+    /* Restore Dots just for Mobile visual anchor */
+    .pulse-dot {
+        display: block; 
+        position: absolute;
+        left: 0;
+        top: 20px;
+        width: 16px;
+        height: 16px;
+        background: #66bb6a !important;
+        border: 2px solid white;
+        border-radius: 50%;
+        z-index: 10;
+        box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+    }
+    .dot-ring, .dot-core { display: none; } /* Simplify dot */
+
     .link-card {
-        padding: 6px 12px;
-        white-space: nowrap; 
+        /* Card Style List Item */
+        position: relative !important;
+        top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+        transform: none !important;
+        
+        width: 100%;
         min-width: unset;
-        
-        /* Reset Position to be relative to center of dot */
-        left: 50% !important;
-        right: auto !important;
-        top: 25px !important; /* Place BELOW the dot */
-        bottom: auto !important;
-        transform: translateX(-50%) !important;
-        
-        /* Reset Styling */
-        text-align: center !important;
-        flex-direction: row !important;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.04);
         border-left: none !important;
-        border-right: none !important;
-        border-bottom: 3px solid #66bb6a !important; /* Move accent to bottom */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         
-        /* Ensure it's on top */
-        z-index: 100;
-        background: rgba(255, 255, 255, 0.95);
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
     }
     
-    /* Specific overrides for dots near bottom edges */
-    .pos-farm { top: 85%; }
-    .pos-farm .link-card {
-         top: auto !important;
-         bottom: 25px !important; /* Place ABOVE dot if low */
-         border-bottom: none !important;
-         border-top: 3px solid #66bb6a !important;
+    /* Triangle pointing to dot */
+    .link-card::before {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 24px;
+        width: 0; 
+        height: 0; 
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent; 
+        border-right: 8px solid white;
     }
 
-     .pos-process { top: 75%; }
-     .pos-process .link-card {
-         top: auto !important;
-         bottom: 25px !important;
-         border-bottom: none !important;
-         border-top: 3px solid #66bb6a !important;
-     }
-
-    .card-title { 
-        font-size: 0.8rem;
+    .card-header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 6px;
     }
-    
+
     .card-number {
-        display: none;
+        font-size: 0.8rem;
+        color: #fff;
+        background: #2b4a3b;
+        padding: 3px 8px;
+        border-radius: 20px;
+        margin-right: 10px;
+    }
+    
+    .card-title {
+        font-size: 1.05rem;
+    }
+
+    /* Force tooltip visible on mobile for context */
+    .card-tooltip {
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        margin-top: 0;
+        font-size: 0.85rem;
+        color: #7b9c8d;
+    }
+    
+    /* Specific styling for the first item to "connect" to plant */
+    .plant-link-spot:first-child {
+        margin-top: 10px;
+    }
+}        line-height: 1.4;
+        padding-left: 0; 
     }
     
     .card-arrow {

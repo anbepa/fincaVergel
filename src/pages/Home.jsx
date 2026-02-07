@@ -4,12 +4,12 @@ import InteractivePlant from '../components/InteractivePlant';
 import './Home.css';
 
 const defaultItems = [
-  {"title":"The Farm","href":"/thefarm"},
-  {"title":"Our process","href":"/ourprocess"},
-  {"title":"Get to know us","href":"/gettoknowus"},
-  {"title":"Perfect coffee","href":"/perfectcoffee"},
-  {"title":"Green Energy","href":"/greenenergy"},
-  {"title":"Our Staff","href":"/our-staff"}
+  {"id": "01", "title": "The Farm",       "description": "Eco-friendly tradition",  "href": "/thefarm"},
+  {"id": "02", "title": "Our Process",    "description": "Quality in every step",   "href": "/ourprocess"},
+  {"id": "03", "title": "Get to know us", "description": "Meet our coffee family",  "href": "/gettoknowus"},
+  {"id": "04", "title": "Perfect Coffee", "description": "Brewing excellence",      "href": "/perfectcoffee"},
+  {"id": "05", "title": "Green Energy",   "description": "Sustainable power",       "href": "/greenenergy"},
+  {"id": "06", "title": "Our Staff",      "description": "The hands behind the coffee", "href": "/our-staff"}
 ];
 
 const Home = () => {
