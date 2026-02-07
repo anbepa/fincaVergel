@@ -60,34 +60,37 @@
     cursor: pointer;
     /*transform: translate(-50%, -50%); managed by motion */
     transform-origin: center center;
+    z-index: 50;
 }
 
-/* The Glowing Pulse Dot */
+/* The Glowing Pulse Dot (Now a larger transparent Bean Hit Area) */
 .pulse-dot {
-    width: 20px;
-    height: 20px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(2px);
+    /* Subtle glow instead of solid dot */
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(139, 195, 74, 0.1) 60%, transparent 80%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    z-index: 50;
     transform: translate(-50%, -50%); /* Center on coordinate */
+    transition: all 0.3s ease;
+    mix-blend-mode: hard-light;
 }
 
-.dot-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 1px solid rgba(139, 195, 74, 0.6);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(139, 195, 74, 0.3);
+/* Hover state: Make the bean cluster GLOW */
+.plant-link-spot:hover .pulse-dot {
+   background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(102, 187, 106, 0.3) 70%, transparent 100%);
+   box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+   transform: translate(-50%, -50%) scale(1.2);
 }
 
-.dot-core {
-    width: 8px;
+/* Hide old dot internals */
+.dot-ring { display: none; }
+.dot-core { display: none; }
     height: 8px;
     background: #fff;
     border-radius: 50%;
@@ -157,24 +160,29 @@
 }
 
 /* --- Position Layout Override for Lines --- */
-/* We keep coordinates for logic, but fine tune visual placement */
+/* We align these to the BEAN CLUSTERS (closer to stem) */
 
-.pos-farm { top: 83%; left: 45%; }
-/* Card Position Override */
-.pos-farm .link-card { left: auto; right: 25px; /* To Left */ } 
+/* Bottom Cluster (Farm) */
+.pos-farm { top: 80%; left: 48%; }
+.pos-farm .link-card { left: auto; right: 35px; top: -10px; } 
 
-.pos-process { top: 72%; left: 82%; }
-/* Card to Right */
+/* Lower Right Cluster (Process) */
+.pos-process { top: 68%; left: 62%; } 
+.pos-process .link-card { top: -20px; }
 
-.pos-know { top: 58%; left: 18%; }
-.pos-know .link-card { left: auto; right: 25px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
+/* Lower Left Cluster (Get to Know) */
+.pos-know { top: 58%; left: 38%; }
+.pos-know .link-card { left: auto; right: 35px; top: -10px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
 
-.pos-coffee { top: 45%; left: 78%; }
+/* Mid Right Cluster (Perfect Coffee) */
+.pos-coffee { top: 44%; left: 65%; }
 
-.pos-energy { top: 30%; left: 24%; }
-.pos-energy .link-card { left: auto; right: 25px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
+/* Mid Left Cluster (Green Energy) */
+.pos-energy { top: 32%; left: 35%; }
+.pos-energy .link-card { left: auto; right: 35px; top: -10px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
 
-.pos-staff { top: 9%; left: 55%; }
+/* Top Cluster (Staff) */
+.pos-staff { top: 15%; left: 52%; }
 
 
 /* Mobile: ZigZag Integrated Layout */

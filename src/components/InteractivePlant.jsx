@@ -67,14 +67,14 @@ const InteractivePlant = ({ items }) => {
   };
 
   // Connecting Lines SVG Coordinates (Percentages: 0-100)
-  // Each line starts at the Node and ends near the Tag
+  // Updated for Bean Cluster Positions (Closer to stem)
   const connections = {
-      'pos-farm':    { x1: 45, y1: 83, x2: 25, y2: 83, cx: 35 }, 
-      'pos-process': { x1: 82, y1: 72, x2: 95, y2: 72, cx: 90 },
-      'pos-know':    { x1: 18, y1: 58, x2: 5,  y2: 58, cx: 10 },
-      'pos-coffee':  { x1: 78, y1: 45, x2: 95, y2: 45, cx: 85 },
-      'pos-energy':  { x1: 24, y1: 30, x2: 5,  y2: 30, cx: 15 },
-      'pos-staff':   { x1: 55, y1: 9,  x2: 75, y2: 9,  cx: 65 },
+      'pos-farm':    { x1: 48, y1: 80, x2: 25, y2: 80, cx: 36 }, 
+      'pos-process': { x1: 62, y1: 68, x2: 85, y2: 68, cx: 73 },
+      'pos-know':    { x1: 38, y1: 58, x2: 15, y2: 58, cx: 26 },
+      'pos-coffee':  { x1: 65, y1: 44, x2: 85, y2: 44, cx: 75 },
+      'pos-energy':  { x1: 35, y1: 32, x2: 15, y2: 32, cx: 25 },
+      'pos-staff':   { x1: 52, y1: 15, x2: 75, y2: 15, cx: 63 },
   };
 
   return (
@@ -123,7 +123,11 @@ const InteractivePlant = ({ items }) => {
             {items.map((item, index) => {
                 const posClass = getPositionClass(item.href);
                 return (
-                    <Link key={item.href} to={item.href}>
+                    <Link 
+                        key={item.href} 
+                        to={item.href} 
+                        aria-label={`Go to ${item.title}`}
+                    >
                         <motion.div 
                             className={`plant-link-spot ${posClass}`}
                             initial={{ opacity: 0 }}
@@ -136,13 +140,13 @@ const InteractivePlant = ({ items }) => {
                             <motion.div 
                                 className="pulse-dot"
                                 variants={{
-                                    hover: { scale: 1.5, backgroundColor: "rgba(139, 195, 74, 0.8)" }
+                                    hover: { scale: 1.2, backgroundColor: "rgba(102, 187, 106, 0.9)" }
                                 }}
                             >
                                 <motion.div 
                                     className="dot-ring"
-                                    animate={{ scale: [1, 1.5, 1], opacity: [0.8, 0, 0.8] }}
-                                    transition={{ duration: 3, repeat: Infinity }}
+                                    animate={{ scale: [1, 2, 1], opacity: [0.6, 0, 0.6] }}
+                                    transition={{ duration: 2.5, repeat: Infinity }}
                                 />
                                 <div className="dot-core"></div>
                             </motion.div>
@@ -154,15 +158,31 @@ const InteractivePlant = ({ items }) => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 2 + index * 0.1 }} /* Wait for lines */
                                 variants={{
-                                    hover: { x: 5, scale: 1.05, backgroundColor: "rgba(255,255,255, 0.95)", boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }
+                                    hover: { 
+                                        y: -5, 
+                                        scale: 1.05, 
+                                        backgroundColor: "#ffffff", 
+                                        boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+                                        borderLeft: "4px solid #66bb6a"
+                                    }
                                 }}
                             >
-                                <span className="card-number">0{index + 1}</span>
-                                <span className="card-title">{item.title}</span>
-                                <motion.span 
-                                    className="card-arrow"
-                                    variants={{ hover: { x: 3, opacity: 1 }}}
-                                >→</motion.span>
+                                <div className="card-header">
+                                    <span className="card-number">{item.id || `0${index + 1}`}</span>
+                                    <span className="card-title">{item.title}</span>
+                                </div>
+                                
+                                {item.description && (
+                                    <motion.div 
+                                        className="card-tooltip"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        variants={{
+                                            hover: { opacity: 1, height: "auto", marginTop: "4px" }
+                                        }}
+                                    >
+                                        {item.description}
+                                    </motion.div>
+                                )}
                             </motion.div>
                         </motion.div>
                     </Link>
