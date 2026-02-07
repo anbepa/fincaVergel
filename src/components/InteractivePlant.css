@@ -1,0 +1,222 @@
+.plant-menu-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: #fdfdfd; 
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    perspective: 1200px; /* Essential for 3D tilt */
+}
+
+/* The wrapper that actually tilts */
+.plant-wrapper-3d {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    /* Ensure child elements (SVG) are relative to this */
+    transform-style: preserve-3d; 
+}
+
+.plant-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15));
+    /* Float animation */
+    pointer-events: none; /* Let clicks pass to overlays */
+}
+
+/* SVG Lines Layer */
+.connections-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none; 
+}
+
+/* Overlay Container */
+.plant-overlays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+/* Interaction Points */
+.plant-link-spot {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    /*transform: translate(-50%, -50%); managed by motion */
+    transform-origin: center center;
+}
+
+/* The Glowing Pulse Dot */
+.pulse-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 50;
+    transform: translate(-50%, -50%); /* Center on coordinate */
+}
+
+.dot-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(139, 195, 74, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(139, 195, 74, 0.3);
+}
+
+.dot-core {
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+}
+
+/* The Information Card (Tag) */
+.link-card {
+    position: absolute;
+    left: 20px; /* Offset from dot */
+    top: -15px; /* Vertically align with dot */
+    
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    padding: 8px 14px;
+    border-radius: 8px;
+    border-left: 3px solid #66bb6a; /* Green accent bar */
+    
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transform: translateZ(20px); /* Lift off the background in 3D */
+}
+
+.card-number {
+    font-size: 0.7rem;
+    color: #999;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.card-title {
+    color: #2c3e50;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.card-arrow {
+    font-size: 1rem;
+    color: #66bb6a;
+    opacity: 0; /* Hidden until hover */
+}
+
+/* --- Position Layout Override for Lines --- */
+/* We keep coordinates for logic, but fine tune visual placement */
+
+.pos-farm { top: 83%; left: 45%; }
+/* Card Position Override */
+.pos-farm .link-card { left: auto; right: 25px; /* To Left */ } 
+
+.pos-process { top: 72%; left: 82%; }
+/* Card to Right */
+
+.pos-know { top: 58%; left: 18%; }
+.pos-know .link-card { left: auto; right: 25px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
+
+.pos-coffee { top: 45%; left: 78%; }
+
+.pos-energy { top: 30%; left: 24%; }
+.pos-energy .link-card { left: auto; right: 25px; text-align: right; border-left: none; border-right: 3px solid #66bb6a; flex-direction: row-reverse; }
+
+.pos-staff { top: 9%; left: 55%; }
+
+
+/* Mobile */
+@media (max-width: 768px) {
+    /* Full width image as requested */
+    .plant-wrapper-3d {
+        width: 100%; 
+        max-width: 500px; 
+    }
+
+    /* Force all labels to center below/above the dot to stay inside screen */
+    .link-card {
+        padding: 6px 12px;
+        white-space: nowrap; 
+        min-width: unset;
+        
+        /* Reset Position to be relative to center of dot */
+        left: 50% !important;
+        right: auto !important;
+        top: 25px !important; /* Place BELOW the dot */
+        bottom: auto !important;
+        transform: translateX(-50%) !important;
+        
+        /* Reset Styling */
+        text-align: center !important;
+        flex-direction: row !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: 3px solid #66bb6a !important; /* Move accent to bottom */
+        
+        /* Ensure it's on top */
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.95);
+    }
+    
+    /* Specific overrides for dots near bottom edges */
+    .pos-farm { top: 85%; }
+    .pos-farm .link-card {
+         top: auto !important;
+         bottom: 25px !important; /* Place ABOVE dot if low */
+         border-bottom: none !important;
+         border-top: 3px solid #66bb6a !important;
+    }
+
+     .pos-process { top: 75%; }
+     .pos-process .link-card {
+         top: auto !important;
+         bottom: 25px !important;
+         border-bottom: none !important;
+         border-top: 3px solid #66bb6a !important;
+     }
+
+    .card-title { 
+        font-size: 0.8rem;
+    }
+    
+    .card-number {
+        display: none;
+    }
+    
+    .card-arrow {
+        display: none;
+    }
+}

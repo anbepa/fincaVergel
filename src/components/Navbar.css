@@ -19,20 +19,20 @@
 
 .brand {
   font-family: var(--font-condensed);
-  font-size: 3rem; /* Matches the large bold look in reference */
+  font-size: 3rem; 
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 1px;
-  color: black;
+  color: #2b4a3b; /* Deep Coffee Leaf Green */
   text-decoration: none;
   z-index: 1001;
   line-height: 0.9;
-  white-space: nowrap; /* Keep on one line */
+  white-space: nowrap; 
 }
 
 .nav-links {
   display: flex;
-  gap: 30px; /* Slightly tighter links */
+  gap: 30px; 
   list-style: none;
   margin: 0;
   padding: 0;
@@ -41,16 +41,16 @@
 .nav-links li a {
   font-family: var(--font-sans);
   text-transform: uppercase;
-  font-size: 0.75rem; /* Matches smaller, clean font in reference */
+  font-size: 0.75rem; 
   letter-spacing: 2px;
-  color: #333;
+  color: #3e5c4e; /* Muted Green */
   transition: color 0.3s;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600; /* Slightly bolder for color visibility */
 }
 
 .nav-links li a:hover {
-  color: #999;
+  color: #66bb6a; /* Bright Leaf Highlight */
 }
 
 /* Mobile Hamburger */
@@ -73,7 +73,7 @@
   display: block;
   width: 100%;
   height: 2px;
-  background-color: black;
+  background-color: #2b4a3b; /* Match Logo Green */
   transition: all 0.3s ease;
 }
 
@@ -89,16 +89,13 @@
 
 @media (max-width: 768px) {
   .navbar-container {
-    padding: 15px 20px; /* Smaller padding for mobile */
+    padding: 15px 20px; 
   }
 
   .mobile-menu-btn {
     display: block;
   }
 
-  /* ... existing nav-links styles (implied re-write or use tool to skip unchanged?) ... */ 
-  /* Better to rewrite the block getting changed to be safe */
-  
   .nav-links {
     position: fixed;
     top: 0;
@@ -119,18 +116,18 @@
   }
 
   .nav-links li a {
-    font-size: 1.5rem; /* Larger links in mobile menu */
+    font-size: 1.5rem; 
+    color: #2b4a3b; /* Stronger green in mobile menu */
   }
 
   .brand {
-    font-size: 1.4rem; /* Adjusted to fit "THE VERGEL COFFEE" on narrow screens */
+    font-size: 1.4rem; 
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: auto;
     max-width: 80%; 
     text-align: center;
-    /* Remove ellipsis if we want to ensure it's readable, adjusting size instead */
     white-space: nowrap; 
   }
-}}
+}
