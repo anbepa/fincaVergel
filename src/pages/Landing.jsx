@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import './Landing.css';
 
-const defaultImages = [];
+const defaultImages = [
+  "https://images.squarespace-cdn.com/content/v1/5616f13ae4b0b56d478e2c2c/1444779276309-IF76N2JLK3KXBXDVF5S3/facy0263.jpg?format=2500w",
+  "https://images.squarespace-cdn.com/content/v1/5616f13ae4b0b56d478e2c2c/1447111883773-8ETHQP1ZM0NGRSCIOEFT/DSC_2477a.jpg?format=2500w",
+  "https://images.squarespace-cdn.com/content/v1/5616f13ae4b0b56d478e2c2c/1444779286905-2891KWL99R9NS8ME0HAE/facy0274.jpg?format=2500w", 
+  "https://images.squarespace-cdn.com/content/v1/5616f13ae4b0b56d478e2c2c/1447111900910-F6QKQPU0HONZDOBSHXX7/DSC_3499a.jpg?format=2500w"
+];
 
 const Landing = () => {
   const [currentImage, setCurrentImage] = useState(0);

@@ -14,6 +14,13 @@
 			"command": "cat >> src/components/ImageCarousel.css <<EOF\n\n.carousel-caption-overlay {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 100%;\n    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);\n    padding: 30px 20px 20px 20px;\n    box-sizing: border-box;\n    color: white;\n    z-index: 5;\n    pointer-events: none; /* Let clicks pass through if needed */\n}\n\n.carousel-caption-overlay p {\n    margin: 0;\n    font-family: var(--font-sans);\n    font-weight: 300;\n    font-size: 1.1rem;\n    text-shadow: 0 1px 3px rgba(0,0,0,0.5);\n    line-height: 1.4;\n}\n\n@media (max-width: 768px) {\n    .carousel-caption-overlay p {\n        font-size: 0.95rem;\n    }\n}\nEOF\n",
 			"args": [],
 			"group": "build"
+		},
+		{
+			"label": "append_plant_css",
+			"type": "shell",
+			"command": "cat >> src/components/InteractivePlant.css <<EOF\n\n/* SVG Logic: Leaves are transparent to clicks to allow hitting nodes behind */\n#path9 {\n    pointer-events: none;\n}\n\n/* Nodes/Hotspots must be clickable */\n.hotspot-group {\n    cursor: pointer;\n    pointer-events: all; /* Restore events for the nodes */\n}\nEOF\n",
+			"args": [],
+			"group": "build"
 		}
 	]
 }

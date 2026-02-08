@@ -1,11 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=Oswald:wght@500;700&display=swap');
 
 :root {
+  /* Fonts */
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Lato', sans-serif;
   --font-condensed: 'Oswald', sans-serif;
-  --color-text: #333;
-  --color-secondary: #999;
+  --font-fancy: 'Playfair Display', serif; /* Map fancy to serif for consistency */
+
+  /* Extracted Plant Colors */
+  --color-primary: #394724;       /* Deep Olive Green (Mature Leaves) */
+  --color-primary-light: #525d2a; /* Lighter Olive (Young Leaves) */
+  --color-secondary: #a04839;     /* Coffee Cherry Red */
+  --color-accent: #af9549;        /* Stem Gold/Tan */
+  --color-tertiary: #61694f;      /* Muted Sage */
+
+  /* Backgrounds & Text */
+  --color-bg-cream: #faf8f4;      /* Organic Off-White */
+  --color-bg-light-green: #e9ece5; /* Super light plant green */
+  --color-text: #394724;          /* Use Primary Green for text for integrated feel */
+  --color-text-light: #faf8f4;
+  --color-border: #af9549;
 }
 
 *, *::before, *::after {
@@ -16,16 +30,30 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
+  background-color: var(--color-bg-light-green); /* Apply plant background globally */
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* Strict horizontal overflow prevention */
+  overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
-  max-width: 100%;
+  position: relative; /* Ensure overflow hidden works contextually */
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--color-secondary); /* Links in cherry red */
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-primary);
 }
 
 .layout {
@@ -37,6 +65,20 @@ a {
 main {
   flex: 1;
 }
+
+@media (max-width: 768px) {
+  /* Prevent sticky footer gaps on mobile and overflow */
+  .layout {
+      min-height: auto;
+      overflow-x: hidden;
+      height: auto;
+  }
+  main {
+      flex: 1 0 auto; /* Allow growth if needed, but respect content */
+      display: block; /* Ensure block formatting context */
+  }
+}
+
 
 /* 
  * SHARED PAGE STYLES 

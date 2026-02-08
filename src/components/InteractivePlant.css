@@ -1,73 +1,441 @@
-.plant-menu-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 10px;
-    background-color: #1a1a1a;  /* Dark background based on index copy aesthetics */
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    perspective: 1200px;
-}
-
-.plant-wrapper-3d {
+.plant-container {
     position: relative;
     width: 100%;
-    max-width: 700px; /* Adjust max width for the SVG */
-    margin: 0 auto;
-    transform-style: preserve-3d;
+    max-width: 750px;
+    margin: 4rem auto 3rem;
+    padding: 20px; /* Reduced padding from 40px */
+    z-index: 10;
+    /* Removed background-color and box-shadow to integrate with page */
+    background-color: transparent !important;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .plant-container {
+        margin: 8rem auto 1rem; /* Significantly Increased top margin */
+        padding: 10px;
+    }
+}
+
+/* Wrapper to synchronize SVG and Overlays dimensions */
+.plant-content-wrapper {
+    position: relative;
+    width: 100%;
+    /* No padding here to ensure overlays match image exactly */
+}
+
+/* Floating Animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes sway {
+    0% { transform: rotate(0deg); }
+    33% { transform: rotate(1deg); }
+    66% { transform: rotate(-1deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .plant-svg {
     width: 100%;
     height: auto;
+    /* Soften the drop shadow so it looks like it's floating on the page, not in a box */
+    filter: drop-shadow(0 15px 25px rgba(50, 60, 40, 0.15));
+    overflow: hidden; /* Prevent hotspots from spilling out */
+    transform-origin: bottom center;
+    /* animation: sway 8s ease-in-out infinite; */ /* Temporarily disable sway to fix positioning stability */
     display: block;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+    margin: 0 auto;
 }
 
-/* Hotspots Styling */
-.hotspot-circle {
-    fill: #ffffff;
-    fill-opacity: 0.01; /* Almost invisible but clickable */
-    stroke: rgba(255,255,255,0.2);
-    stroke-width: 2px;
+/* Ensure Inner SVG Scales Correctly */
+.plant-svg svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 100%; /* Prevent overflow */
+    margin: 0 auto; /* Center SVG */
+}
+
+/* SVG Path Styling */
+.plant-svg path {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    transition: all 0.3s ease;
-    mix-blend-mode: overlay;
+    stroke: rgba(255, 255, 255, 0);
+    stroke-width: 0;
+    vector-effect: non-scaling-stroke; /* Keep stroke constant on zoom */
 }
 
-.hotspot-circle:hover {
-    fill-opacity: 0.1;
-    stroke: rgba(255,255,255,0.8);
-    stroke-width: 3px;
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+/* Active State */
+.plant-svg path.active {
+    fill: var(--color-accent) !important; /* Gold accent color */
+    filter: drop-shadow(0 0 20px rgba(175, 149, 73, 0.6));
+    stroke: #fff;
+    stroke-width: 2px;
+    transform: scale(1.02);
+    z-index: 10;
 }
 
-.hotspot-circle.picked {
+/* Interaction Hint "Start here" */
+.interaction-hint {
+    position: absolute;
+    top: 20px; /* Moved INSIDE the container to ensure visibility */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-bg-light-green); /* Match background to float */
+    color: var(--color-primary);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(50, 60, 40, 0.15); /* Softer shadow matching plant */
     pointer-events: none;
-    opacity: 0;
+    animation: bounce 2s infinite;
+    z-index: 100; /* High z-index to stay on top */
+    white-space: nowrap;
+    border: 1px solid rgba(175, 149, 73, 0.3); /* Gold border */
 }
 
-/* Flying layer on top */
-.flying-layer {
+.interaction-hint::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: var(--color-border) transparent transparent transparent;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+    40% {transform: translateX(-50%) translateY(-10px);}
+    60% {transform: translateX(-50%) translateY(-5px);}
+}
+
+/* Connections Layer */
+.connections-layer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 5;
     pointer-events: none;
-    z-index: 50;
+    overflow: visible;
 }
 
-/* Mobile Adjustments */
+.connection-line {
+    stroke: #E3B34C;
+    stroke-width: 2px;
+    stroke-dasharray: 6 6;
+    opacity: 0.5;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    animation: dash 40s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Labels Overlay */
+.plant-labels-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20; /* Ensure labels are above lines (z-5) */
+    pointer-events: none; /* Let clicks pass through to SVG */
+}
+
+.plant-label {
+    pointer-events: auto;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -50%); /* Default state */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0; /* Start hidden for animation */
+    animation: fadeInLabel 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    cursor: pointer;
+}
+
+.plant-label.inactive {
+    opacity: 0.3 !important; /* Force dimming */
+    filter: grayscale(0.8);
+    transform: translate(-50%, -50%) scale(0.9);
+}
+
+.plant-label.active {
+    z-index: 30;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Sequential Animation Delays */
+.plant-label:nth-child(1) { animation-delay: 0.2s; }
+.plant-label:nth-child(2) { animation-delay: 0.4s; }
+.plant-label:nth-child(3) { animation-delay: 0.6s; }
+.plant-label:nth-child(4) { animation-delay: 0.8s; }
+.plant-label:nth-child(5) { animation-delay: 1.0s; }
+.plant-label:nth-child(6) { animation-delay: 1.2s; }
+
+@keyframes fadeInLabel {
+    from { opacity: 0; transform: translate(-50%, -40%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.plant-label.active {
+    z-index: 20;
+}
+
+.label-number {
+    width: 34px;
+    height: 34px;
+    background-color: #1a4d2e; /* Idle: Green */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-fancy);
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    margin-bottom: 8px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Hover: Subtle Glow + Scale */
+.plant-label:hover .label-number {
+    transform: scale(1.1);
+    background-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(57, 71, 36, 0.5);
+}
+
+/* Active: Gold "On" State */
+.plant-label.active .label-number {
+    transform: scale(1.25);
+    background-color: var(--color-accent); /* Gold */
+    border-color: white;
+    box-shadow: 0 0 20px rgba(175, 149, 73, 0.8);
+    z-index: 10;
+}
+
+.label-text {
+    /* Enhanced visibility */
+    color: #ffffff;
+    background-color: rgba(26, 77, 46, 0.85); /* Dark green background */
+    padding: 6px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 1; 
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    /* border: 1px solid rgba(255,255,255,0.2); */
+}
+
+/* Hover effect on Text */
+.plant-label:hover .label-text,
+.plant-label.active .label-text {
+    background-color: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: var(--color-primary);
+}
+
+/* Desktop Footer - Call to Action */
+.plant-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 20;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+}
+
+.plant-cta-btn {
+    background-color: var(--color-primary);
+    color: white;
+    border: 2px solid var(--color-accent);
+    padding: 14px 36px;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 50px;
+    
+    /* Connect to Tree Story */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInBtn 0.8s ease forwards;
+    animation-delay: 2s; /* Waits for journey to complete */
+}
+
+@keyframes fadeInBtn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.plant-cta-btn:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-primary);
+    color: #1a4d2e;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* Responsive Positioning Adjustments */
 @media (max-width: 768px) {
-    .plant-menu-container {
-        padding: 10px;
+    .plant-container {
+        margin-top: 10rem; /* Increased to prevent tooltip clipping */
+        margin-bottom: 0;
+        padding-bottom: 2rem; /* Add internal padding instead of margin to control height better */
+        padding: 0;
+        overflow-x: hidden; /* Force horizontal containment */
+        max-width: 100%; /* Strict width */
+        width: 100%;
+    }
+
+    .plant-svg {
+        transform: none; /* Remove scale to fix horizontal scroll */
+        margin-bottom: 0;
+        width: 100%;
+        height: auto;
+        display: block;
     }
     
-    /* Make hotspots more visible on mobile touches if needed */
-    .hotspot-circle {
-        stroke-opacity: 0.1;
+    .plant-footer {
+        margin-top: 3rem;
+        position: relative; 
+        z-index: 50;
+        padding-bottom: 1rem; /* Small breathing room above footer */
+        margin-bottom: 0;
     }
+    
+    .label-number {
+        width: 48px; /* Increase hit area to 48px */
+        height: 48px;
+        font-size: 1.2rem;
+        border-width: 2px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3); /* Stronger shadow for separation */
+    }
+    
+    /* Ensure only active/hovered state is prioritized, others dimmed */
+    .plant-label:not(.active):not(:hover) .label-number {
+        opacity: 0.9;
+        transform: scale(0.95);
+    }
+    
+    /* Ensure label text is visible on mobile */
+    .label-text {
+        display: block !important;
+        font-size: 0.75rem; /* Slightly smaller text for mobile */
+        padding: 4px 8px; /* Tighter padding */
+        margin-top: 2px;
+        background-color: rgba(26, 77, 46, 0.9); /* Opaque background for readability */
+    }
+    
+    .interaction-hint {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+        top: 45px; /* Pushed further down (was 25px) */
+        width: auto;
+        white-space: nowrap;
+        background: rgba(255,255,255,0.9);
+        color: var(--color-primary);
+    }
+}
+
+/* Mobile Fixed Tooltip */
+.mobile-tooltip {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-tooltip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        position: fixed;
+        bottom: 30px;
+        left: 5%;
+        width: 90%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 16px 24px;
+        border-radius: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        z-index: 2000;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        font-family: var(--font-fancy);
+        font-size: 1.25rem;
+        color: #1a4d2e;
+        pointer-events: none;
+        border: 1px solid rgba(227, 179, 76, 0.3);
+    }
+    
+    .mobile-tooltip.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .tooltip-number {
+        background: #1a4d2e;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+}
+
+/* SVG Logic: Leaves are transparent to clicks to allow hitting nodes behind */
+#path9 {
+    pointer-events: none;
+}
+
+/* Nodes/Hotspots must be clickable */
+.hotspot-group {
+    cursor: pointer;
+    pointer-events: all; /* Restore events for the nodes */
+}
+
+/* Hide overlay text to prevent duplication with background image text */
+.hotspot-text {
+    display: none;
 }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/home' || location.pathname === '/';
   const [logoUrl, setLogoUrl] = useState(null);
   const [headerTitle, setHeaderTitle] = useState("");
   const [labels, setLabels] = useState({
@@ -61,6 +63,7 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => {
+    console.log("Toggle menu clicked", !isOpen);
     setIsOpen(!isOpen);
   };
 
@@ -69,7 +72,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isHome ? 'navbar-home' : ''}`}>
       <div className="navbar-container">
         <ul className={`nav-links ${isOpen ? 'active' : ''}`}>
           <li><Link to="/" onClick={closeMenu}>{labels.home}</Link></li>

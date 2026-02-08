@@ -1,32 +1,62 @@
 /* Footer Styles */
 footer {
-  width: 100%; /* Ensure full width */
+  width: 100%; 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 40px 20px; /* Added horizontal padding for mobile safety */
-  margin-top: auto;
-  border-top: 1px solid #eee;
-  box-sizing: border-box; /* Prevent padding from causing overflow */
+  padding: 30px 20px 40px; /* Increased bottom padding for mobile safety */
+  margin-top: 0; /* Remove auto margin if layout handles it, or keep auto for sticky */
+  margin-bottom: 0; 
+  border-top: none; 
+  position: relative;
+  z-index: 101; /* Ensure footer stays on top, above plant container */
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  box-sizing: border-box; 
+  background-color: var(--color-bg-light-green); /* Ensure background is solid */
+  color: var(--color-text); /* Ensure visible text inheritance */
+}
+
+@media (max-width: 768px) {
+  footer {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+}
+
+
+/* Organic Gradient Separator */
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    width: 70%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    opacity: 0.6;
 }
 
 .social-links {
-  display: flex; /* Robust centering for icons */
+  display: flex; 
   justify-content: center;
-  gap: 15px; /* Use gap instead of margin on children */
-  margin-bottom: 20px;
+  gap: 20px; /* Increased gap slightly */
+  margin-bottom: 15px; /* Brought closer to edge */
 }
 
 .social-links a {
   /* margin: 0 10px;  Removed in favor of gap */
   font-size: 1.2rem;
-  color: black;
+  color: var(--color-primary); /* Use brand green */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--color-secondary); /* Hover to red/burgundy */
 }
 
 .social-links a svg {
@@ -38,7 +68,7 @@ footer {
 footer p {
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  color: #999;
+  color: var(--color-tertiary); /* Muted green/sage */
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;

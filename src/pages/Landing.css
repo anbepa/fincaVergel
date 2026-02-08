@@ -16,7 +16,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0; /* Changed from -1 to 0 to prevent hiding behind global background */
 }
 
 .bg-slide {
@@ -40,6 +40,7 @@
  * Matches reference styling: Solid white, centered, padding.
  */
 .landing-content {
+  position: relative; /* Needed for z-index */
   text-align: center;
   z-index: 1;
   background: rgba(255, 255, 255, 0.92); /* Slight transparency */

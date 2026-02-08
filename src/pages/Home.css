@@ -1,8 +1,28 @@
 .home-container-plant {
     width: 100%;
     min-height: 100vh;
-    background-color: #fdfdfd;
+    background-color: var(--color-bg-light-green) !important;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    padding: 20px;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.home-container-plant > div {
+    background-color: transparent;
+}
+
+@media (max-width: 768px) {
+    .home-container-plant {
+        display: block; 
+        padding: 60px 0 20px 0; /* Clear Header, space for Footer */
+        overflow: visible; /* Don't clip anything, let it flow */
+        width: 100%;
+        max-width: 100%;
+        min-height: auto; 
+        height: auto;
+        margin-bottom: 0;
+    }
 }
