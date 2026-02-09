@@ -178,7 +178,7 @@ const InteractivePlant = ({ items }) => {
                   }} 
                   className="plant-cta-btn"
                 >
-                   Schedule a Visit
+                   Contáctanos
                 </button>  
             </div>
         </div>

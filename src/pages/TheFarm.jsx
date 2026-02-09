@@ -15,45 +15,60 @@ const TheFarm = () => {
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState(defaultContent);
   const [captions, setCaptions] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const { data } = await supabase
-      .from('content_pages')
-      .select('*')
-      .eq('slug', 'thefarm')
-      .single();
+    try {
+      const { data } = await supabase
+        .from('content_pages')
+        .select('*')
+        .eq('slug', 'thefarm')
+        .single();
 
-    if (data) {
-      if (data.title) setTitle(data.title);
-      
-      // Check for rich content (JSON with captions)
-      if (data.content) {
-          try {
-             if (data.content.trim().startsWith('{')) {
-                 const parsed = JSON.parse(data.content);
-                 if (parsed.isRichContent) {
-                     setContent(parsed.text);
-                     setCaptions(parsed.captions || {});
-                 } else {
-                     setContent(data.content);
-                 }
-             } else {
-                 setContent(data.content);
-             }
-          } catch(e) {
-              setContent(data.content);
-          }
-      }
+      if (data) {
+        if (data.title) setTitle(data.title);
+        
+        // Check for rich content (JSON with captions)
+        if (data.content) {
+            try {
+               if (data.content.trim().startsWith('{')) {
+                   const parsed = JSON.parse(data.content);
+                   if (parsed.isRichContent) {
+                       setContent(parsed.text);
+                       setCaptions(parsed.captions || {});
+                   } else {
+                       setContent(data.content);
+                   }
+               } else {
+                   setContent(data.content);
+               }
+            } catch(e) {
+                setContent(data.content);
+            }
+        }
 
-      if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-        setImages(data.images);
+        if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+          setImages(data.images);
+        }
       }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <ProjectLayout title="" images={[]} captions={{}}>
+        <div className="page-loading">Loading...</div>
+      </ProjectLayout>
+    );
+  }
 
   return (
     <ProjectLayout
