@@ -19,33 +19,33 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout noPad><Landing /></Layout>} />
+        {/* Landing IS the scrollable homepage — includes Navbar */}
+        <Route path="/" element={<Layout><Landing /></Layout>} />
         <Route path="/home" element={<Layout><Home /></Layout>} />
         <Route path="/aboutus" element={<Layout><AboutUs /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
-        
+
         {/* Public Pages managed by Admin */}
-        <Route path="/thefarm" element={<Layout><TheFarm /></Layout>} />
-        <Route path="/ourprocess" element={<Layout><OurProcess /></Layout>} />
-        <Route path="/gettoknowus" element={<Layout><GetToKnowUs /></Layout>} />
+        <Route path="/thefarm"       element={<Layout><TheFarm /></Layout>} />
+        <Route path="/ourprocess"    element={<Layout><OurProcess /></Layout>} />
+        <Route path="/gettoknowus"   element={<Layout><GetToKnowUs /></Layout>} />
         <Route path="/perfectcoffee" element={<Layout><PerfectCoffee /></Layout>} />
-        <Route path="/greenenergy" element={<Layout><GreenEnergy /></Layout>} />
-        <Route path="/our-staff" element={<Layout><OurStaff /></Layout>} />
+        <Route path="/greenenergy"   element={<Layout><GreenEnergy /></Layout>} />
+        <Route path="/our-staff"     element={<Layout><OurStaff /></Layout>} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<Layout><Login /></Layout>} />
-        <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/admin/edit/:slug" element={<Layout><EditPage /></Layout>} />
+        <Route path="/admin"              element={<Layout><Login /></Layout>} />
+        <Route path="/admin/dashboard"    element={<Layout><Dashboard /></Layout>} />
+        <Route path="/admin/edit/:slug"   element={<Layout><EditPage /></Layout>} />
       </Routes>
     </Router>
   );
 }
 
-// Simple Layout component to include Nav and Footer on inner pages
-const Layout = ({ children, noPad }) => (
+const Layout = ({ children }) => (
   <div className="layout">
     <Navbar />
-    <main style={noPad ? {} : { paddingTop: '70px' }}>{children}</main>
+    <main>{children}</main>
     <Footer />
   </div>
 );

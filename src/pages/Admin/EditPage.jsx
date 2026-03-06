@@ -33,6 +33,11 @@ const EditPage = () => {
      { title: "Our Goal", content: "" }
   ]);
 
+  // Get To Know Us  (3 pillars displayed as cards on the homepage)
+  const [gtkBusiness,   setGtkBusiness]   = useState('');
+  const [gtkCommitment, setGtkCommitment] = useState('');
+  const [gtkGoal,       setGtkGoal]       = useState('');
+
   // Contact
   const [contactIntro, setContactIntro] = useState("");
   const [contactVisit, setContactVisit] = useState("");
@@ -135,6 +140,33 @@ const EditPage = () => {
           } catch (e) {
               setContactIntro("If you have any questions about us...");
               setContactVisit("If you want to come visit our farm...");
+          }
+      }
+      else if (slug === 'gettoknowus') {
+          try {
+              if (rawContent.trim().startsWith('{')) {
+                  const parsed = JSON.parse(rawContent);
+                  if (parsed.business !== undefined) {
+                      // New {business, commitment, goal} format
+                      setGtkBusiness(parsed.business || '');
+                      setGtkCommitment(parsed.commitment || '');
+                      setGtkGoal(parsed.goal || '');
+                  } else if (parsed.isRichContent) {
+                      // Legacy isRichContent — migrate to business field
+                      setGtkBusiness(parsed.text || '');
+                      setGtkCommitment('');
+                      setGtkGoal('');
+                  }
+              } else {
+                  // Plain HTML from old seed
+                  setGtkBusiness(rawContent);
+                  setGtkCommitment('');
+                  setGtkGoal('');
+              }
+          } catch (e) {
+              setGtkBusiness('');
+              setGtkCommitment('');
+              setGtkGoal('');
           }
       }
       else if (slug === 'layout') {
@@ -243,6 +275,13 @@ const EditPage = () => {
         contentToSave = JSON.stringify({
             intro: contactIntro,
             visit: contactVisit
+        });
+    }
+    else if (slug === 'gettoknowus') {
+        contentToSave = JSON.stringify({
+            business:   gtkBusiness,
+            commitment: gtkCommitment,
+            goal:       gtkGoal,
         });
     }
     else if (slug === 'layout') {
@@ -421,7 +460,7 @@ const EditPage = () => {
                 <hr style={{margin:'20px 0', borderTop: '1px solid #ddd'}}/>
                 
                 <h3 style={{marginTop:0}}>Menu & Button Labels</h3>
-                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'15px'}}>
+                <div className="nav-labels-grid">
                     <div>
                         <label className="edit-label">Home Menu item</label>
                         <input type="text" value={navLabels.home} onChange={e => setNavLabels({...navLabels, home: e.target.value})} className="edit-input" />
@@ -533,6 +572,25 @@ const EditPage = () => {
                 </div>
              </div>
         )
+        /* GET TO KNOW US */
+        : slug === 'gettoknowus' ? (
+             <div className="edit-section">
+                <h3>Get To Know Us — 3 Pillars</h3>
+                <p className="edit-hint">These three texts appear as cards in the "Get to Know Us" section on the main page.</p>
+                <div className="mb-20">
+                    <label className="edit-label">Our Business</label>
+                    <textarea value={gtkBusiness} onChange={e => setGtkBusiness(e.target.value)} rows={4} className="edit-textarea" />
+                </div>
+                <div className="mb-20">
+                    <label className="edit-label">Our Commitment</label>
+                    <textarea value={gtkCommitment} onChange={e => setGtkCommitment(e.target.value)} rows={4} className="edit-textarea" />
+                </div>
+                <div className="mb-10">
+                    <label className="edit-label">Our Goal</label>
+                    <textarea value={gtkGoal} onChange={e => setGtkGoal(e.target.value)} rows={4} className="edit-textarea" />
+                </div>
+             </div>
+        )
         /* HOME Grid */
         : slug === 'home' ? (
               <div className="edit-section">
@@ -589,15 +647,15 @@ const EditPage = () => {
                     <button 
                     type="button" 
                     onClick={() => removeImage(idx)}
-                    style={{position: 'absolute', top: '5px', right: '5px', background: 'red', color: 'white', border: 'none', cursor: 'pointer', padding: '2px 5px'}}
+                    className="gallery-remove-btn"
                     >
-                    X
+                    ×
                     </button>
                 </div>
                 ))}
             </div>
 
-            <div style={{border: '1px dashed #ccc', padding: '20px', textAlign: 'center'}}>
+            <div className="upload-zone">
                 <label className="btn-upload" style={{cursor: 'pointer'}}>
                 {uploading ? 'Uploading...' : 'Upload New Image(s)'}
                 <input 

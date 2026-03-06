@@ -1,0 +1,169 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "FINCA VERGEL" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Home" [ref=e9] [cursor=pointer]
+        - listitem [ref=e10]:
+          - button "About Us" [ref=e11] [cursor=pointer]
+        - listitem [ref=e12]:
+          - button "Contact" [ref=e13] [cursor=pointer]
+        - listitem [ref=e14]:
+          - link "Admin" [ref=e15] [cursor=pointer]:
+            - /url: /admin
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: Specialty Coffee · Costa Rica
+          - heading "FINCA EL VERGEL" [level=1] [ref=e27]
+          - paragraph [ref=e28]: Grown at the foot of the Poás Volcano. Shade-grown, sun-dried, and crafted with purpose.
+          - generic [ref=e29]:
+            - button "Discover Our Farm" [ref=e30] [cursor=pointer]
+            - generic [ref=e31]:
+              - link "Facebook" [ref=e32] [cursor=pointer]:
+                - /url: https://facebook.com/fincavergel
+                - img [ref=e33]
+              - link "Instagram" [ref=e35] [cursor=pointer]:
+                - /url: https://instagram.com/fincavergel
+                - img [ref=e36]
+        - generic [ref=e39]: Scroll
+      - generic [ref=e42]:
+        - paragraph [ref=e43]: Our Mission
+        - heading "We journey to grow the finest specialty coffee in the highlands of Costa Rica — with purpose, passion, and deep respect for the land." [level=2] [ref=e44]:
+          - text: We journey to grow the finest specialty coffee
+          - text: in the highlands of Costa Rica — with purpose,
+          - text: passion, and deep respect for the land.
+      - generic [ref=e47]:
+        - paragraph [ref=e48]: 01 — The Farm
+        - heading "The Farm" [level=2] [ref=e49]
+        - generic [ref=e50]:
+          - paragraph [ref=e51]: "Hacienda Sonora is located in the Central Valley of Costa Rica, at the foot of the world renowned Poás Volcano. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level."
+          - paragraph [ref=e52]: Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.
+      - generic [ref=e55]:
+        - paragraph [ref=e56]: 02 — Our Process
+        - heading "Our Process" [level=2] [ref=e57]
+        - generic [ref=e58]:
+          - paragraph [ref=e59]: Right next to our 150-year-old sugar cane mill sits our micro coffee mill, the heart of our operation. Here, we oversee every step from harvested cherry to exportable parchment. We specialize in honey and natural processing methods — a conscious choice that saves over 3 gallons of water per pound of coffee compared to washed processing.
+          - paragraph [ref=e60]: The cherry pulp is composted and returned to the soil; drying energy comes directly from the farm. Every decision honors the land and elevates the cup.
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - paragraph [ref=e63]: 03 — Get to Know Us
+          - heading "Get to Know Us" [level=2] [ref=e64]
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]: "01"
+            - heading "Our Business" [level=3] [ref=e68]
+            - paragraph [ref=e69]: We grow 8 varietals of specialty-grade Arabica and export micro-lots of green coffee to roasters worldwide who share our commitment to quality and traceability.
+          - generic [ref=e70]:
+            - generic [ref=e71]: "02"
+            - heading "Our Commitment" [level=3] [ref=e72]
+            - paragraph [ref=e73]: Our commitment is to quality at every level — from soil health to staff well-being — always in harmony with the natural environment that makes our coffee unique.
+          - generic [ref=e74]:
+            - generic [ref=e75]: "03"
+            - heading "Our Goal" [level=3] [ref=e76]
+            - paragraph [ref=e77]: "Our goal is simple: to have fun, meet amazing people, and create a positive impact on the environment and our community — one exceptional cup at a time."
+      - generic [ref=e80]:
+        - paragraph [ref=e81]: 04 — Perfect Coffee
+        - heading "Perfect Coffee" [level=2] [ref=e82]
+        - generic [ref=e83]:
+          - paragraph [ref=e84]: Great coffee begins long before the roast. It starts with altitude, varietals, harvest timing, and the care taken at every processing stage. At Finca El Vergel we control all these variables — from planting under the shade of native trees to hand-selecting only ripe cherries at harvest.
+          - paragraph [ref=e85]: "The result: complex, clean, specialty-grade lots that express the unique terroir of Alajuela, Costa Rica."
+      - generic [ref=e88]:
+        - paragraph [ref=e89]: 05 — Green Energy
+        - heading "Green Energy" [level=2] [ref=e90]
+        - generic [ref=e91]:
+          - paragraph [ref=e92]: "Sustainability is not a marketing word for us — it is how we operate. The farm harnesses natural resources at every opportunity: compost from coffee pulp feeds the soil, gravity-fed water systems reduce pump energy, and we continually invest in reducing our carbon footprint."
+          - paragraph [ref=e93]: We believe the most delicious coffee is also the most responsible one.
+      - generic [ref=e97]:
+        - paragraph [ref=e98]: 06 — Our Staff
+        - heading "Our Staff" [level=2] [ref=e99]
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Our employees are one of the crucial aspects of our success. Through their energy, consistency and local insights we have been able to build and maintain Hacienda Sonora. Their well-being is essential for us and for the tranquility of the farm.
+          - paragraph [ref=e102]: One of the many things that make Hacienda Sonora so different from other farms is the fact that we provide free accommodation for each worker and their families at the farm's houses. We encourage our staff to become the best they can, and we are proud to often see them grow to greater opportunities in life.
+          - paragraph [ref=e103]: Pura vida!
+      - generic [ref=e106]:
+        - paragraph [ref=e107]: Our Story
+        - heading "Our Story" [level=2] [ref=e108]
+        - paragraph [ref=e109]: "Finca El Vergel is a family-owned coffee estate nestled in the highlands of Alajuela, Costa Rica. For generations we have cultivated specialty-grade Arabica under the shade of native trees, guided by a single belief: that great coffee is the fruit of great land, cared for with patience and respect."
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - paragraph [ref=e113]: Contact
+          - heading "Get in Touch" [level=2] [ref=e114]
+          - paragraph [ref=e115]: If you have questions about us, or are interested in our green coffee, please don't hesitate to reach out.
+          - paragraph [ref=e116]: If you want to visit the farm, let us know a little about yourself and what you'd like to see. We'll put together a package that suits you perfectly.
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]: Email
+              - link "rosanabernal26@gmail.com" [ref=e120] [cursor=pointer]:
+                - /url: mailto:rosanabernal26@gmail.com
+            - generic [ref=e121]:
+              - generic [ref=e122]: Location
+              - generic [ref=e123]: Alajuela, Costa Rica
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]: First Name *
+              - textbox [ref=e129]
+            - generic [ref=e130]:
+              - generic [ref=e131]: Last Name *
+              - textbox [ref=e132]
+          - generic [ref=e133]:
+            - generic [ref=e134]: Email Address *
+            - textbox [ref=e135]
+          - generic [ref=e136]:
+            - generic [ref=e137]: Subject *
+            - textbox [ref=e138]
+          - generic [ref=e139]:
+            - generic [ref=e140]: Message *
+            - textbox [ref=e141]
+          - button "Send Message" [ref=e142] [cursor=pointer]
+  - contentinfo [ref=e143]:
+    - generic [ref=e144]:
+      - generic [ref=e145]:
+        - link "FINCA VERGEL" [ref=e146] [cursor=pointer]:
+          - /url: /
+        - paragraph [ref=e147]: Specialty Coffee · Costa Rica
+        - generic [ref=e148]:
+          - link "Facebook" [ref=e149] [cursor=pointer]:
+            - /url: https://facebook.com/fincavergel
+            - img [ref=e150]
+          - link "Instagram" [ref=e152] [cursor=pointer]:
+            - /url: https://instagram.com/fincavergel
+            - img [ref=e153]
+      - generic [ref=e155]:
+        - heading "Explore" [level=4] [ref=e156]
+        - list [ref=e157]:
+          - listitem [ref=e158]:
+            - link "Home" [ref=e159] [cursor=pointer]:
+              - /url: /home
+          - listitem [ref=e160]:
+            - link "About Us" [ref=e161] [cursor=pointer]:
+              - /url: /aboutus
+          - listitem [ref=e162]:
+            - link "The Farm" [ref=e163] [cursor=pointer]:
+              - /url: /thefarm
+          - listitem [ref=e164]:
+            - link "Our Process" [ref=e165] [cursor=pointer]:
+              - /url: /ourprocess
+          - listitem [ref=e166]:
+            - link "Perfect Coffee" [ref=e167] [cursor=pointer]:
+              - /url: /perfectcoffee
+          - listitem [ref=e168]:
+            - link "Green Energy" [ref=e169] [cursor=pointer]:
+              - /url: /greenenergy
+      - generic [ref=e170]:
+        - heading "Connect" [level=4] [ref=e171]
+        - list [ref=e172]:
+          - listitem [ref=e173]:
+            - link "Contact" [ref=e174] [cursor=pointer]:
+              - /url: /contact
+          - listitem [ref=e175]:
+            - link "Get to Know Us" [ref=e176] [cursor=pointer]:
+              - /url: /gettoknowus
+          - listitem [ref=e177]:
+            - link "Our Staff" [ref=e178] [cursor=pointer]:
+              - /url: /our-staff
+    - paragraph [ref=e180]: Never settle for good enough. © 2026 Finca Vergel. All rights reserved.

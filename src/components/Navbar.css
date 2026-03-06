@@ -1,58 +1,117 @@
 /* Navbar Styles */
 .navbar {
   width: 100%;
-  background: var(--color-bg-light-green); /* Cream, not white */
-  position: relative;
+  position: fixed;
+  top: 0; left: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(175, 149, 73, 0.2); /* Faint gold border */
-  /* overflow-x: hidden; REMOVED: This clips the fixed menu when backdrop-filter creates a containing block */
+  transition: background .35s, border-color .35s, box-shadow .35s;
+}
+
+/* Transparent mode — over hero image */
+.navbar-transparent {
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0);
+}
+.navbar-transparent .navbar-brand,
+.navbar-transparent .nav-links li a,
+.navbar-transparent .nav-anchor {
+  color: rgba(255,255,255,0.88);
+}
+.navbar-transparent .hamburger span { background: #fff; }
+
+/* Solid mode — scrolled */
+.navbar-solid {
+  background: rgba(247,243,238,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(175,149,73,0.18);
+  box-shadow: 0 1px 16px rgba(0,0,0,0.06);
+}
+.navbar-solid .navbar-brand,
+.navbar-solid .nav-links li a,
+.navbar-solid .nav-anchor { color: #1a1a14; }
+.navbar-solid .hamburger span { background: #1a1a14; }
+
+/* Legacy class (kept for compatibility) */
+.navbar.navbar-home {
+  background: rgba(250, 248, 244, 0.95);
+  backdrop-filter: blur(8px);
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  border-bottom: 1px solid rgba(175, 149, 73, 0.1);
 }
 
 .navbar-container {
   width: 100%;
-  max-width: 100%; /* Allow full width */
+  max-width: 100%;
   margin: 0 auto;
-  padding: 30px 50px; /* Adjust padding to match visual reference */
+  padding: 22px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.brand {
+/* Brand / Logo */
+.navbar-brand {
   font-family: var(--font-condensed);
-  font-size: 3rem; 
+  font-size: 1.55rem;
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--color-primary); /* Deep Olive Green */
+  letter-spacing: 2px;
+  color: #fff;
   text-decoration: none;
   z-index: 1001;
-  line-height: 0.9;
-  white-space: nowrap; 
+  line-height: 1;
+  white-space: nowrap;
+  transition: color .25s;
+}
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
+/* Nav links list */
 .nav-links {
   display: flex;
-  gap: 30px; 
+  gap: 36px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* Regular <a> links */
 .nav-links li a {
   font-family: var(--font-sans);
   text-transform: uppercase;
-  font-size: 0.75rem; 
-  letter-spacing: 2px;
-  color: var(--color-tertiary); /* Muted Sage */
-  transition: color 0.3s;
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.88);
+  transition: color 0.25s, opacity 0.25s;
   text-decoration: none;
-  font-weight: 600; /* Slightly bolder for color visibility */
+  font-weight: 600;
 }
+.nav-links li a:hover { color: #fff; opacity: 1; }
 
-.nav-links li a:hover {
-  color: var(--color-secondary); /* Coffee Cherry Red Accent */
+/* Anchor-scroll buttons (same visual as <a>) */
+.nav-anchor {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  transition: color 0.25s;
 }
+.nav-anchor:hover { color: #fff; }
+
+/* Admin link accent */
+.admin-link { opacity: 0.55; }
+.admin-link:hover { opacity: 1 !important; }
 
 /* Mobile Hamburger */
 .mobile-menu-btn {
@@ -90,7 +149,7 @@
 
 @media (max-width: 768px) {
   .navbar-container {
-    padding: 15px 20px; 
+    padding: 16px 20px;
   }
 
   .mobile-menu-btn {
@@ -99,62 +158,40 @@
 
   .nav-links {
     position: fixed;
-    top: 0;
-    right: 0; /* Align to right edge, but move with transform */
+    top: 0; right: 0;
     width: 100%;
     height: 100vh;
-    background-color: var(--color-bg-light-green);
+    background-color: var(--color-bg-dark);
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 30px;
-    transform: translateX(100%); /* Move off-screen without affecting layout width */
+    transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1), visibility 0.4s;
     z-index: 1000;
-    visibility: hidden; /* Hide when not active to prevent focus/scroll interaction */
+    visibility: hidden;
   }
-
   .nav-links.active {
-    transform: translateX(0); /* Slide in */
+    transform: translateX(0);
     visibility: visible;
   }
-
-  .nav-links li a {
-    font-size: 1.5rem; 
-    color: var(--color-primary); /* Stronger green in mobile menu */
+  .nav-links li a,
+  .nav-anchor {
+    font-size: 1.3rem !important;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.85) !important;
   }
-/* ... existing code ... */
-  .brand {
-    font-size: 1.4rem; 
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    max-width: 80%; 
-    text-align: center;
-    white-space: nowrap; 
+  .navbar-brand {
+    font-size: 1.2rem;
+    position: relative;
   }
 }
 
 /* Home Page Transparent/Reduced Header Override */
 .navbar.navbar-home {
-  background: rgba(250, 248, 244, 0.95); /* Cream, semi-transparent */
-  backdrop-filter: blur(8px);            /* Blur effect */
-  position: absolute;                    /* Overlay */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;                          /* Reduced Height */
+  background: rgba(250, 248, 244, 0.95);
+  backdrop-filter: blur(8px);
+  position: fixed;
+  top: 0; left: 0; width: 100%;
   border-bottom: 1px solid rgba(175, 149, 73, 0.1);
-}
-
-.navbar.navbar-home .brand {
-  font-size: 1.2rem;     /* Smaller Logo */
-  color: var(--color-primary);        /* Dark green for contrast on white */
-}
-
-.navbar-home .nav-links li a {
-    font-size: 0.9rem;   /* Smaller links */
-    color: var(--color-primary);
-    font-weight: 500;
 }
