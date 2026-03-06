@@ -7,6 +7,7 @@ const Footer = () => {
   const [footerText, setFooterText] = useState('Specialty Coffee · Costa Rica');
   const [footerLogo, setFooterLogo] = useState(null);
   const [brandName, setBrandName]   = useState('FINCA VERGEL');
+  const [footerCopyright, setFooterCopyright] = useState('Never settle for good enough.');
   const [links, setLinks] = useState({
     facebook:  '',
     instagram: '',
@@ -23,6 +24,7 @@ const Footer = () => {
           if (p.headerTitle) setBrandName(p.headerTitle);
           if (p.footerLogo)  setFooterLogo(p.footerLogo);
           else if (data.images?.[1]) setFooterLogo(data.images[1]);
+          if (p.footerCopyright) setFooterCopyright(p.footerCopyright);
           setLinks({
             facebook:  p.facebook  || '',
             instagram: p.instagram || '',
@@ -80,7 +82,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p className="footer-copy">Never settle for good enough. &copy; {new Date().getFullYear()} Finca Vergel. All rights reserved.</p>
+        <p className="footer-copy">{footerCopyright} &copy; {new Date().getFullYear()} Finca Vergel. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -34,19 +34,29 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.*
 .env.test
 .env.production
 .env.local
 
 # Vite
-dist
-dist-ssr
+dist/
+dist-ssr/
 *.local
 
 # macOS
 .DS_Store
+Thumbs.db
 
 # Playwright artifacts
 .playwright-mcp/
+
+# SQL / Database credentials & seeds
+*.sql
+
+# Dev scratch files
+check_overflow.js
+desktop-layout-check.md
+index copy.html
 
 

@@ -21,10 +21,47 @@ function useReveal() {
   }, []);
 }
 
+/* ── Parallax hook for split images ── */
+function useParallax() {
+  useEffect(() => {
+    if (window.matchMedia('(hover: none)').matches) return; // skip on mobile
+    const images = document.querySelectorAll('.lp-split-image');
+    const onScroll = () => {
+      images.forEach(img => {
+        const rect = img.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const offset = (center - window.innerHeight / 2) * 0.06;
+        img.style.transform = `scale(1) translateY(${offset}px)`;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+}
+
 /* ── Smooth anchor scroll ── */
 function scrollTo(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ── Magnetic button hook (desktop only) ── */
+function useMagnetic(ref) {
+  useEffect(() => {
+    if (window.matchMedia('(hover: none)').matches) return;
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
+      const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
+      el.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    const onLeave = () => { el.style.transform = ''; };
+    el.addEventListener('mousemove', onMove, { passive: true });
+    el.addEventListener('mouseleave', onLeave);
+    return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
+  }, [ref]);
 }
 
 /* ── Default images ── */
@@ -42,6 +79,7 @@ const defaults = {
     subtitle: 'Specialty Coffee · Costa Rica',
     title:    'FINCA EL VERGEL',
     desc:     'Grown at the foot of the Poás Volcano. Shade-grown, sun-dried, and crafted with purpose.',
+    manifesto: 'We journey to grow the finest specialty coffee\nin the highlands of Costa Rica — with purpose,\npassion, and deep respect for the land.',
   },
   thefarm: {
     title:   'The Farm',
@@ -99,6 +137,41 @@ function parseContent(raw) {
 }
 
 /* ════════════════════════════════════════════
+   SPECIAL EFFECT COMPONENTS
+   ════════════════════════════════════════════ */
+
+/* Infinite scrolling marquee */
+function Marquee({ text = 'SPECIALTY COFFEE · COSTA RICA · FINCA EL VERGEL · SHADE GROWN · SUN DRIED ·' }) {
+  return (
+    <div className="marquee-wrap" aria-hidden="true">
+      <div className="marquee-track">
+        {[...Array(4)].map((_, i) => (
+          <span key={i} className="marquee-item">{text}&nbsp;</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Staggered hero title — each letter animates in */
+function SplitTitle({ text, className }) {
+  const letters = text.split('');
+  return (
+    <h1 className={className}>
+      {letters.map((char, i) => (
+        <span
+          key={i}
+          className="split-char"
+          style={{ animationDelay: `${0.6 + i * 0.04}s` }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </h1>
+  );
+}
+
+/* ════════════════════════════════════════════
    INLINE SECTION COMPONENTS
    ════════════════════════════════════════════ */
 
@@ -146,9 +219,11 @@ function SectionProcess({ data }) {
 
 function SectionGetToKnow({ data }) {
   const parsed = data ? parseContent(data.content) : null;
-  const biz  = (typeof parsed === 'object' && parsed?.business)   || defaults.gettoknowus.business;
-  const com  = (typeof parsed === 'object' && parsed?.commitment) || defaults.gettoknowus.commitment;
-  const goal = (typeof parsed === 'object' && parsed?.goal)       || defaults.gettoknowus.goal;
+  const isObj  = typeof parsed === 'object' && parsed !== null;
+  // Use DB value if the key EXISTS (even if empty string); only fall to default when key is absent
+  const biz  = (isObj && 'business'   in parsed && parsed.business   !== '') ? parsed.business   : defaults.gettoknowus.business;
+  const com  = (isObj && 'commitment' in parsed && parsed.commitment !== '') ? parsed.commitment : defaults.gettoknowus.commitment;
+  const goal = (isObj && 'goal'       in parsed && parsed.goal       !== '') ? parsed.goal       : defaults.gettoknowus.goal;
   const title = data?.title || defaults.gettoknowus.title;
   return (
     <section id="get-to-know-us" className="lp-tricard">
@@ -265,11 +340,15 @@ function SectionContact({ data }) {
   const [submitted, setSubmitted] = useState(false);
   let introText = "If you have questions about us, or are interested in our green coffee, please don't hesitate to reach out.";
   let visitText = "If you want to visit the farm, let us know a little about yourself and what you'd like to see. We'll put together a package that suits you perfectly.";
+  let contactEmail = "rosanabernal26@gmail.com";
+  let contactLocation = "Alajuela, Costa Rica";
   if (data?.content) {
     try {
       const p = JSON.parse(data.content);
       if (p.intro) introText = p.intro;
       if (p.visit) visitText = p.visit;
+      if (p.email) contactEmail = p.email;
+      if (p.location) contactLocation = p.location;
     } catch {}
   }
 
@@ -279,7 +358,7 @@ function SectionContact({ data }) {
     const fd = Object.fromEntries(new FormData(form).entries());
     const fullName = `${fd.firstName || ''} ${fd.lastName || ''}`.trim();
     try {
-      const res = await fetch('https://formsubmit.co/ajax/rosanabernal26@gmail.com', {
+      const res = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -305,13 +384,13 @@ function SectionContact({ data }) {
           <div className="lp-contact-details">
             <div className="lp-contact-detail">
               <span className="lp-contact-label">Email</span>
-              <a href="mailto:rosanabernal26@gmail.com" className="lp-contact-value">
-                rosanabernal26@gmail.com
+              <a href={`mailto:${contactEmail}`} className="lp-contact-value">
+                {contactEmail}
               </a>
             </div>
             <div className="lp-contact-detail">
               <span className="lp-contact-label">Location</span>
-              <span className="lp-contact-value">Alajuela, Costa Rica</span>
+              <span className="lp-contact-value">{contactLocation}</span>
             </div>
           </div>
         </div>
@@ -367,6 +446,7 @@ const Landing = () => {
   const [btnLabel,     setBtnLabel]     = useState('Discover Our Farm');
 
   const [heroData,        setHeroData]        = useState(defaults.hero);
+  const heroBtnRef = useRef(null);
   const [farmData,        setFarmData]        = useState(null);
   const [processData,     setProcessData]     = useState(null);
   const [getToKnowData,   setGetToKnowData]   = useState(null);
@@ -377,6 +457,8 @@ const Landing = () => {
   const [contactData,     setContactData]     = useState(null);
 
   useReveal();
+  useParallax();
+  useMagnetic(heroBtnRef);
 
   /* Fetch all data once */
   useEffect(() => {
@@ -396,14 +478,15 @@ const Landing = () => {
 
       /* Hero */
       if (ld) {
-        let { subtitle, title, desc } = defaults.hero;
+        let { subtitle, title, desc, manifesto } = defaults.hero;
         if (ld.content) {
           const parts = ld.content.split('|');
           if (parts[0]) subtitle = parts[0];
           if (parts[1]) title    = parts[1];
           if (parts[2]) desc     = parts[2];
+          if (parts[3]) manifesto = parts[3];
         }
-        setHeroData({ images: ld.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc });
+        setHeroData({ images: ld.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc, manifesto });
       }
 
       if (fd)  setFarmData(fd);
@@ -448,10 +531,10 @@ const Landing = () => {
         <div className="lp-hero-overlay" />
         <div className="lp-hero-content">
           <p className="lp-eyebrow reveal">{heroData.subtitle}</p>
-          <h1 className="lp-hero-title reveal reveal-delay-1">{heroData.title}</h1>
+          <SplitTitle text={heroData.title} className="lp-hero-title" />
           <p className="lp-hero-desc reveal reveal-delay-2">{heroData.desc}</p>
           <div className="lp-hero-actions reveal reveal-delay-3">
-            <button className="btn-light" onClick={() => scrollTo('farm')}>{btnLabel}</button>
+            <button ref={heroBtnRef} className="btn-light magnetic-btn" onClick={() => scrollTo('farm')}>{btnLabel}</button>
             <div className="lp-socials">
               {socialLinks.facebook && (
                 <a href={socialLinks.facebook} target="_blank" rel="noreferrer" className="lp-social-icon" aria-label="Facebook">
@@ -472,14 +555,15 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* ═══ MARQUEE ═══ */}
+      <Marquee />
+
       {/* ═══ MANIFESTO ═══ */}
       <section className="lp-manifesto">
         <div className="lp-manifesto-inner reveal">
           <p className="lp-manifesto-eyebrow">Our Mission</p>
-          <h2 className="lp-manifesto-text">
-            We journey to grow the finest specialty coffee<br />
-            in the highlands of Costa Rica — with purpose,<br />
-            passion, and deep respect for the land.
+          <h2 className="lp-manifesto-text" style={{ whiteSpace: 'pre-line' }}>
+            {heroData.manifesto || defaults.hero.manifesto}
           </h2>
         </div>
       </section>

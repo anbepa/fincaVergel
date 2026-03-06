@@ -64,6 +64,11 @@
   max-width: var(--max-width);
   margin: 0 auto;
   border-bottom: 1px solid var(--color-border);
+  animation: fadeSlideUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .project-title {
@@ -81,6 +86,7 @@
 .project-body {
   padding-top: 56px;
   padding-bottom: 80px;
+  animation: fadeSlideUp 0.8s 0.15s cubic-bezier(0.22,1,0.36,1) both;
 }
 
 .project-split {
@@ -191,7 +197,8 @@
 /* legacy class kept for any stragglers */
 .layout-gallery-wrapper { width: 100%; }
 
-  position: relative; /* Context for absolute positioning of nav buttons */
+.project-split-layout {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -199,7 +206,7 @@
   max-width: 1400px;
   margin: 0 auto;
   min-height: 100vh;
-  overflow-x: hidden; /* Prevent horizontal scroll on this specific layout */
+  overflow-x: hidden;
 }
 
 @media (min-width: 900px) {

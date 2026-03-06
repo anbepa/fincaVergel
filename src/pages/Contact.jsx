@@ -8,6 +8,8 @@ const Contact = () => {
   const [pageTitle,  setPageTitle]  = useState('Get in Touch');
   const [introText,  setIntroText]  = useState("If you have any questions about us, or if you are interested in obtaining our green coffee, please don't hesitate to reach out.");
   const [visitText,  setVisitText]  = useState("If you want to come visit our farm please let us know a little about yourself and what you are interested in seeing or learning. We'll put together a package that suits you perfectly.");
+  const [contactEmail, setContactEmail] = useState("rosanabernal26@gmail.com");
+  const [contactLocation, setContactLocation] = useState("Alajuela, Costa Rica");
 
   useEffect(() => {
     (async () => {
@@ -21,6 +23,8 @@ const Contact = () => {
             const p = JSON.parse(data.content);
             if (p.intro) setIntroText(p.intro);
             if (p.visit) setVisitText(p.visit);
+            if (p.email) setContactEmail(p.email);
+            if (p.location) setContactLocation(p.location);
           } catch {}
         }
       }
@@ -33,7 +37,7 @@ const Contact = () => {
     const fd   = Object.fromEntries(new FormData(form).entries());
     const fullName = `${fd.firstName || ''} ${fd.lastName || ''}`.trim();
     try {
-      const res = await fetch('https://formsubmit.co/ajax/rosanabernal26@gmail.com', {
+      const res = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -66,11 +70,11 @@ const Contact = () => {
             <div className="contact-details">
               <div className="contact-detail-item">
                 <span className="contact-detail-label">Email</span>
-                <a href="mailto:rosanabernal26@gmail.com" className="contact-detail-value">rosanabernal26@gmail.com</a>
+                <a href={`mailto:${contactEmail}`} className="contact-detail-value">{contactEmail}</a>
               </div>
               <div className="contact-detail-item">
                 <span className="contact-detail-label">Location</span>
-                <span className="contact-detail-value">Alajuela, Costa Rica</span>
+                <span className="contact-detail-value">{contactLocation}</span>
               </div>
             </div>
           </div>

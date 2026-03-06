@@ -52,6 +52,17 @@ const EditPage = () => {
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerLogo, setHeaderLogo] = useState("");
   const [footerLogo, setFooterLogo] = useState("");
+  const [footerCopyright, setFooterCopyright] = useState("Never settle for good enough.");
+
+  // Contact details
+  const [contactEmail, setContactEmail] = useState("rosanabernal26@gmail.com");
+  const [contactLocation, setContactLocation] = useState("Alajuela, Costa Rica");
+
+  // Landing manifesto
+  const [landingManifesto, setLandingManifesto] = useState("");
+
+  // Home card descriptions
+  const [homeDescriptions, setHomeDescriptions] = useState(["", "", "", "", "", ""]);
   
   // Custom Navigation Labels
   const [navLabels, setNavLabels] = useState({
@@ -98,17 +109,26 @@ const EditPage = () => {
         setLandingSub(parts[0] || "");
         setLandingTitle(parts[1] || "");
         setLandingDesc(parts[2] || "");
+        setLandingManifesto(parts[3] || "");
       }
       else if (slug === 'home') {
         try {
-          const titles = JSON.parse(rawContent);
-          if (Array.isArray(titles) && titles.length === 6) {
-            setHomeTitles(titles);
+          const parsed = JSON.parse(rawContent);
+          if (Array.isArray(parsed) && parsed.length === 6) {
+            // Legacy format: plain array of titles
+            setHomeTitles(parsed);
+            setHomeDescriptions(["", "", "", "", "", ""]);
+          } else if (parsed.titles) {
+            // New format: {titles, descriptions}
+            setHomeTitles(parsed.titles || ["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+            setHomeDescriptions(parsed.descriptions || ["", "", "", "", "", ""]);
           } else {
-             setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+            setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+            setHomeDescriptions(["", "", "", "", "", ""]);
           }
         } catch (e) {
-             setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+          setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+          setHomeDescriptions(["", "", "", "", "", ""]);
         }
       }
       else if (slug === 'aboutus') {
@@ -137,6 +157,8 @@ const EditPage = () => {
               const parsed = JSON.parse(rawContent);
               setContactIntro(parsed.intro || "");
               setContactVisit(parsed.visit || "");
+              setContactEmail(parsed.email || "rosanabernal26@gmail.com");
+              setContactLocation(parsed.location || "Alajuela, Costa Rica");
           } catch (e) {
               setContactIntro("If you have any questions about us...");
               setContactVisit("If you want to come visit our farm...");
@@ -147,7 +169,7 @@ const EditPage = () => {
               if (rawContent.trim().startsWith('{')) {
                   const parsed = JSON.parse(rawContent);
                   if (parsed.business !== undefined) {
-                      // New {business, commitment, goal} format
+                      // Correct new format: {business, commitment, goal}
                       setGtkBusiness(parsed.business || '');
                       setGtkCommitment(parsed.commitment || '');
                       setGtkGoal(parsed.goal || '');
@@ -157,8 +179,23 @@ const EditPage = () => {
                       setGtkCommitment('');
                       setGtkGoal('');
                   }
+              } else if (rawContent.trim().startsWith('<')) {
+                  // OLD plain-HTML seed format — extract paragraphs via DOMParser
+                  try {
+                      const doc = new DOMParser().parseFromString(rawContent, 'text/html');
+                      const paras = Array.from(doc.querySelectorAll('p'))
+                          .map(p => p.textContent.trim())
+                          .filter(Boolean);
+                      setGtkBusiness(paras[0] || '');
+                      setGtkCommitment(paras[1] || '');
+                      setGtkGoal(paras[2] || '');
+                  } catch {
+                      setGtkBusiness(rawContent);
+                      setGtkCommitment('');
+                      setGtkGoal('');
+                  }
               } else {
-                  // Plain HTML from old seed
+                  // Plain text fallback
                   setGtkBusiness(rawContent);
                   setGtkCommitment('');
                   setGtkGoal('');
@@ -177,6 +214,7 @@ const EditPage = () => {
                 setFacebookUrl(parsed.facebook || "");
                 setInstagramUrl(parsed.instagram || "");
                 setHeaderTitle(parsed.headerTitle || "sonora coffee");
+                setFooterCopyright(parsed.footerCopyright || "Never settle for good enough.");
                 
                 if (parsed.navLabels) {
                     setNavLabels({
@@ -261,10 +299,10 @@ const EditPage = () => {
 
     // Compose content based on slug
     if (slug === 'landing') {
-        contentToSave = `${landingSub}|${landingTitle}|${landingDesc}`;
+        contentToSave = `${landingSub}|${landingTitle}|${landingDesc}|${landingManifesto}`;
     }
     else if (slug === 'home') {
-        contentToSave = JSON.stringify(homeTitles);
+        contentToSave = JSON.stringify({ titles: homeTitles, descriptions: homeDescriptions });
     }
     else if (slug === 'aboutus') {
         contentToSave = JSON.stringify({
@@ -274,7 +312,9 @@ const EditPage = () => {
     else if (slug === 'contact') {
         contentToSave = JSON.stringify({
             intro: contactIntro,
-            visit: contactVisit
+            visit: contactVisit,
+            email: contactEmail,
+            location: contactLocation
         });
     }
     else if (slug === 'gettoknowus') {
@@ -292,6 +332,7 @@ const EditPage = () => {
             headerTitle: headerTitle,
             headerLogo: headerLogo,
             footerLogo: footerLogo,
+            footerCopyright: footerCopyright,
             navLabels: navLabels
         });
         // Clear generic images array for layout to enforce JSON source of truth
@@ -434,6 +475,11 @@ const EditPage = () => {
                     <label className="edit-label">Description (Bottom)</label>
                     <textarea value={landingDesc} onChange={e => setLandingDesc(e.target.value)} rows={3} className="edit-textarea" />
                 </div>
+                <div className="mb-10">
+                    <label className="edit-label">Manifesto / Mission Statement</label>
+                    <textarea value={landingManifesto} onChange={e => setLandingManifesto(e.target.value)} rows={4} className="edit-textarea" placeholder="We journey to grow the finest specialty coffee..." />
+                    <small style={{color:'#888', fontSize:'0.75rem'}}>Use line breaks for multi-line display. Leave blank to show the default text.</small>
+                </div>
              </div>
         ) 
         /* LAYOUT */
@@ -445,8 +491,13 @@ const EditPage = () => {
                     <input type="text" value={headerTitle} onChange={e => setHeaderTitle(e.target.value)} className="edit-input" placeholder="sonora coffee" />
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Footer Text</label>
+                    <label className="edit-label">Footer Text (Tagline)</label>
                     <input type="text" value={footerText} onChange={e => setFooterText(e.target.value)} className="edit-input" />
+                </div>
+                 <div className="mb-10">
+                    <label className="edit-label">Footer Copyright Text</label>
+                    <input type="text" value={footerCopyright} onChange={e => setFooterCopyright(e.target.value)} className="edit-input" placeholder="Never settle for good enough." />
+                    <small style={{color:'#888', fontSize:'0.75rem'}}>Shown before © {new Date().getFullYear()} Finca Vergel. All rights reserved.</small>
                 </div>
                  <div className="mb-10">
                     <label className="edit-label">Facebook URL</label>
@@ -570,6 +621,15 @@ const EditPage = () => {
                     <label className="edit-label">Visit Text (Farm Visits)</label>
                     <textarea value={contactVisit} onChange={e => setContactVisit(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
+                <hr style={{margin:'16px 0', border:'none', borderTop:'1px solid #eee'}}/>
+                <div className="mb-10">
+                    <label className="edit-label">Contact Email</label>
+                    <input type="text" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="edit-input" placeholder="info@example.com" />
+                </div>
+                <div className="mb-10">
+                    <label className="edit-label">Location</label>
+                    <input type="text" value={contactLocation} onChange={e => setContactLocation(e.target.value)} className="edit-input" placeholder="City, Country" />
+                </div>
              </div>
         )
         /* GET TO KNOW US */
@@ -594,22 +654,29 @@ const EditPage = () => {
         /* HOME Grid */
         : slug === 'home' ? (
               <div className="edit-section">
-                 <h3 style={{marginTop:0}}>Grid Menu Titles</h3>
-                 <p className="mb-10">Enter the titles for the 6 menu items.</p>
-                 <div className="home-titles-grid">
-                    {homeTitles.map((t, idx) => (
-                        <div key={idx}>
-                             <label style={{fontSize:'0.8rem'}}>Item {idx+1}</label>
-                             <input type="text" value={t} onChange={(e) => {
-                                    const newTitles = [...homeTitles];
-                                    newTitles[idx] = e.target.value;
-                                    setHomeTitles(newTitles);
-                                }} 
-                                className="edit-input"
-                             />
-                        </div>
-                    ))}
-                 </div>
+                 <h3 style={{marginTop:0}}>Grid Menu Items</h3>
+                 <p className="edit-hint">Edit the title and description for each of the 6 menu cards.</p>
+                 {homeTitles.map((t, idx) => (
+                    <div key={idx} style={{backgroundColor:'#f9f9f9', padding:'12px', borderRadius:'4px', marginBottom:'12px'}}>
+                        <label className="edit-label">Item {idx+1} — Title</label>
+                        <input type="text" value={t} onChange={(e) => {
+                                const newTitles = [...homeTitles];
+                                newTitles[idx] = e.target.value;
+                                setHomeTitles(newTitles);
+                            }}
+                            className="edit-input"
+                            style={{marginBottom:'8px'}}
+                        />
+                        <label className="edit-label">Item {idx+1} — Description</label>
+                        <input type="text" value={homeDescriptions[idx] || ""} onChange={(e) => {
+                                const newDescs = [...homeDescriptions];
+                                newDescs[idx] = e.target.value;
+                                setHomeDescriptions(newDescs);
+                            }}
+                            className="edit-input"
+                        />
+                    </div>
+                 ))}
               </div>
         ) 
         /* GENERIC CONTENT */

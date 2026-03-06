@@ -21,6 +21,12 @@
   color: var(--color-bg-dark);
   line-height: 0.9;
   margin: 0.4rem 0 0;
+  animation: clipReveal 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+  overflow: hidden;
+}
+@keyframes clipReveal {
+  from { clip-path: inset(0 100% 0 0); opacity: 0; }
+  to   { clip-path: inset(0 0 0 0);     opacity: 1; }
 }
 
 /* ── Navigation grid ──────────────────────────────────────── */
@@ -30,6 +36,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-left: 1px solid var(--color-border);
+  perspective: 1200px;
 }
 
 .home-card {
@@ -41,13 +48,49 @@
   border-bottom: 1px solid var(--color-border);
   text-decoration: none;
   color: var(--color-bg-dark);
-  transition: background 0.28s ease, color 0.28s ease;
+  transition: background 0.35s ease, color 0.35s ease, transform 0.35s ease;
   min-height: 280px;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+  transform-style: preserve-3d;
 }
+/* Scroll reveal for cards */
+.home-card.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(.22,1,.36,1),
+              transform 0.7s cubic-bezier(.22,1,.36,1),
+              background 0.35s ease, color 0.35s ease;
+}
+.home-card.reveal.visible { opacity: 1; transform: translateY(0); }
+.home-card.reveal.visible:nth-child(2) { transition-delay: 0.1s; }
+.home-card.reveal.visible:nth-child(3) { transition-delay: 0.18s; }
+.home-card.reveal.visible:nth-child(4) { transition-delay: 0.24s; }
+.home-card.reveal.visible:nth-child(5) { transition-delay: 0.30s; }
+.home-card.reveal.visible:nth-child(6) { transition-delay: 0.36s; }
+
+/* Gold accent line at bottom on hover */
+.home-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+}
+.home-card:hover::after { transform: scaleX(1); }
 
 .home-card:hover {
   background: var(--color-bg-dark);
   color: var(--color-bg);
+}
+/* Touch active feedback */
+@media (hover: none) {
+  .home-card:active { transform: scale(0.98); }
+  .home-card::after { transform: scaleX(1); } /* Always show on touch */
 }
 
 .home-card-num {
@@ -110,42 +153,30 @@
   }
 }
 
+@media (max-width: 768px) {
+  .home-grid {
+    perspective: none; /* Disable 3D on mobile — perf */
+  }
+  .home-card {
+    will-change: auto; /* Free GPU memory */
+    transform-style: flat;
+  }
+}
+
 @media (max-width: 600px) {
   .home-grid {
     grid-template-columns: 1fr;
   }
   .home-hero {
     padding: 60px 1.25rem 36px;
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
   }
   .home-card {
     padding: 2rem 1.25rem;
     min-height: 200px;
   }
-}
-
-    min-height: 100vh;
-    background-color: var(--color-bg-light-green) !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    padding-top: 10px;
-    box-sizing: border-box;
-}
-
-.home-container-plant > div {
-    background-color: transparent;
-}
-
-@media (max-width: 768px) {
-    .home-container-plant {
-        display: block; 
-        padding: 60px 0 20px 0; /* Clear Header, space for Footer */
-        overflow: visible; /* Don't clip anything, let it flow */
-        width: 100%;
-        max-width: 100%;
-        min-height: auto; 
-        height: auto;
-        margin-bottom: 0;
-    }
+  .home-headline {
+    font-size: clamp(2.6rem, 12vw, 5rem);
+  }
 }

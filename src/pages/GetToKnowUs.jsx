@@ -40,6 +40,14 @@ const GetToKnowUs = () => {
                    if (parsed.isRichContent) {
                        setContent(parsed.text);
                        setCaptions(parsed.captions || {});
+                   } else if (parsed.business !== undefined) {
+                       // Format saved by admin: {business, commitment, goal}
+                       const html = [
+                         parsed.business   ? `<p><strong>Our Business</strong><br/>${parsed.business}</p>`   : '',
+                         parsed.commitment ? `<p><strong>Our Commitment</strong><br/>${parsed.commitment}</p>` : '',
+                         parsed.goal       ? `<p><strong>Our Goal</strong><br/>${parsed.goal}</p>`             : '',
+                       ].join('');
+                       setContent(html || defaultContent);
                    } else {
                        setContent(data.content);
                    }

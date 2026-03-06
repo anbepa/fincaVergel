@@ -116,3 +116,54 @@ a:hover { opacity: 0.7; }
 .dynamic-content a { color: var(--color-accent); text-decoration: underline; }
 
 @media (max-width: 768px) { .layout { overflow-x: hidden; } }
+
+/* ══════════════════════ VISUAL ENHANCEMENTS ══════════════════════ */
+
+/* Branded selection */
+::selection { background: var(--color-accent); color: #fff; }
+::-moz-selection { background: var(--color-accent); color: #fff; }
+
+/* Page entry animation */
+main { animation: pageIn .45s ease-out both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Premium cursor handled by GlobalEffects.jsx */
+
+/* Touch improvements */
+html {
+  -webkit-tap-highlight-color: transparent;
+  /* Support safe-area-inset for notch devices */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+}
+
+/* Prevent iOS auto-zoom on input focus (must be ≥16px) */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* Minimum touch targets */
+button, a, .nav-anchor, .pager-btn, input[type="submit"] {
+  min-height: 44px;
+}
+.btn-primary, .btn-light {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Reduced motion — accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  main { animation: none; }
+}

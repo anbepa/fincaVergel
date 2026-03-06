@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import './Home.css';
@@ -14,6 +14,47 @@ const defaultItems = [
 
 const Home = () => {
   const [items, setItems] = useState(defaultItems);
+  const gridRef = useRef(null);
+
+  /* Scroll-reveal for cards */
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }),
+      { threshold: 0.15 }
+    );
+    grid.querySelectorAll('.home-card.reveal').forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [items]);
+
+  /* 3D tilt effect on desktop */
+  useEffect(() => {
+    if (window.matchMedia('(hover: none)').matches) return;
+    const grid = gridRef.current;
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.home-card');
+    const handleMove = (e) => {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.02)`;
+    };
+    const handleLeave = (e) => {
+      e.currentTarget.style.transform = '';
+    };
+    cards.forEach(c => {
+      c.addEventListener('mousemove', handleMove, { passive: true });
+      c.addEventListener('mouseleave', handleLeave);
+    });
+    return () => {
+      cards.forEach(c => {
+        c.removeEventListener('mousemove', handleMove);
+        c.removeEventListener('mouseleave', handleLeave);
+      });
+    };
+  }, [items]);
 
   useEffect(() => {
     (async () => {
@@ -21,9 +62,17 @@ const Home = () => {
         .from('content_pages').select('*').eq('slug', 'home').single();
       if (data?.content) {
         try {
-          const titles = JSON.parse(data.content);
-          if (Array.isArray(titles) && titles.length > 0) {
-            setItems(cur => cur.map((item, i) => ({ ...item, title: titles[i] || item.title })));
+          const parsed = JSON.parse(data.content);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            // Legacy format: array of titles only
+            setItems(cur => cur.map((item, i) => ({ ...item, title: parsed[i] || item.title })));
+          } else if (parsed.titles) {
+            // New format: {titles, descriptions}
+            setItems(cur => cur.map((item, i) => ({
+              ...item,
+              title: parsed.titles[i] || item.title,
+              description: parsed.descriptions?.[i] || item.description,
+            })));
           }
         } catch {}
       }
@@ -37,9 +86,9 @@ const Home = () => {
         <h1 className="home-headline">Our World</h1>
       </section>
 
-      <section className="home-grid">
+      <section className="home-grid" ref={gridRef}>
         {items.map((item) => (
-          <Link to={item.href} key={item.id} className="home-card">
+          <Link to={item.href} key={item.id} className="home-card reveal">
             <span className="home-card-num">{item.id}</span>
             <div className="home-card-body">
               <h2 className="home-card-title">{item.title}</h2>

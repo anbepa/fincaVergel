@@ -14,10 +14,12 @@ import Dashboard from './pages/Admin/Dashboard';
 import EditPage from './pages/Admin/EditPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import GlobalEffects from './components/GlobalEffects';
 
 function App() {
   return (
     <Router>
+      <GlobalEffects />
       <Routes>
         <Route path="/" element={<Layout noPad><Landing /></Layout>} />
         <Route path="/home" element={<Layout><Home /></Layout>} />
