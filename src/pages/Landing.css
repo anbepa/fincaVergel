@@ -17,17 +17,6 @@
 
 .lp-root { width: 100%; overflow-x: hidden; }
 
-/* ══════════════════════ SCROLL SNAP ══════════════════════ */
-.lp-root {
-  scroll-snap-type: y proximity;
-  overflow-y: auto;
-  height: 100%;
-}
-.lp-root > section,
-.lp-root > .marquee-wrap {
-  scroll-snap-align: start;
-}
-
 /* ══════════════════════ HERO ══════════════════════ */
 .lp-hero {
   position: relative;
@@ -615,8 +604,6 @@
   /* Stats single column on small phones */
   .lp-stats-grid { grid-template-columns: 1fr 1fr; }
   .lp-stat .animated-counter { font-size: clamp(1.8rem, 8vw, 2.6rem); }
-  /* Disable scroll snap on small screens for smoother scroll */
-  .lp-root { scroll-snap-type: none; }
   /* Contact section safe-area */
   .lp-contact {
     padding-left: max(20px, env(safe-area-inset-left));
