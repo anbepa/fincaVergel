@@ -500,17 +500,21 @@ const Landing = () => {
         fetchPage('contact'),
       ]);
 
-      /* Hero */
+      /* Hero & Stats */
       if (ld) {
         let { subtitle, title, desc, manifesto } = defaults.hero;
+        let pStats = null;
         if (ld.content) {
           const parts = ld.content.split('|');
           if (parts[0]) subtitle = parts[0];
           if (parts[1]) title    = parts[1];
           if (parts[2]) desc     = parts[2];
           if (parts[3]) manifesto = parts[3];
+          if (parts[4]) {
+              try { pStats = JSON.parse(parts[4]); } catch(e) {}
+          }
         }
-        setHeroData({ images: ld.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc, manifesto });
+        setHeroData({ images: ld.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc, manifesto, stats: pStats });
       }
 
       if (fd)  setFarmData(fd);
@@ -585,22 +589,17 @@ const Landing = () => {
       {/* ═══ STATS COUNTERS ═══ */}
       <section className="lp-stats">
         <div className="lp-stats-grid">
-          <div className="lp-stat reveal">
-            <AnimatedCounter end={100} suffix="+" />
-            <span className="lp-stat-label">Hectares of Estate</span>
-          </div>
-          <div className="lp-stat reveal" style={{ transitionDelay: '0.1s' }}>
-            <AnimatedCounter end={1200} prefix="" suffix="m" />
-            <span className="lp-stat-label">Altitude (m.a.s.l.)</span>
-          </div>
-          <div className="lp-stat reveal" style={{ transitionDelay: '0.2s' }}>
-            <AnimatedCounter end={8} />
-            <span className="lp-stat-label">Arabica Varietals</span>
-          </div>
-          <div className="lp-stat reveal" style={{ transitionDelay: '0.3s' }}>
-            <AnimatedCounter end={35} suffix="ha" />
-            <span className="lp-stat-label">Forest Reserve</span>
-          </div>
+          {(heroData.stats || [
+            { value: 100, suffix: '+', label: 'Hectares of Estate' },
+            { value: 1200, suffix: 'm', label: 'Altitude (m.a.s.l.)' },
+            { value: 8, suffix: '', label: 'Arabica Varietals' },
+            { value: 35, suffix: 'ha', label: 'Forest Reserve' }
+          ]).map((s, i) => (
+              <div key={i} className="lp-stat reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <AnimatedCounter end={s.value} suffix={s.suffix} prefix="" />
+                <span className="lp-stat-label">{s.label}</span>
+              </div>
+          ))}
         </div>
       </section>
 

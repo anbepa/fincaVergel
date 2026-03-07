@@ -574,7 +574,7 @@
     min-height: 100svh;
     min-height: -webkit-fill-available; /* Fallback for older iOS */
   }
-  .lp-hero-title { font-size: clamp(3.4rem,15vw,6rem); }
+  .lp-hero-title { font-size: clamp(3rem,11vw,4.5rem); }
   .lp-scroll-hint { display: none; }
   .lp-manifesto-text { font-size: clamp(1.5rem,5vw,2.4rem); }
   .lp-split-text {

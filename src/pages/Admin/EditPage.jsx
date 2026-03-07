@@ -22,6 +22,12 @@ const EditPage = () => {
   const [landingSub, setLandingSub] = useState("");
   const [landingTitle, setLandingTitle] = useState("");
   const [landingDesc, setLandingDesc] = useState("");
+  const [landingStats, setLandingStats] = useState([
+      { value: 100, suffix: '+', label: 'Hectares of Estate' },
+      { value: 1200, suffix: 'm', label: 'Altitude (m.a.s.l.)' },
+      { value: 8, suffix: '', label: 'Arabica Varietals' },
+      { value: 35, suffix: 'ha', label: 'Forest Reserve' }
+  ]);
 
   // Home (Titles for the 6 grid items)
   const [homeTitles, setHomeTitles] = useState(["", "", "", "", "", ""]);
@@ -110,6 +116,15 @@ const EditPage = () => {
         setLandingTitle(parts[1] || "");
         setLandingDesc(parts[2] || "");
         setLandingManifesto(parts[3] || "");
+        
+        try {
+            if (parts[4]) {
+                const parsedStats = JSON.parse(parts[4]);
+                if (Array.isArray(parsedStats) && parsedStats.length === 4) {
+                    setLandingStats(parsedStats);
+                }
+            }
+        } catch(e) {}
       }
       else if (slug === 'home') {
         try {
@@ -299,7 +314,8 @@ const EditPage = () => {
 
     // Compose content based on slug
     if (slug === 'landing') {
-        contentToSave = `${landingSub}|${landingTitle}|${landingDesc}|${landingManifesto}`;
+        const statsJson = JSON.stringify(landingStats);
+        contentToSave = `${landingSub}|${landingTitle}|${landingDesc}|${landingManifesto}|${statsJson}`;
     }
     else if (slug === 'home') {
         contentToSave = JSON.stringify({ titles: homeTitles, descriptions: homeDescriptions });
@@ -479,6 +495,26 @@ const EditPage = () => {
                     <label className="edit-label">Manifesto / Mission Statement</label>
                     <textarea value={landingManifesto} onChange={e => setLandingManifesto(e.target.value)} rows={4} className="edit-textarea" placeholder="We journey to grow the finest specialty coffee..." />
                     <small style={{color:'#888', fontSize:'0.75rem'}}>Use line breaks for multi-line display. Leave blank to show the default text.</small>
+                </div>
+                <hr style={{margin:'20px 0', borderTop: '1px solid #eee'}}/>
+                <h4 style={{marginTop:0, marginBottom:'10px'}}>Stats Counters</h4>
+                <div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'10px'}}>
+                  {landingStats.map((stat, i) => (
+                    <div key={i} style={{padding: '10px', background: '#f9f9f9', borderRadius: '4px'}}>
+                      <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>{`Stat ${i+1} Label:`}</label>
+                      <input type="text" value={stat.label} onChange={e => {
+                         const n = [...landingStats]; n[i].label = e.target.value; setLandingStats(n);
+                      }} className="edit-input" style={{marginBottom:'5px'}} />
+                       <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>Value:</label>
+                      <input type="number" value={stat.value} onChange={e => {
+                         const n = [...landingStats]; n[i].value = Number(e.target.value); setLandingStats(n);
+                      }} className="edit-input" style={{marginBottom:'5px'}} />
+                       <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>Sufijo (ej. + o ha):</label>
+                      <input type="text" value={stat.suffix} onChange={e => {
+                         const n = [...landingStats]; n[i].suffix = e.target.value; setLandingStats(n);
+                      }} className="edit-input" />
+                    </div>
+                  ))}
                 </div>
              </div>
         ) 
