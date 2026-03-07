@@ -20,7 +20,6 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
 html, body {
   margin: 0; padding: 0;
   font-family: var(--font-sans);
@@ -28,9 +27,7 @@ html, body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   width: 100%;
-  overscroll-behavior-y: contain; /* Prevent Safari bounce / accidental back nav */
 }
 #root { width: 100%; display: flex; flex-direction: column; min-height: 100vh; }
 .layout { display: flex; flex-direction: column; min-height: 100vh; }
@@ -116,8 +113,6 @@ a:hover { opacity: 0.7; }
 .dynamic-content strong { color: var(--color-bg-dark); font-weight: 600; }
 .dynamic-content a { color: var(--color-accent); text-decoration: underline; }
 
-@media (max-width: 768px) { .layout { overflow-x: hidden; } }
-
 /* ══════════════════════ VISUAL ENHANCEMENTS ══════════════════════ */
 
 /* Branded selection */
@@ -136,8 +131,6 @@ main { animation: pageIn .45s ease-out both; }
 /* Touch improvements */
 html {
   -webkit-tap-highlight-color: transparent;
-  /* Support safe-area-inset for notch devices */
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 /* Prevent iOS auto-zoom on input focus (must be ≥16px) */

@@ -15,7 +15,7 @@
 .reveal-delay-3 { transition-delay: 0.42s; }
 .reveal-delay-4 { transition-delay: 0.56s; }
 
-.lp-root { width: 100%; overflow-x: hidden; }
+.lp-root { width: 100%; }
 
 /* ══════════════════════ HERO ══════════════════════ */
 .lp-hero {

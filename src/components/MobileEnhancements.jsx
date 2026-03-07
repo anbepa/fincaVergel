@@ -209,10 +209,10 @@ export function usePrefetchRoutes() {
     };
 
     document.addEventListener('pointerenter', handler, { passive: true, capture: true });
-    document.addEventListener('touchstart', handler, { passive: true, capture: true });
+    // document.addEventListener('touchstart', handler, { passive: true, capture: true });
     return () => {
       document.removeEventListener('pointerenter', handler, true);
-      document.removeEventListener('touchstart', handler, true);
+      // document.removeEventListener('touchstart', handler, true);
     };
   }, []);
 }
