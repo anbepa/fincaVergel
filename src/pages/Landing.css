@@ -17,6 +17,17 @@
 
 .lp-root { width: 100%; overflow-x: hidden; }
 
+/* ══════════════════════ SCROLL SNAP ══════════════════════ */
+.lp-root {
+  scroll-snap-type: y proximity;
+  overflow-y: auto;
+  height: 100%;
+}
+.lp-root > section,
+.lp-root > .marquee-wrap {
+  scroll-snap-align: start;
+}
+
 /* ══════════════════════ HERO ══════════════════════ */
 .lp-hero {
   position: relative;
@@ -160,6 +171,42 @@
 @keyframes marqueeScroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* ══════════════════════ STATS COUNTERS ══════════════════════ */
+.lp-stats {
+  background: var(--color-bg);
+  padding: clamp(36px, 5vw, 64px) clamp(24px, 5vw, 80px);
+  border-bottom: 1px solid var(--color-border);
+}
+.lp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  background: var(--color-border);
+}
+.lp-stat {
+  background: var(--color-bg);
+  padding: clamp(20px, 3vw, 40px) clamp(16px, 2vw, 32px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lp-stat .animated-counter {
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  color: var(--color-accent);
+  line-height: 1;
+}
+.lp-stat-label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-mid);
 }
 
 /* ══════════════════════ MANIFESTO ══════════════════════ */
@@ -524,6 +571,8 @@
   .lp-form-submit { width: 100%; min-height: 52px; }
   /* Tricard accent line always visible on enter */
   .lp-tricard-item.visible::before { transform: scaleX(1); }
+  /* Stats 2-column on tablet */
+  .lp-stats-grid { grid-template-columns: repeat(2, 1fr); }
   /* Staff section safe height */
   .lp-staff, .lp-staff-bg { min-height: 70vh; }
   /* Disable parallax transforms */
@@ -563,6 +612,11 @@
   /* Hide floating orbs on small screens */
   .lp-manifesto::before, .lp-manifesto::after { display: none; }
   .marquee-item { font-size: 0.6rem; letter-spacing: 3px; }
+  /* Stats single column on small phones */
+  .lp-stats-grid { grid-template-columns: 1fr 1fr; }
+  .lp-stat .animated-counter { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+  /* Disable scroll snap on small screens for smoother scroll */
+  .lp-root { scroll-snap-type: none; }
   /* Contact section safe-area */
   .lp-contact {
     padding-left: max(20px, env(safe-area-inset-left));

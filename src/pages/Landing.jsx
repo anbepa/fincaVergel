@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
+import {
+  AnimatedCounter,
+  TextRevealByLine,
+  useGyroParallax,
+  useToast,
+} from '../components/MobileEnhancements';
 import './Landing.css';
 
 /* ── Scroll-reveal hook ── */
@@ -338,6 +344,8 @@ function SectionOurStory({ data }) {
 
 function SectionContact({ data }) {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const toast = useToast();
   let introText = "If you have questions about us, or are interested in our green coffee, please don't hesitate to reach out.";
   let visitText = "If you want to visit the farm, let us know a little about yourself and what you'd like to see. We'll put together a package that suits you perfectly.";
   let contactEmail = "rosanabernal26@gmail.com";
@@ -354,6 +362,8 @@ function SectionContact({ data }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (sending) return;
+    setSending(true);
     const form = e.target;
     const fd = Object.fromEntries(new FormData(form).entries());
     const fullName = `${fd.firstName || ''} ${fd.lastName || ''}`.trim();
@@ -368,9 +378,19 @@ function SectionContact({ data }) {
           _subject: `New Contact from Website: ${fd.subject}`,
         }),
       });
-      if (res.ok) { setSubmitted(true); form.reset(); }
-      else alert('Something went wrong. Please try again.');
-    } catch { alert('Error sending message. Please check your connection.'); }
+      if (res.ok) {
+        setSubmitted(true);
+        form.reset();
+        if (toast) toast('Message sent successfully!', 'success');
+        if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
+      } else {
+        if (toast) toast('Something went wrong. Please try again.', 'error');
+      }
+    } catch {
+      if (toast) toast('Connection error. Please check your internet.', 'error');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -428,7 +448,9 @@ function SectionContact({ data }) {
                 <label>Message <span className="req">*</span></label>
                 <textarea name="message" rows={5} required />
               </div>
-              <button type="submit" className="btn-light lp-form-submit">Send Message</button>
+              <button type="submit" className="btn-light lp-form-submit" disabled={sending}>
+                {sending ? 'Sending...' : 'Send Message'}
+              </button>
             </form>
           )}
         </div>
@@ -447,6 +469,8 @@ const Landing = () => {
 
   const [heroData,        setHeroData]        = useState(defaults.hero);
   const heroBtnRef = useRef(null);
+  const heroSliderRef = useRef(null);
+  useGyroParallax(heroSliderRef);
   const [farmData,        setFarmData]        = useState(null);
   const [processData,     setProcessData]     = useState(null);
   const [getToKnowData,   setGetToKnowData]   = useState(null);
@@ -520,7 +544,7 @@ const Landing = () => {
 
       {/* ═══ HERO ═══ */}
       <section id="hero" className="lp-hero">
-        <div className="lp-bg-slider">
+        <div className="lp-bg-slider" ref={heroSliderRef}>
           {heroData.images.map((img, i) => (
             <div key={i}
               className={`lp-bg-slide${i === currentImage ? ' active' : ''}`}
@@ -558,13 +582,36 @@ const Landing = () => {
       {/* ═══ MARQUEE ═══ */}
       <Marquee />
 
+      {/* ═══ STATS COUNTERS ═══ */}
+      <section className="lp-stats">
+        <div className="lp-stats-grid">
+          <div className="lp-stat reveal">
+            <AnimatedCounter end={100} suffix="+" />
+            <span className="lp-stat-label">Hectares of Estate</span>
+          </div>
+          <div className="lp-stat reveal" style={{ transitionDelay: '0.1s' }}>
+            <AnimatedCounter end={1200} prefix="" suffix="m" />
+            <span className="lp-stat-label">Altitude (m.a.s.l.)</span>
+          </div>
+          <div className="lp-stat reveal" style={{ transitionDelay: '0.2s' }}>
+            <AnimatedCounter end={8} />
+            <span className="lp-stat-label">Arabica Varietals</span>
+          </div>
+          <div className="lp-stat reveal" style={{ transitionDelay: '0.3s' }}>
+            <AnimatedCounter end={35} suffix="ha" />
+            <span className="lp-stat-label">Forest Reserve</span>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ MANIFESTO ═══ */}
       <section className="lp-manifesto">
         <div className="lp-manifesto-inner reveal">
           <p className="lp-manifesto-eyebrow">Our Mission</p>
-          <h2 className="lp-manifesto-text" style={{ whiteSpace: 'pre-line' }}>
-            {heroData.manifesto || defaults.hero.manifesto}
-          </h2>
+          <TextRevealByLine
+            text={heroData.manifesto || defaults.hero.manifesto}
+            className="lp-manifesto-text"
+          />
         </div>
       </section>
 

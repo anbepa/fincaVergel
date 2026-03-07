@@ -30,6 +30,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   width: 100%;
+  overscroll-behavior-y: contain; /* Prevent Safari bounce / accidental back nav */
 }
 #root { width: 100%; display: flex; flex-direction: column; min-height: 100vh; }
 .layout { display: flex; flex-direction: column; min-height: 100vh; }

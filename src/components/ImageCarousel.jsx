@@ -65,10 +65,31 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
       );
   }
 
+  /* ── Swipe gesture support ── */
+  const touchStart = useRef({ x: 0, y: 0 });
+  const handleTouchStart = (e) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const handleTouchEnd = (e) => {
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    const dy = e.changedTouches[0].clientY - touchStart.current.y;
+    // Only register horizontal swipes (not vertical scrolls)
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) nextSlide();
+      else prevSlide();
+      // Haptic feedback
+      if (navigator.vibrate) navigator.vibrate(5);
+    }
+  };
+
   return (
     <div className="carousel-container">
       {/* Main Large Image */}
-      <div className="carousel-main-view">
+      <div
+        className="carousel-main-view"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
          {images.length > 1 && (
              <>
                 <button className="carousel-arrow left" onClick={prevSlide}>&#10094;</button>
