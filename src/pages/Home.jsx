@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { getPage } from '../lib/content';
 import './Home.css';
 
 const defaultItems = [
@@ -58,8 +58,7 @@ const Home = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from('content_pages').select('*').eq('slug', 'home').single();
+      const { data } = await getPage('home');
       if (data?.content) {
         try {
           const parsed = JSON.parse(data.content);

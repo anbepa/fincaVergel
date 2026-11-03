@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProjectLayout from '../components/ProjectLayout';
-import { supabase } from '../supabaseClient';
+import { getPage } from '../lib/content';
 
 const defaultImages = [];
 
@@ -17,11 +17,7 @@ const GreenEnergy = () => {
 
   const fetchData = async () => {
     try {
-      const { data } = await supabase
-        .from('content_pages')
-        .select('*')
-        .eq('slug', 'greenenergy')
-        .single();
+      const { data } = await getPage('greenenergy');
 
       if (data) {
         if (data.title) setTitle(data.title);

@@ -3,21 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Finca El Vergel — Specialty Coffee from Costa Rica</title>
+    <meta name="description" content="Finca El Vergel — Specialty Coffee from Costa Rica. Shade-grown, sun-dried, crafted with purpose." />
     <meta name="theme-color" content="#111111" id="theme-color-meta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Finca Vergel" />
-    <meta name="description" content="Finca El Vergel — Specialty Coffee from Costa Rica. Shade-grown, sun-dried, crafted with purpose." />
+
+    <!-- Social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Finca El Vergel" />
+    <meta property="og:title" content="Finca El Vergel — Specialty Coffee from Costa Rica" />
+    <meta property="og:description" content="Shade-grown, sun-dried specialty coffee from the foot of the Poás Volcano." />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <title>Finca El Vergel</title>
+
+    <!-- Connect early to the hosts the first screen needs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.squarespace-cdn.com" />
+
+    <!-- Only the families/weights the site actually uses (non-render-blocking) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" /></noscript>
+
+    <!-- Critical CSS: instant branded first paint while JS downloads -->
+    <style>
+      html, body { margin: 0; background: #111; }
+      #splash {
+        position: fixed; inset: 0; z-index: 100001;
+        display: flex; align-items: center; justify-content: center; gap: 20px;
+        background: #111; color: #fff;
+        font: 800 clamp(1.2rem, 4vw, 2.2rem)/1 'Barlow Condensed', 'Arial Narrow', sans-serif;
+        letter-spacing: 8px; text-transform: uppercase;
+        transition: opacity .4s ease, visibility .4s;
+      }
+      #splash::before, #splash::after {
+        content: ''; width: clamp(30px, 8vw, 60px); height: 1px; background: #b5956a;
+      }
+      #splash.splash--hide { opacity: 0; visibility: hidden; }
+      @media (prefers-reduced-motion: reduce) { #splash { transition: none; } }
+    </style>
   </head>
   <body>
+    <div id="splash" aria-hidden="true">Finca El Vergel</div>
     <div id="root"></div>
+    <noscript><p style="color:#fff;font-family:sans-serif;text-align:center;padding:40px">Please enable JavaScript to view Finca El Vergel.</p></noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

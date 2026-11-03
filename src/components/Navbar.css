@@ -18,6 +18,14 @@
   color: rgba(255,255,255,0.88);
 }
 .navbar-transparent .hamburger span { background: #fff; }
+/* Soft gradient keeps white nav text legible over bright hero photos */
+.navbar-transparent::before {
+  content: '';
+  position: absolute; inset: 0 0 -40px 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.35), transparent);
+  pointer-events: none;
+  z-index: -1;
+}
 
 /* Solid mode — scrolled */
 .navbar-solid {
@@ -124,15 +132,43 @@
 }
 .nav-anchor:hover { color: #fff; }
 
-/* Admin link accent */
-.admin-link { opacity: 0.55; }
-.admin-link:hover { opacity: 1 !important; }
+/* Contact = primary action: outlined pill on desktop */
+.nav-links { align-items: center; }
+.nav-anchor { position: relative; min-height: 44px; }
+.nav-anchor::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 10px;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: right;
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.nav-anchor:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-anchor--cta {
+  padding: 0 20px;
+  border: 1px solid currentColor;
+  transition: background .25s, color .25s, border-color .25s;
+}
+.nav-anchor--cta::after { display: none; }
+.navbar-transparent .nav-anchor--cta:hover { background: #fff; color: #111; border-color: #fff; }
+.navbar-solid .nav-anchor--cta:hover { background: #1a1a14; color: #f7f3ee; border-color: #1a1a14; }
 
-/* Mobile Hamburger */
+/* Keyboard focus */
+.navbar a:focus-visible,
+.navbar button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* Mobile Hamburger — reset native button chrome (was showing a white box) */
 .mobile-menu-btn {
   display: none;
   cursor: pointer;
   z-index: 1001;
+  background: none;
+  border: 0;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .hamburger {
@@ -148,18 +184,19 @@
   display: block;
   width: 100%;
   height: 2px;
-  background-color: var(--color-primary); /* Match Logo Green */
-  transition: all 0.3s ease;
+  background-color: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color .3s;
 }
 
 .hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 6px);
+  transform: translateY(9px) rotate(45deg);
 }
 .hamburger.active span:nth-child(2) {
   opacity: 0;
 }
 .hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -6px);
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
@@ -171,11 +208,20 @@
   }
 
   .mobile-menu-btn {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* Bigger tap area */
-    padding: 8px;
-    margin: -8px;
+    width: 48px; height: 48px;
+    padding: 0;
+    margin: -12px -12px -12px 0;
   }
+  /* While the full-screen menu is open, keep brand + X readable on dark */
+  .navbar-open { background: transparent !important; box-shadow: none !important; border-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .navbar-open .navbar-brand { color: #fff !important; }
+  .navbar-open .hamburger span { background: #fff !important; }
+  .nav-anchor::after { display: none; }
+  .nav-anchor--cta { border: 0; padding: 8px 16px; }
 
   .nav-links {
     position: fixed;

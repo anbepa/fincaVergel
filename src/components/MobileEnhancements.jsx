@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import useSectionNav from '../lib/useSectionNav';
 import './MobileEnhancements.css';
 
 /* ═══════════════════════════════════════════════════════
@@ -42,25 +43,29 @@ export function ToastProvider({ children }) {
    ═══════════════════════════════════════════════════════ */
 export function ContactFAB() {
   const [visible, setVisible] = useState(false);
-  const location = useLocation();
-  const isLanding = location.pathname === '/';
+  const { pathname } = useLocation();
+  const goTo = useSectionNav();
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      // Hide near the contact section itself (no point offering it there)
+      const contact = document.getElementById('contact');
+      const nearContact = contact && contact.getBoundingClientRect().top < window.innerHeight * 0.8;
+      setVisible(window.scrollY > 400 && !nearContact);
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    update();
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [pathname]);
+
+  if (pathname.startsWith('/admin')) return null;
 
   const handleClick = () => {
-    // Haptic feedback (Android)
     if (navigator.vibrate) navigator.vibrate(10);
-    if (isLanding) {
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = '/#contact';
-    }
+    goTo('contact');
   };
 
   return (
@@ -193,12 +198,13 @@ export function usePrefetchRoutes() {
       '/our-staff':     () => import('../pages/OurStaff'),
       '/aboutus':       () => import('../pages/AboutUs'),
       '/contact':       () => import('../pages/Contact'),
-      // Home is statically imported — no need to prefetch
+      '/home':          () => import('../pages/Home'),
     };
 
     const prefetched = new Set();
 
     const handler = (e) => {
+      if (!(e.target instanceof Element)) return;
       const link = e.target.closest('a[href]');
       if (!link) return;
       const path = link.getAttribute('href');
@@ -209,10 +215,23 @@ export function usePrefetchRoutes() {
     };
 
     document.addEventListener('pointerenter', handler, { passive: true, capture: true });
-    // document.addEventListener('touchstart', handler, { passive: true, capture: true });
+    document.addEventListener('touchstart', handler, { passive: true, capture: true });
+
+    // Page chunks are tiny (1–4 KB): warm them all once the browser is idle
+    // so navigation is instant, unless the user is on a data-saver connection.
+    const saveData = navigator.connection?.saveData;
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 2500));
+    const cancelIdle = window.cancelIdleCallback || clearTimeout;
+    const idleId = saveData ? null : idle(() => {
+      Object.entries(lazyImports).forEach(([path, load]) => {
+        if (!prefetched.has(path)) { prefetched.add(path); load(); }
+      });
+    }, { timeout: 5000 });
+
     return () => {
       document.removeEventListener('pointerenter', handler, true);
-      // document.removeEventListener('touchstart', handler, true);
+      document.removeEventListener('touchstart', handler, true);
+      if (idleId != null) cancelIdle(idleId);
     };
   }, []);
 }
@@ -224,7 +243,7 @@ export function useHapticFeedback() {
   useEffect(() => {
     if (!navigator.vibrate) return;
     const handler = (e) => {
-      if (e.target.closest('button, .btn-primary, .btn-light, .home-card, .fab-contact')) {
+      if (e.target instanceof Element && e.target.closest('button, .btn-primary, .btn-light, .home-card, .fab-contact')) {
         navigator.vibrate(8);
       }
     };
@@ -349,56 +368,70 @@ export function TextRevealByLine({ text, className = '' }) {
    BOTTOM MOBILE NAV
    ═══════════════════════════════════════════════════════ */
 export function BottomNav() {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const [visible, setVisible] = useState(true);
+  const [active, setActive] = useState('top');
   const lastScroll = useRef(0);
-  const isLanding = location.pathname === '/';
+  const goTo = useSectionNav();
+  const isLanding = pathname === '/';
 
-  // Hide on scroll down, show on scroll up
+  // Hide on scroll down, show on scroll up (rAF-throttled, ignores tiny jitter)
   useEffect(() => {
-    const onScroll = () => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
       const y = window.scrollY;
-      setVisible(y < lastScroll.current || y < 100);
+      const delta = y - lastScroll.current;
+      if (Math.abs(delta) < 6) return;
+      setVisible(delta < 0 || y < 100);
       lastScroll.current = y;
     };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Highlight the section currently in view
+  useEffect(() => {
+    if (!isLanding) { setActive(null); return; }
+    setActive('top');
+    const ids = ['hero', 'farm', 'our-story', 'contact'];
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) setActive(e.target.id === 'hero' ? 'top' : e.target.id);
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    const t = setTimeout(() => ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    }), 100);
+    return () => { clearTimeout(t); io.disconnect(); };
+  }, [isLanding]);
+
+  if (pathname.startsWith('/admin')) return null;
+
   const scrollToSection = (id) => {
     if (navigator.vibrate) navigator.vibrate(8);
-    if (isLanding) {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = `/#${id}`;
-    }
+    goTo(id);
   };
-
-  const scrollToTop = () => {
-    if (navigator.vibrate) navigator.vibrate(8);
-    if (isLanding) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.location.href = '/';
-    }
-  };
+  const scrollToTop = () => scrollToSection('top');
+  const cls = (id) => `bottom-nav-item${active === id ? ' is-active' : ''}`;
 
   return (
     <nav className={`bottom-nav ${visible ? '' : 'bottom-nav--hidden'}`} aria-label="Mobile navigation">
-      <button className="bottom-nav-item" onClick={scrollToTop}>
+      <button type="button" className={cls('top')} aria-current={active === 'top' ? 'true' : undefined} onClick={scrollToTop}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 12l9-9 9 9"/><path d="M12 3v18"/></svg>
         <span>Home</span>
       </button>
-      <button className="bottom-nav-item" onClick={() => scrollToSection('farm')}>
+      <button type="button" className={cls('farm')} aria-current={active === 'farm' ? 'true' : undefined} onClick={() => scrollToSection('farm')}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10"/><path d="M12 2a15 15 0 0 0-4 10 15 15 0 0 0 4 10"/><path d="M2 12h20"/></svg>
         <span>Explore</span>
       </button>
-      <button className="bottom-nav-item" onClick={() => scrollToSection('our-story')}>
+      <button type="button" className={cls('our-story')} aria-current={active === 'our-story' ? 'true' : undefined} onClick={() => scrollToSection('our-story')}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>About</span>
       </button>
-      <button className="bottom-nav-item" onClick={() => scrollToSection('contact')}>
+      <button type="button" className={cls('contact')} aria-current={active === 'contact' ? 'true' : undefined} onClick={() => scrollToSection('contact')}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span>Contact</span>
       </button>

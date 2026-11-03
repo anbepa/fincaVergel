@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
+import { invalidatePages } from '../../lib/content';
 import './Admin.css';
 
 const EditPage = () => {
@@ -377,6 +378,7 @@ const EditPage = () => {
     if (error) {
       alert('Error saving: ' + error.message);
     } else {
+      invalidatePages();
       alert('Page updated successfully!');
     }
   };

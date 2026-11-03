@@ -78,7 +78,7 @@
 .footer-copy {
   font-family: var(--font-sans);
   font-size: 0.72rem;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
   font-weight: 300; letter-spacing: 0.5px;
 }
 .footer-logo { height: 32px; width: auto; margin-bottom: 16px; display: block; }
@@ -99,3 +99,11 @@
   }
 }
 
+
+.footer-admin {
+  font-family: var(--font-sans);
+  font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  display: inline-flex; align-items: center;
+}
+.footer-admin:hover { color: rgba(255,255,255,0.7); opacity: 1; }

@@ -1,7 +1,7 @@
 /* ── Contact Page ───────────────────────────────────────────── */
 .contact-page {
   background: var(--color-bg);
-  padding-top: 80px;
+  padding-top: 0; /* <main> reserves navbar space */
   min-height: 100vh;
 }
 

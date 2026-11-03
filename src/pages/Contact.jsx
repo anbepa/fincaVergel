@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient';
+import { getPage } from '../lib/content';
 import './Contact.css';
 
 const Contact = () => {
@@ -13,8 +13,7 @@ const Contact = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from('content_pages').select('*').eq('slug', 'contact').single();
+      const { data } = await getPage('contact');
       if (data) {
         if (data.title && data.title !== 'Contact') setPageTitle(data.title);
         if (data.images?.length) setHeroImage(data.images[0]);

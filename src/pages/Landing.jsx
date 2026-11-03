@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../supabaseClient';
+import { useLocation } from 'react-router-dom';
+import { getCachedPage, subscribePage } from '../lib/content';
+import { preloadImage, sizedImage, viewportWidth } from '../lib/images';
+import LazyBackground from '../components/LazyBackground';
 import {
   AnimatedCounter,
   TextRevealByLine,
@@ -31,25 +34,55 @@ function useReveal() {
 function useParallax() {
   useEffect(() => {
     if (window.matchMedia('(hover: none)').matches) return; // skip on mobile
-    const images = document.querySelectorAll('.lp-split-image');
-    const onScroll = () => {
-      images.forEach(img => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const images = Array.from(document.querySelectorAll('.lp-split-image'));
+    const onScreen = new Set();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)));
+    });
+    images.forEach(img => io.observe(img));
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      onScreen.forEach(img => {
+        if (!img.classList.contains('visible')) return; // let the reveal transition finish
         const rect = img.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const offset = (center - window.innerHeight / 2) * 0.06;
-        img.style.transform = `scale(1) translateY(${offset}px)`;
+        const offset = (rect.top + rect.height / 2 - vh / 2) * 0.06;
+        img.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
       });
     };
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => { io.disconnect(); window.removeEventListener('scroll', onScroll); };
   }, []);
 }
 
 /* ── Smooth anchor scroll ── */
 function scrollTo(id) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+/* ── Scroll to #hash when arriving from another route ── */
+function useHashScroll() {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return;
+    const id = decodeURIComponent(hash.slice(1));
+    // Wait a frame so sections have laid out
+    const raf = requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [hash]);
+}
+
+/* Share of viewport width a split-section image covers */
+const splitImageFraction = () => (viewportWidth() > 1024 ? 0.5 : 1);
 
 /* ── Magnetic button hook (desktop only) ── */
 function useMagnetic(ref) {
@@ -126,12 +159,19 @@ const defaults = {
   },
 };
 
-/* ── Fetch helper ── */
-async function fetchPage(slug) {
-  try {
-    const { data } = await supabase.from('content_pages').select('*').eq('slug', slug).single();
-    return data || null;
-  } catch { return null; }
+/* ── Parse the landing row ("subtitle|title|desc|manifesto|statsJSON") ── */
+function parseLanding(ld) {
+  let { subtitle, title, desc, manifesto } = defaults.hero;
+  let stats = null;
+  if (ld?.content) {
+    const parts = ld.content.split('|');
+    if (parts[0]) subtitle = parts[0];
+    if (parts[1]) title = parts[1];
+    if (parts[2]) desc = parts[2];
+    if (parts[3]) manifesto = parts[3];
+    if (parts[4]) { try { stats = JSON.parse(parts[4]); } catch { /* ignore */ } }
+  }
+  return { images: ld?.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc, manifesto, stats };
 }
 
 function parseContent(raw) {
@@ -163,12 +203,13 @@ function Marquee({ text = 'SPECIALTY COFFEE · COSTA RICA · FINCA EL VERGEL · 
 function SplitTitle({ text, className }) {
   const letters = text.split('');
   return (
-    <h1 className={className}>
+    <h1 className={className} aria-label={text}>
       {letters.map((char, i) => (
         <span
           key={i}
           className="split-char"
-          style={{ animationDelay: `${0.6 + i * 0.04}s` }}
+          aria-hidden="true"
+          style={{ animationDelay: `${0.1 + i * 0.03}s` }}
         >
           {char === ' ' ? '\u00A0' : char}
         </span>
@@ -189,10 +230,7 @@ function SectionFarm({ data }) {
                : defaults.thefarm.content;
   return (
     <section id="farm" className="lp-split lp-split--light">
-      <div
-        className="lp-split-image reveal"
-        style={{ backgroundImage: `url(${data?.images?.[0] || defaultImages[0]})` }}
-      />
+      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[0]} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
         <p className="lp-section-eyebrow">01 — The Farm</p>
         <h2 className="lp-split-title">{data?.title || defaults.thefarm.title}</h2>
@@ -210,10 +248,7 @@ function SectionProcess({ data }) {
                : defaults.process.content;
   return (
     <section id="process" className="lp-split lp-split--dark lp-split--reverse">
-      <div
-        className="lp-split-image reveal"
-        style={{ backgroundImage: `url(${data?.images?.[0] || defaultImages[1]})` }}
-      />
+      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[1]} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
         <p className="lp-section-eyebrow">02 — Our Process</p>
         <h2 className="lp-split-title">{data?.title || defaults.process.title}</h2>
@@ -263,10 +298,7 @@ function SectionPerfectCoffee({ data }) {
              : defaults.perfectcoffee.content;
   return (
     <section id="perfect-coffee" className="lp-split lp-split--light">
-      <div
-        className="lp-split-image reveal"
-        style={{ backgroundImage: `url(${data?.images?.[0] || defaultImages[2]})` }}
-      />
+      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[2]} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
         <p className="lp-section-eyebrow">04 — Perfect Coffee</p>
         <h2 className="lp-split-title">{data?.title || defaults.perfectcoffee.title}</h2>
@@ -284,10 +316,7 @@ function SectionGreenEnergy({ data }) {
              : defaults.greenenergy.content;
   return (
     <section id="green-energy" className="lp-split lp-split--dark lp-split--reverse">
-      <div
-        className="lp-split-image reveal"
-        style={{ backgroundImage: `url(${data?.images?.[0] || defaultImages[3]})` }}
-      />
+      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[3]} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
         <p className="lp-section-eyebrow">05 — Green Energy</p>
         <h2 className="lp-split-title">{data?.title || defaults.greenenergy.title}</h2>
@@ -306,14 +335,14 @@ function SectionStaff({ data }) {
   const imgSrc = data?.images?.[0] || defaultImages[0];
   return (
     <section id="our-staff" className="lp-staff">
-      <div className="lp-staff-bg" style={{ backgroundImage: `url(${imgSrc})` }}>
+      <LazyBackground className="lp-staff-bg" src={imgSrc}>
         <div className="lp-staff-overlay" />
         <div className="lp-staff-content reveal">
           <p className="lp-section-eyebrow lp-eyebrow--light">06 — Our Staff</p>
           <h2 className="lp-staff-title">{data?.title || defaults.staff.title}</h2>
           <div className="lp-staff-body" dangerouslySetInnerHTML={{ __html: html }} />
         </div>
-      </div>
+      </LazyBackground>
     </section>
   );
 }
@@ -332,7 +361,7 @@ function SectionOurStory({ data }) {
   const img = data?.images?.[0] || defaults.aboutus.image;
   return (
     <section id="our-story" className="lp-split lp-split--light">
-      <div className="lp-split-image reveal" style={{ backgroundImage: `url(${img})` }} />
+      <LazyBackground className="lp-split-image reveal" src={img} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
         <p className="lp-section-eyebrow">Our Story</p>
         <h2 className="lp-split-title">{data?.title || defaults.aboutus.title}</h2>
@@ -417,7 +446,7 @@ function SectionContact({ data }) {
 
         <div className="lp-contact-form-col reveal reveal-delay-1">
           {submitted ? (
-            <div className="lp-contact-success">
+            <div className="lp-contact-success" role="status">
               <h3>Thank you!</h3>
               <p>Your message has been sent. We'll be in touch soon.</p>
               <button className="btn-light" onClick={() => setSubmitted(false)}>
@@ -428,28 +457,28 @@ function SectionContact({ data }) {
             <form className="lp-form" onSubmit={handleSubmit}>
               <div className="lp-form-row">
                 <div className="lp-form-group">
-                  <label>First Name <span className="req">*</span></label>
-                  <input type="text" name="firstName" required />
+                  <label htmlFor="cf-first">First Name <span className="req" aria-hidden="true">*</span></label>
+                  <input id="cf-first" type="text" name="firstName" autoComplete="given-name" required />
                 </div>
                 <div className="lp-form-group">
-                  <label>Last Name <span className="req">*</span></label>
-                  <input type="text" name="lastName" required />
+                  <label htmlFor="cf-last">Last Name <span className="req" aria-hidden="true">*</span></label>
+                  <input id="cf-last" type="text" name="lastName" autoComplete="family-name" required />
                 </div>
               </div>
               <div className="lp-form-group">
-                <label>Email Address <span className="req">*</span></label>
-                <input type="email" name="email" required />
+                <label htmlFor="cf-email">Email Address <span className="req" aria-hidden="true">*</span></label>
+                <input id="cf-email" type="email" name="email" autoComplete="email" inputMode="email" required />
               </div>
               <div className="lp-form-group">
-                <label>Subject <span className="req">*</span></label>
-                <input type="text" name="subject" required />
+                <label htmlFor="cf-subject">Subject <span className="req" aria-hidden="true">*</span></label>
+                <input id="cf-subject" type="text" name="subject" required />
               </div>
               <div className="lp-form-group">
-                <label>Message <span className="req">*</span></label>
-                <textarea name="message" rows={5} required />
+                <label htmlFor="cf-message">Message <span className="req" aria-hidden="true">*</span></label>
+                <textarea id="cf-message" name="message" rows={5} required />
               </div>
-              <button type="submit" className="btn-light lp-form-submit" disabled={sending}>
-                {sending ? 'Sending...' : 'Send Message'}
+              <button type="submit" className="btn-light lp-form-submit" disabled={sending} aria-busy={sending}>
+                {sending ? <><span className="btn-spinner" aria-hidden="true" />Sending…</> : 'Send Message'}
               </button>
             </form>
           )}
@@ -462,104 +491,123 @@ function SectionContact({ data }) {
 /* ════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ════════════════════════════════════════════ */
-const Landing = () => {
-  const [currentImage, setCurrentImage] = useState(0);
-  const [socialLinks,  setSocialLinks]  = useState({ facebook: '', instagram: '' });
-  const [btnLabel,     setBtnLabel]     = useState('Discover Our Farm');
+/* Parse the "layout" row for social links + hero button label */
+function parseLayout(lay) {
+  const out = { social: { facebook: '', instagram: '' }, btnLabel: null };
+  if (lay?.content?.startsWith('{')) {
+    try {
+      const p = JSON.parse(lay.content);
+      out.social = { facebook: p.facebook || '', instagram: p.instagram || '' };
+      if (p.navLabels?.landingBtn) out.btnLabel = p.navLabels.landingBtn;
+    } catch { /* ignore */ }
+  }
+  return out;
+}
 
-  const [heroData,        setHeroData]        = useState(defaults.hero);
+/* Section slugs → state keys */
+const SECTION_SLUGS = {
+  farm: 'thefarm', process: 'ourprocess', getToKnow: 'gettoknowus',
+  perfect: 'perfectcoffee', green: 'greenenergy', staff: 'our-staff',
+  about: 'aboutus', contact: 'contact',
+};
+
+/* Full-bleed hero background that never shows a half-loaded or swapped image */
+function HeroSlider({ images, sliderRef }) {
+  const [current, setCurrent] = useState(0);
+  const [ready, setReady] = useState({}); // index -> decoded
+  const urls = React.useMemo(
+    () => (images || []).map(src => sizedImage(src, viewportWidth())),
+    [images],
+  );
+
+  /* Load first image ASAP, then the next one in the background */
+  useEffect(() => {
+    if (!urls.length) return;
+    let cancelled = false;
+    setCurrent(0);
+    preloadImage(urls[0]).then(() => { if (!cancelled) setReady(r => ({ ...r, 0: true })); });
+    return () => { cancelled = true; };
+  }, [urls]);
+
+  /* Advance only when the next slide is already decoded */
+  useEffect(() => {
+    if (urls.length < 2 || !ready[current]) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const next = (current + 1) % urls.length;
+    let cancelled = false;
+    preloadImage(urls[next]).then(() => { if (!cancelled) setReady(r => ({ ...r, [next]: true })); });
+    const id = setTimeout(() => {
+      if (document.hidden) return; // don't churn in background tabs
+      setCurrent(c => (c === current ? next : c));
+    }, 6000);
+    return () => { cancelled = true; clearTimeout(id); };
+  }, [current, urls, ready]);
+
+  return (
+    <div className="lp-bg-slider" ref={sliderRef}>
+      {urls.map((url, i) => (ready[i] || i === current) && (
+        <div
+          key={url}
+          className={`lp-bg-slide${i === current && ready[i] ? ' active' : ''}`}
+          style={ready[i] ? { backgroundImage: `url("${url}")` } : undefined}
+        />
+      ))}
+    </div>
+  );
+}
+
+const Landing = () => {
+  /* Initialise from cache so repeat visits paint final content immediately */
+  const cachedLanding = getCachedPage('landing');
+  const [heroData, setHeroData] = useState(() =>
+    cachedLanding !== undefined ? parseLanding(cachedLanding) : { ...defaults.hero, images: null });
+  const [layoutInfo, setLayoutInfo] = useState(() => parseLayout(getCachedPage('layout')));
+  const [sections, setSections] = useState(() => {
+    const init = {};
+    Object.entries(SECTION_SLUGS).forEach(([k, slug]) => { init[k] = getCachedPage(slug) || null; });
+    return init;
+  });
+
   const heroBtnRef = useRef(null);
   const heroSliderRef = useRef(null);
   useGyroParallax(heroSliderRef);
-  const [farmData,        setFarmData]        = useState(null);
-  const [processData,     setProcessData]     = useState(null);
-  const [getToKnowData,   setGetToKnowData]   = useState(null);
-  const [perfectData,     setPerfectData]     = useState(null);
-  const [greenData,       setGreenData]       = useState(null);
-  const [staffData,       setStaffData]       = useState(null);
-  const [aboutData,       setAboutData]       = useState(null);
-  const [contactData,     setContactData]     = useState(null);
-
   useReveal();
   useParallax();
   useMagnetic(heroBtnRef);
+  useHashScroll();
 
-  /* Fetch all data once */
+  /* Subscribe to content (cache first, then network) */
   useEffect(() => {
-    (async () => {
-      const [ld, fd, pd, gd, pcd, ged, sd, ad, lay, cd] = await Promise.all([
-        fetchPage('landing'),
-        fetchPage('thefarm'),
-        fetchPage('ourprocess'),
-        fetchPage('gettoknowus'),
-        fetchPage('perfectcoffee'),
-        fetchPage('greenenergy'),
-        fetchPage('our-staff'),
-        fetchPage('aboutus'),
-        fetchPage('layout'),
-        fetchPage('contact'),
-      ]);
-
-      /* Hero & Stats */
-      if (ld) {
-        let { subtitle, title, desc, manifesto } = defaults.hero;
-        let pStats = null;
-        if (ld.content) {
-          const parts = ld.content.split('|');
-          if (parts[0]) subtitle = parts[0];
-          if (parts[1]) title    = parts[1];
-          if (parts[2]) desc     = parts[2];
-          if (parts[3]) manifesto = parts[3];
-          if (parts[4]) {
-              try { pStats = JSON.parse(parts[4]); } catch(e) {}
-          }
-        }
-        setHeroData({ images: ld.images?.length ? ld.images : defaults.hero.images, subtitle, title, desc, manifesto, stats: pStats });
-      }
-
-      if (fd)  setFarmData(fd);
-      if (pd)  setProcessData(pd);
-      if (gd)  setGetToKnowData(gd);
-      if (pcd) setPerfectData(pcd);
-      if (ged) setGreenData(ged);
-      if (sd)  setStaffData(sd);
-      if (ad)  setAboutData(ad);
-      if (cd)  setContactData(cd);
-
-      /* Layout / social */
-      if (lay?.content?.startsWith('{')) {
-        try {
-          const p = JSON.parse(lay.content);
-          setSocialLinks({ facebook: p.facebook || '', instagram: p.instagram || '' });
-          if (p.navLabels?.landingBtn) setBtnLabel(p.navLabels.landingBtn);
-        } catch {}
-      }
-    })();
+    const unsubs = [
+      subscribePage('landing', ld => setHeroData(parseLanding(ld))),
+      subscribePage('layout', lay => setLayoutInfo(parseLayout(lay))),
+      ...Object.entries(SECTION_SLUGS).map(([k, slug]) =>
+        subscribePage(slug, row => setSections(prev => ({ ...prev, [k]: row || null })))),
+    ];
+    /* If the CMS is slow/unreachable, fall back to default hero images */
+    const t = setTimeout(() => {
+      setHeroData(h => (h.images ? h : { ...h, images: defaults.hero.images }));
+    }, 2500);
+    return () => { clearTimeout(t); unsubs.forEach(u => u()); };
   }, []);
 
-  /* Slideshow */
-  useEffect(() => {
-    const id = setInterval(() => setCurrentImage(i => (i + 1) % heroData.images.length), 5500);
-    return () => clearInterval(id);
-  }, [heroData.images.length]);
+  const socialLinks = layoutInfo.social;
+  const btnLabel = layoutInfo.btnLabel || 'Discover Our Farm';
+  const {
+    farm: farmData, process: processData, getToKnow: getToKnowData, perfect: perfectData,
+    green: greenData, staff: staffData, about: aboutData, contact: contactData,
+  } = sections;
 
   return (
     <div className="lp-root">
 
       {/* ═══ HERO ═══ */}
       <section id="hero" className="lp-hero">
-        <div className="lp-bg-slider" ref={heroSliderRef}>
-          {heroData.images.map((img, i) => (
-            <div key={i}
-              className={`lp-bg-slide${i === currentImage ? ' active' : ''}`}
-              style={{ backgroundImage: `url(${img})` }}
-            />
-          ))}
-        </div>
+        <HeroSlider images={heroData.images} sliderRef={heroSliderRef} />
         <div className="lp-hero-overlay" />
         <div className="lp-hero-content">
           <p className="lp-eyebrow reveal">{heroData.subtitle}</p>
-          <SplitTitle text={heroData.title} className="lp-hero-title" />
+          <SplitTitle key={heroData.title} text={heroData.title} className="lp-hero-title" />
           <p className="lp-hero-desc reveal reveal-delay-2">{heroData.desc}</p>
           <div className="lp-hero-actions reveal reveal-delay-3">
             <button ref={heroBtnRef} className="btn-light magnetic-btn" onClick={() => scrollTo('farm')}>{btnLabel}</button>
@@ -577,10 +625,10 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        <div className="lp-scroll-hint">
+        <button type="button" className="lp-scroll-hint" onClick={() => scrollTo('farm')} aria-label="Scroll to content">
           <span>Scroll</span>
-          <div className="lp-scroll-line" />
-        </div>
+          <span className="lp-scroll-line" />
+        </button>
       </section>
 
       {/* ═══ MARQUEE ═══ */}

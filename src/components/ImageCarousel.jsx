@@ -5,6 +5,7 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef(null);
+  const touchStart = useRef({ x: 0, y: 0 });
 
   // Auto-play interval
   useEffect(() => {
@@ -66,7 +67,6 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
   }
 
   /* ── Swipe gesture support ── */
-  const touchStart = useRef({ x: 0, y: 0 });
   const handleTouchStart = (e) => {
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
@@ -92,8 +92,8 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
       >
          {images.length > 1 && (
              <>
-                <button className="carousel-arrow left" onClick={prevSlide}>&#10094;</button>
-                <button className="carousel-arrow right" onClick={nextSlide}>&#10095;</button>
+                <button type="button" className="carousel-arrow left" onClick={prevSlide} aria-label="Previous image">&#10094;</button>
+                <button type="button" className="carousel-arrow right" onClick={nextSlide} aria-label="Next image">&#10095;</button>
              </>
          )}
 
@@ -122,10 +122,13 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
       {images.length > 1 && (
         <div className="carousel-thumbnails">
             {images.map((img, index) => (
-                <div 
-                    key={index} 
+                <button
+                    type="button"
+                    key={index}
                     className={`thumbnail-item ${index === currentIndex ? 'active' : ''}`}
                     onClick={() => handleThumbnailClick(index)}
+                    aria-label={`Show image ${index + 1}`}
+                    aria-current={index === currentIndex ? 'true' : undefined}
                 >
                     <img 
                       src={img} 
@@ -133,7 +136,7 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
                       loading="lazy"
                       decoding="async"
                     />
-                </div>
+                </button>
             ))}
         </div>
       )}

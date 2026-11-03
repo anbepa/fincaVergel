@@ -1,7 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
 import Landing from './pages/Landing';
-import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import GlobalEffects from './components/GlobalEffects';
@@ -17,6 +16,7 @@ import {
 } from './components/MobileEnhancements';
 
 /* Lazy-loaded pages for prefetch + code splitting */
+const Home = lazy(() => import('./pages/Home'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
 const Contact = lazy(() => import('./pages/Contact'));
 const TheFarm = lazy(() => import('./pages/TheFarm'));
@@ -28,6 +28,15 @@ const OurStaff = lazy(() => import('./pages/OurStaff'));
 const Login = lazy(() => import('./pages/Admin/Login'));
 const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
 const EditPage = lazy(() => import('./pages/Admin/EditPage'));
+
+/* Scroll to top on route change (unless navigating to a #section) */
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
 
 /* Global hooks component */
 function GlobalHooks() {
@@ -41,6 +50,7 @@ function App() {
   return (
     <Router>
       <ToastProvider>
+        <ScrollToTop />
         <GlobalEffects />
         <GlobalHooks />
         <DynamicThemeColor />
@@ -48,7 +58,7 @@ function App() {
         <BottomNav />
         <Routes>
           <Route path="/" element={<Layout noPad><Landing /></Layout>} />
-          <Route path="/home" element={<Layout><Home /></Layout>} />
+          <Route path="/home" element={<Layout><Suspense fallback={<SkeletonPage />}><Home /></Suspense></Layout>} />
           <Route path="/aboutus" element={<Layout><Suspense fallback={<SkeletonPage />}><AboutUs /></Suspense></Layout>} />
           <Route path="/contact" element={<Layout><Suspense fallback={<SkeletonPage />}><Contact /></Suspense></Layout>} />
           
@@ -73,8 +83,9 @@ function App() {
 // Simple Layout component to include Nav and Footer on inner pages
 const Layout = ({ children, noPad }) => (
   <div className="layout">
+    <a href="#main" className="skip-link">Skip to content</a>
     <Navbar />
-    <main style={noPad ? {} : { paddingTop: '70px' }}>{children}</main>
+    <main id="main" style={noPad ? {} : { paddingTop: '70px' }}>{children}</main>
     <Footer />
   </div>
 );

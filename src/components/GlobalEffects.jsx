@@ -2,32 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import './GlobalEffects.css';
 
 /* ═══════════════════════════════════════════════════════
-   PRELOADER — branded loading screen
-   ═══════════════════════════════════════════════════════ */
-function Preloader({ onDone }) {
-  const [hiding, setHiding] = useState(false);
-
-  useEffect(() => {
-    // Allow at least 1.4s for the animation to play
-    const t = setTimeout(() => {
-      setHiding(true);
-      setTimeout(onDone, 600); // matches CSS exit animation
-    }, 1400);
-    return () => clearTimeout(t);
-  }, [onDone]);
-
-  return (
-    <div className={`preloader${hiding ? ' preloader--exit' : ''}`}>
-      <div className="preloader-inner">
-        <div className="preloader-line" />
-        <span className="preloader-text">FINCA EL VERGEL</span>
-        <div className="preloader-line" />
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════
    CUSTOM CURSOR — dot + ring (desktop only)
    ═══════════════════════════════════════════════════════ */
 function CustomCursor() {
@@ -53,7 +27,8 @@ function CustomCursor() {
         dot.style.opacity = '1';
         ring.style.opacity = '1';
       }
-      dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      kick();
     };
 
     const onLeave = () => {
@@ -62,26 +37,30 @@ function CustomCursor() {
       ring.style.opacity = '0';
     };
 
-    // Ring follows with lag via rAF
-    let raf;
+    // Ring follows with lag via rAF — the loop stops once it has caught up
+    let raf = 0;
     const animate = () => {
-      ringPos.current.x += (pos.current.x - ringPos.current.x) * 0.15;
-      ringPos.current.y += (pos.current.y - ringPos.current.y) * 0.15;
-      ring.style.transform = `translate(${ringPos.current.x}px, ${ringPos.current.y}px) scale(${hovering.current ? 1.6 : 1})`;
-      raf = requestAnimationFrame(animate);
+      const dx = pos.current.x - ringPos.current.x;
+      const dy = pos.current.y - ringPos.current.y;
+      ringPos.current.x += dx * 0.18;
+      ringPos.current.y += dy * 0.18;
+      ring.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) scale(${hovering.current ? 1.6 : 1})`;
+      raf = (Math.abs(dx) > 0.3 || Math.abs(dy) > 0.3) ? requestAnimationFrame(animate) : 0;
     };
-    raf = requestAnimationFrame(animate);
+    const kick = () => { if (!raf) raf = requestAnimationFrame(animate); };
 
     // Detect hoverable elements for "grow" effect
     const onOver = (e) => {
-      if (e.target.closest('a, button, .home-card, .lp-tricard-item, input, textarea, .btn-light, .btn-primary, .nav-anchor')) {
+      if (e.target instanceof Element && e.target.closest('a, button, .home-card, .lp-tricard-item, input, textarea, .btn-light, .btn-primary, .nav-anchor')) {
         hovering.current = true;
         dot.classList.add('cursor-dot--hover');
+        kick();
       }
     };
     const onOut = () => {
       hovering.current = false;
       dot.classList.remove('cursor-dot--hover');
+      kick();
     };
 
     document.addEventListener('mousemove', onMove, { passive: true });
@@ -141,20 +120,22 @@ function ScrollProgress() {
    MAIN EXPORT — all effects bundled
    ═══════════════════════════════════════════════════════ */
 export default function GlobalEffects() {
-  const [loaded, setLoaded] = useState(false);
   const [reducedMotion] = useState(
     () => typeof window !== 'undefined'
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
-  // Skip preloader entirely for reduced-motion users
+  // Remove the static HTML splash (index.html) as soon as React has painted
   useEffect(() => {
-    if (reducedMotion) setLoaded(true);
-  }, [reducedMotion]);
+    const splash = document.getElementById('splash');
+    if (!splash) return;
+    splash.classList.add('splash--hide');
+    const t = setTimeout(() => splash.remove(), 500);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <>
-      {!loaded && <Preloader onDone={() => setLoaded(true)} />}
       <CustomCursor />
       <ScrollProgress />
       {!reducedMotion && <div className="film-grain" aria-hidden="true" />}

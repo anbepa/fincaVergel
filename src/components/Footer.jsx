@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { subscribePage } from '../lib/content';
 import './Footer.css';
 
 const Footer = () => {
@@ -13,26 +13,18 @@ const Footer = () => {
     instagram: '',
   });
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from('content_pages').select('*').eq('slug', 'layout').single();
-      if (data?.content?.startsWith('{')) {
-        try {
-          const p = JSON.parse(data.content);
-          if (p.text)        setFooterText(p.text);
-          if (p.headerTitle) setBrandName(p.headerTitle);
-          if (p.footerLogo)  setFooterLogo(p.footerLogo);
-          else if (data.images?.[1]) setFooterLogo(data.images[1]);
-          if (p.footerCopyright) setFooterCopyright(p.footerCopyright);
-          setLinks({
-            facebook:  p.facebook  || '',
-            instagram: p.instagram || '',
-          });
-        } catch {}
-      }
-    })();
-  }, []);
+  useEffect(() => subscribePage('layout', (data) => {
+    if (!data?.content?.startsWith('{')) return;
+    try {
+      const p = JSON.parse(data.content);
+      if (p.text)        setFooterText(p.text);
+      if (p.headerTitle) setBrandName(p.headerTitle);
+      if (p.footerLogo)  setFooterLogo(p.footerLogo);
+      else if (data.images?.[1]) setFooterLogo(data.images[1]);
+      if (p.footerCopyright) setFooterCopyright(p.footerCopyright);
+      setLinks({ facebook: p.facebook || '', instagram: p.instagram || '' });
+    } catch { /* ignore */ }
+  }), []);
 
   return (
     <footer className="footer">
@@ -40,7 +32,7 @@ const Footer = () => {
         {/* Brand column */}
         <div className="footer-brand-col">
           {footerLogo
-            ? <img src={footerLogo} alt={brandName} className="footer-logo" />
+            ? <img src={footerLogo} alt={brandName} className="footer-logo" loading="lazy" decoding="async" />
             : <Link to="/" className="footer-brand">{brandName}</Link>}
           <p className="footer-tagline" dangerouslySetInnerHTML={{ __html: footerText }} />
           <div className="footer-social">
@@ -83,6 +75,7 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <p className="footer-copy">{footerCopyright} &copy; {new Date().getFullYear()} Finca Vergel. All rights reserved.</p>
+        <Link to="/admin" className="footer-admin">Admin</Link>
       </div>
     </footer>
   );

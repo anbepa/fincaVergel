@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient';
+import { getPage } from '../lib/content';
 import ImageCarousel from '../components/ImageCarousel';
 import './AboutUs.css';
 
@@ -11,8 +11,7 @@ const AboutUs = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from('content_pages').select('*').eq('slug', 'aboutus').single();
+      const { data } = await getPage('aboutus');
       if (data) {
         if (data.title) setTitle(data.title);
         if (data.images?.length) setImages(data.images);

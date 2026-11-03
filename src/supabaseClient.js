@@ -23,7 +23,8 @@ export const supabase = (supabaseUrl && supabaseAnonKey)
         select: () => ({
           eq: () => ({
             single: async () => ({ data: null, error: { message: 'Supabase not configured' } })
-          })
+          }),
+          in: async () => ({ data: null, error: { message: 'Supabase not configured' } })
         }),
         upsert: async () => ({ error: { message: 'Supabase not configured' } })
       }),
