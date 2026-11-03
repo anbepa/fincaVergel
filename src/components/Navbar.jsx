@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { subscribePage } from '../lib/content';
+import { subscribeLots } from '../lib/lots';
 import useSectionNav from '../lib/useSectionNav';
 import './Navbar.css';
 
@@ -10,8 +11,9 @@ const Navbar = () => {
   const [logoUrl,     setLogoUrl]     = useState(null);
   const [headerTitle, setHeaderTitle] = useState('FINCA VERGEL');
   const [labels, setLabels] = useState({
-    home: 'Home', about: 'About Us', contact: 'Contact',
+    home: 'Home', about: 'About Us', contact: 'Contact', coffees: 'Our Coffees',
   });
+  const [hasLots, setHasLots] = useState(false);
   const location  = useLocation();
   const goTo = useSectionNav();
   const isHeroPage = location.pathname === '/';
@@ -38,6 +40,8 @@ const Navbar = () => {
       else if (data.images?.[0]) setLogoUrl(data.images[0]);
     } catch { /* ignore */ }
   }), []);
+
+  useEffect(() => subscribeLots(l => setHasLots(Array.isArray(l) && l.length > 0)), []);
 
   /* Close the menu on route change, lock page scroll + Escape while open */
   useEffect(() => { setIsOpen(false); }, [location.pathname]);
@@ -68,6 +72,7 @@ const Navbar = () => {
 
         <ul id="primary-nav" className={`nav-links${isOpen ? ' active' : ''}`}>
           <li><button type="button" className="nav-anchor" onClick={() => go('farm')}>{labels.home}</button></li>
+          {hasLots && <li><button type="button" className="nav-anchor" onClick={() => go('coffees')}>{labels.coffees}</button></li>}
           <li><button type="button" className="nav-anchor" onClick={() => go('our-story')}>{labels.about}</button></li>
           <li><button type="button" className="nav-anchor nav-anchor--cta" onClick={() => go('contact')}>{labels.contact}</button></li>
         </ul>

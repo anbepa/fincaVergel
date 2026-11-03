@@ -77,7 +77,8 @@ const EditPage = () => {
       about: "About us",
       contact: "Contact",
       admin: "ADMIN",
-      landingBtn: "Get to know us"
+      landingBtn: "Get to know us",
+      coffees: "Our Coffees"
   });
 
   useEffect(() => {
@@ -238,7 +239,8 @@ const EditPage = () => {
                         about: parsed.navLabels.about || "About us",
                         contact: parsed.navLabels.contact || "Contact",
                         admin: parsed.navLabels.admin || "ADMIN",
-                        landingBtn: parsed.navLabels.landingBtn || "Get to know us"
+                        landingBtn: parsed.navLabels.landingBtn || "Get to know us",
+                        coffees: parsed.navLabels.coffees || "Our Coffees"
                     });
                 }
                 
@@ -557,6 +559,10 @@ const EditPage = () => {
                     <div>
                         <label className="edit-label">About Us Menu item</label>
                         <input type="text" value={navLabels.about} onChange={e => setNavLabels({...navLabels, about: e.target.value})} className="edit-input" />
+                    </div>
+                    <div>
+                        <label className="edit-label">Coffees Menu item</label>
+                        <input type="text" value={navLabels.coffees || ''} onChange={e => setNavLabels({...navLabels, coffees: e.target.value})} className="edit-input" placeholder="Our Coffees" />
                     </div>
                     <div>
                         <label className="edit-label">Contact Menu item</label>

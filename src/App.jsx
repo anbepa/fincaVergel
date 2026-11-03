@@ -28,6 +28,10 @@ const OurStaff = lazy(() => import('./pages/OurStaff'));
 const Login = lazy(() => import('./pages/Admin/Login'));
 const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
 const EditPage = lazy(() => import('./pages/Admin/EditPage'));
+const AdminLots = lazy(() => import('./pages/Admin/AdminLots'));
+const AdminRequests = lazy(() => import('./pages/Admin/AdminRequests'));
+const AdminHeroVideo = lazy(() => import('./pages/Admin/AdminHeroVideo'));
+const AdminMap = lazy(() => import('./pages/Admin/AdminMap'));
 
 /* Scroll to top on route change (unless navigating to a #section) */
 function ScrollToTop() {
@@ -74,6 +78,10 @@ function App() {
           <Route path="/admin" element={<Layout><Suspense fallback={<SkeletonPage />}><Login /></Suspense></Layout>} />
           <Route path="/admin/dashboard" element={<Layout><Suspense fallback={<SkeletonPage />}><Dashboard /></Suspense></Layout>} />
           <Route path="/admin/edit/:slug" element={<Layout><Suspense fallback={<SkeletonPage />}><EditPage /></Suspense></Layout>} />
+          <Route path="/admin/lots" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminLots /></Suspense></Layout>} />
+          <Route path="/admin/requests" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminRequests /></Suspense></Layout>} />
+          <Route path="/admin/hero-video" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminHeroVideo /></Suspense></Layout>} />
+          <Route path="/admin/map" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminMap /></Suspense></Layout>} />
         </Routes>
       </ToastProvider>
     </Router>

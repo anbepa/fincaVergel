@@ -1,0 +1,255 @@
+/* ══════════════════════════════════════════════════════
+   COFFEE LOTS — catalog + sample requests
+   ══════════════════════════════════════════════════════ */
+.lots {
+  background: var(--color-bg);
+  padding: clamp(72px, 10vw, 140px) 0 clamp(64px, 8vw, 110px);
+  overflow: hidden;
+}
+.lots-head {
+  max-width: var(--max-width);
+  margin: 0 auto clamp(36px, 5vw, 64px);
+  padding: 0 clamp(20px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: end;
+}
+.lots-title {
+  font-family: var(--font-condensed);
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: .88;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--color-text);
+}
+.lots-intro {
+  font-size: 1.02rem; line-height: 1.7; color: #3f3f3a;
+  margin: 0 0 20px; max-width: 460px;
+}
+.lots-filter { display: flex; flex-wrap: wrap; gap: 8px; }
+.lots-chip {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: .74rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background .25s, color .25s, border-color .25s;
+}
+.lots-chip:hover { border-color: var(--color-text); }
+.lots-chip.is-active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
+
+/* Rail: grid on desktop, swipeable on mobile */
+.lots-rail {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.lot-card {
+  display: flex; flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .5s;
+  animation: lotIn .7s calc(var(--i, 0) * 70ms) cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes lotIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@media (hover: hover) {
+  .lot-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -24px rgba(17,17,17,.35); }
+  .lot-card:hover .lot-media img { transform: scale(1.06); }
+}
+.lot-card.is-soldout .lot-media img { filter: grayscale(.7); }
+
+.lot-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #2a2a26;
+}
+.lot-media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1.2s cubic-bezier(.22,1,.36,1);
+}
+.lot-media-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-condensed); font-weight: 900; font-size: 7rem;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.25);
+  background: radial-gradient(circle at 30% 30%, #3a3329, #161512);
+}
+.lot-score {
+  position: absolute; right: 16px; bottom: -28px;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--color-accent); color: #111;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 10px 24px -8px rgba(0,0,0,.35);
+  z-index: 2;
+}
+.lot-score b { font-family: var(--font-condensed); font-weight: 800; font-size: 1.6rem; line-height: 1; }
+.lot-score small { font-size: .56rem; font-weight: 700; letter-spacing: 2px; }
+.lot-badge {
+  position: absolute; left: 16px; top: 16px;
+  padding: 6px 12px;
+  background: rgba(17,17,17,.85); color: #fff;
+  font-size: .64rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+}
+
+.lot-body {
+  position: relative;
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 28px 24px 24px;
+  flex: 1;
+}
+.lot-eyebrow {
+  margin: 0;
+  font-size: .64rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--color-accent-dark);
+}
+.lot-name {
+  margin: 0;
+  font-family: var(--font-condensed); font-weight: 800;
+  font-size: 2rem; line-height: 1; text-transform: uppercase;
+  color: var(--color-text);
+  padding-right: 72px;
+}
+.lot-specs { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; }
+.lot-specs div { display: flex; flex-direction: column; gap: 2px; }
+.lot-specs dt { font-size: .6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8a8a80; }
+.lot-specs dd { margin: 0; font-size: .92rem; font-weight: 500; color: var(--color-text); }
+.lot-notes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.lot-notes li {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--color-bg-light);
+  font-size: .78rem; font-weight: 500; color: #3f3f3a;
+}
+.lot-flip { display: flex; gap: 14px; align-items: center; }
+.lot-desc { margin: 0; font-size: .86rem; line-height: 1.6; color: #55554f; }
+
+/* Radar */
+.radar { flex: none; overflow: visible; }
+.radar-ring { fill: none; stroke: rgba(17,17,17,.1); stroke-width: 1; }
+.radar-axis { stroke: rgba(17,17,17,.1); stroke-width: 1; }
+.radar-label { font-family: var(--font-sans); font-size: 7.5px; font-weight: 600; letter-spacing: .5px; fill: #77776f; text-transform: uppercase; }
+.radar-shape { fill: rgba(181,149,106,.32); stroke: var(--color-accent-dark); stroke-width: 1.5; stroke-linejoin: round; }
+.radar-dot { fill: var(--color-accent-dark); }
+
+/* Buttons */
+.lots-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px;
+  margin-top: auto;
+  padding: 0 22px;
+  border: 1.5px solid var(--color-text);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: .72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer;
+  transition: background .25s, color .25s, gap .25s;
+}
+.lots-btn:hover { background: var(--color-text); color: var(--color-bg); gap: 14px; }
+.lots-btn--solid { background: var(--color-text); color: var(--color-bg); }
+.lots-btn--solid:hover { background: var(--color-accent-dark); border-color: var(--color-accent-dark); }
+.lots-btn:focus-visible, .lots-chip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.lots-btn:disabled { opacity: .7; cursor: progress; }
+
+.lots-cta {
+  max-width: var(--max-width);
+  margin: clamp(36px, 5vw, 56px) auto 0;
+  padding: 0 clamp(20px, 5vw, 80px);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  font-family: var(--font-condensed); font-weight: 700; font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .lots-head { grid-template-columns: 1fr; gap: 16px; }
+  /* Swipeable rail */
+  .lots-rail {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    scroll-padding-left: 20px;
+  }
+  .lots-rail::-webkit-scrollbar { display: none; }
+  .lot-card { flex: 0 0 84%; scroll-snap-align: start; }
+  .lots-cta { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+/* ── Sample dialog ── */
+.sample-backdrop {
+  position: fixed; inset: 0; z-index: 100000;
+  background: rgba(10,10,8,.6);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn .25s ease both;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.sample-dialog {
+  position: relative;
+  width: 100%; max-width: 620px; max-height: calc(100vh - 40px); overflow: auto;
+  background: var(--color-bg);
+  padding: clamp(28px, 4vw, 44px);
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,.5);
+  animation: dialogIn .4s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes dialogIn { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+.sample-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 44px; height: 44px; border: 0; background: none;
+  font-size: 1.8rem; line-height: 1; cursor: pointer; color: var(--color-text);
+}
+.sample-eyebrow { margin: 0 0 8px; font-size: .64rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--color-accent-dark); }
+.sample-title { margin: 0 0 6px; font-family: var(--font-condensed); font-weight: 800; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; text-transform: uppercase; }
+.sample-meta { margin: 0 0 22px; color: #55554f; font-size: .9rem; }
+.sample-form { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+.sample-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sample-form label {
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: .68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #55554f;
+}
+.sample-form input, .sample-form select, .sample-form textarea {
+  font: 400 1rem var(--font-sans);
+  letter-spacing: 0; text-transform: none;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-bottom: 2px solid rgba(17,17,17,.25);
+  background: #fff; color: var(--color-text);
+  border-radius: 0;
+  outline: none;
+  transition: border-color .2s;
+}
+.sample-form input:focus, .sample-form select:focus, .sample-form textarea:focus { border-color: var(--color-accent-dark); }
+.sample-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.sample-form .lots-btn { margin-top: 6px; }
+.sample-done { text-align: center; padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.sample-done-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--color-accent); color: #111;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; font-weight: 700;
+}
+.sample-done h3 { margin: 0; font-family: var(--font-condensed); font-weight: 800; font-size: 2.2rem; text-transform: uppercase; }
+.sample-done p { margin: 0 0 8px; color: #55554f; }
+@media (max-width: 600px) {
+  .sample-backdrop { align-items: flex-end; padding: 0; }
+  .sample-dialog { max-height: 92vh; animation-name: sheetIn; }
+  @keyframes sheetIn { from { transform: translateY(100%); } to { transform: none; } }
+  .sample-row { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lot-card, .sample-dialog, .sample-backdrop { animation: none; }
+}

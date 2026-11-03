@@ -5,6 +5,8 @@ import { preloadImage, sizedImage, viewportWidth } from '../lib/images';
 import LazyBackground from '../components/LazyBackground';
 import Journey, { htmlExcerpt } from '../components/Journey';
 import FarmLive from '../components/FarmLive';
+import CoffeeLots from '../components/CoffeeLots';
+import FarmMap from '../components/FarmMap';
 import {
   AnimatedCounter,
   useGyroParallax,
@@ -537,8 +539,62 @@ const SECTION_SLUGS = {
   about: 'aboutus', contact: 'contact',
 };
 
+/* Parse hero video settings ("heromedia" row) */
+function parseHeroMedia(row) {
+  if (!row?.content) return null;
+  try {
+    const p = JSON.parse(row.content);
+    if (!p.enabled || !(p.videoUrl || p.mobileVideoUrl)) return null;
+    return p;
+  } catch { return null; }
+}
+
+/* Looping background video; fades in only once it is really playing */
+function HeroVideo({ media, onPlaying }) {
+  const ref = useRef(null);
+  const [on, setOn] = useState(false);
+  const src = React.useMemo(() => {
+    const small = viewportWidth() < 768;
+    return (small && media.mobileVideoUrl) || media.videoUrl || media.mobileVideoUrl;
+  }, [media]);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const play = () => v.play().catch(() => {});
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? play() : v.pause()));
+    io.observe(v);
+    const onVis = () => (document.hidden ? v.pause() : play());
+    document.addEventListener('visibilitychange', onVis);
+    return () => { io.disconnect(); document.removeEventListener('visibilitychange', onVis); };
+  }, [src]);
+
+  return (
+    <video
+      ref={ref}
+      className={`lp-hero-video${on ? ' is-on' : ''}`}
+      src={src}
+      poster={media.posterUrl || undefined}
+      muted
+      loop
+      autoPlay
+      playsInline
+      preload="auto"
+      aria-hidden="true"
+      onPlaying={() => { setOn(true); onPlaying?.(); }}
+    />
+  );
+}
+
+const canAutoplayVideo = () =>
+  typeof window !== 'undefined'
+  && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  && !navigator.connection?.saveData;
+
 /* Full-bleed hero background that never shows a half-loaded or swapped image */
-function HeroSlider({ images, sliderRef }) {
+function HeroSlider({ images, sliderRef, video }) {
+  const [videoOn, setVideoOn] = useState(false);
+  const useVideo = !!video && canAutoplayVideo();
   const [current, setCurrent] = useState(0);
   const [ready, setReady] = useState({}); // index -> decoded
   const urls = React.useMemo(
@@ -557,6 +613,7 @@ function HeroSlider({ images, sliderRef }) {
 
   /* Advance only when the next slide is already decoded */
   useEffect(() => {
+    if (videoOn) return; // the video takes over the hero
     if (urls.length < 2 || !ready[current]) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const next = (current + 1) % urls.length;
@@ -567,7 +624,7 @@ function HeroSlider({ images, sliderRef }) {
       setCurrent(c => (c === current ? next : c));
     }, 6000);
     return () => { cancelled = true; clearTimeout(id); };
-  }, [current, urls, ready]);
+  }, [current, urls, ready, videoOn]);
 
   const jump = (i) => {
     if (i === current) return;
@@ -587,8 +644,9 @@ function HeroSlider({ images, sliderRef }) {
             style={ready[i] ? { backgroundImage: `url("${url}")` } : undefined}
           />
         ))}
+        {useVideo && <HeroVideo media={video} onPlaying={() => setVideoOn(true)} />}
       </div>
-      {urls.length > 1 && (
+      {urls.length > 1 && !videoOn && (
         <div className="lp-hero-slides" role="group" aria-label="Hero images">
           <span className="lp-hero-count" aria-hidden="true">
             <b>{String(current + 1).padStart(2, '0')}</b> / {String(urls.length).padStart(2, '0')}
@@ -619,6 +677,7 @@ const Landing = () => {
   const [heroData, setHeroData] = useState(() =>
     cachedLanding !== undefined ? parseLanding(cachedLanding) : { ...defaults.hero, images: null });
   const [layoutInfo, setLayoutInfo] = useState(() => parseLayout(getCachedPage('layout')));
+  const [heroMedia, setHeroMedia] = useState(() => parseHeroMedia(getCachedPage('heromedia')));
   const [sections, setSections] = useState(() => {
     const init = {};
     Object.entries(SECTION_SLUGS).forEach(([k, slug]) => { init[k] = getCachedPage(slug) || null; });
@@ -639,6 +698,7 @@ const Landing = () => {
     const unsubs = [
       subscribePage('landing', ld => setHeroData(parseLanding(ld))),
       subscribePage('layout', lay => setLayoutInfo(parseLayout(lay))),
+      subscribePage('heromedia', row => setHeroMedia(parseHeroMedia(row))),
       ...Object.entries(SECTION_SLUGS).map(([k, slug]) =>
         subscribePage(slug, row => setSections(prev => ({ ...prev, [k]: row || null })))),
     ];
@@ -661,7 +721,7 @@ const Landing = () => {
 
       {/* ═══ HERO ═══ */}
       <section id="hero" className="lp-hero">
-        <HeroSlider images={heroData.images} sliderRef={heroSliderRef} />
+        <HeroSlider images={heroData.images} sliderRef={heroSliderRef} video={heroMedia} />
         <div className="lp-hero-overlay" />
         <div className="lp-hero-content">
           <FarmLive />
@@ -741,6 +801,12 @@ const Landing = () => {
             image: greenData?.images?.[0] || defaultImages[3] },
         ]}
       />
+
+      {/* ═══ COFFEE LOTS (admin: Coffee Lots) ═══ */}
+      <CoffeeLots />
+
+      {/* ═══ INTERACTIVE FARM MAP (admin: Farm Map) ═══ */}
+      <FarmMap />
 
       {/* ═══ GET TO KNOW US ═══ */}
       <SectionGetToKnow data={getToKnowData} />

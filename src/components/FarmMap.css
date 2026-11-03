@@ -1,0 +1,114 @@
+/* ══════════════════════════════════════════════════════
+   INTERACTIVE FARM MAP
+   ══════════════════════════════════════════════════════ */
+.fmap {
+  background: #10120e;
+  color: #fff;
+  padding: clamp(72px, 10vw, 140px) clamp(20px, 5vw, 80px);
+}
+.fmap-head { max-width: var(--max-width); margin: 0 auto clamp(32px, 4vw, 56px); }
+.fmap-title {
+  margin: 0;
+  font-family: var(--font-condensed); font-weight: 900;
+  font-size: clamp(3rem, 7vw, 6.5rem); line-height: .88; text-transform: uppercase;
+}
+.fmap-intro { margin: 18px 0 0; max-width: 560px; font-size: 1.02rem; line-height: 1.7; color: rgba(255,255,255,.78); }
+
+.fmap-layout {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(280px, 1fr);
+  gap: clamp(16px, 2.5vw, 32px);
+  align-items: stretch;
+}
+.fmap-canvas {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #1b2016;
+  box-shadow: 0 40px 80px -40px rgba(0,0,0,.8);
+}
+.fmap-img, .map-illustration {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+
+/* Pins */
+.fmap-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-height: 0;
+  padding: 0; border: 0; background: none;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  animation: pinIn .6s calc(.3s + var(--d, 0s)) cubic-bezier(.22,1,.36,1) both;
+  z-index: 2;
+}
+@keyframes pinIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+.fmap-pin-dot {
+  position: relative;
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; color: #111;
+  font: 800 .9rem var(--font-condensed);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), background .3s;
+}
+.fmap-pin-dot::after {
+  content: ''; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.7);
+  animation: pinPulse 2.4s ease-out infinite;
+}
+@keyframes pinPulse { 0% { transform: scale(.8); opacity: .9; } 100% { transform: scale(1.7); opacity: 0; } }
+.fmap-pin-label {
+  position: absolute; left: 44px; white-space: nowrap;
+  padding: 6px 10px;
+  background: rgba(10,10,8,.75);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font: 600 .7rem var(--font-sans); letter-spacing: 1.5px; text-transform: uppercase;
+  color: #fff;
+  opacity: 0; transform: translateX(-6px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.fmap-pin:hover .fmap-pin-label,
+.fmap-pin.is-active .fmap-pin-label,
+.fmap-pin:focus-visible .fmap-pin-label { opacity: 1; transform: none; }
+.fmap-pin.is-active { z-index: 3; }
+.fmap-pin.is-active .fmap-pin-dot { background: var(--color-accent); transform: scale(1.18); }
+.fmap-pin:focus-visible .fmap-pin-dot { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+
+/* Detail card */
+.fmap-card {
+  display: flex; flex-direction: column;
+  background: #f7f3ee; color: #111;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.fmap-card-img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; animation: fmapFade .5s ease both; }
+.fmap-card-body { padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; gap: 12px; flex: 1; animation: fmapFade .5s ease both; }
+@keyframes fmapFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.fmap-card-num { font: 600 .7rem var(--font-sans); letter-spacing: 3px; color: var(--color-accent-dark); }
+.fmap-card-title { margin: 0; font: 800 clamp(1.8rem, 2.6vw, 2.6rem)/1 var(--font-condensed); text-transform: uppercase; }
+.fmap-card-text { margin: 0; font-size: .98rem; line-height: 1.7; color: #3f3f3a; }
+.fmap-card-nav { margin-top: auto; display: flex; gap: 8px; padding-top: 8px; }
+.fmap-card-nav button {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1.5px solid #111; background: transparent; color: #111;
+  font-size: 1.1rem; cursor: pointer;
+  transition: background .25s, color .25s;
+}
+.fmap-card-nav button:hover { background: #111; color: #f7f3ee; }
+
+@media (max-width: 900px) {
+  .fmap-layout { grid-template-columns: 1fr; }
+  .fmap-canvas { aspect-ratio: 4 / 3; }
+  .fmap-pin-label { display: none; }
+  .fmap-pin-dot { width: 30px; height: 30px; font-size: .82rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fmap-pin, .fmap-pin-dot::after, .fmap-card-img, .fmap-card-body { animation: none; }
+}

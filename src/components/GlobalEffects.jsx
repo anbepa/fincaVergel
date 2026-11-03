@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './GlobalEffects.css';
 
 /* ═══════════════════════════════════════════════════════
@@ -125,6 +126,13 @@ export default function GlobalEffects() {
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
+  // The admin uses the native cursor (precise editing, drag & drop)
+  const { pathname } = useLocation();
+  const isAdmin = pathname.startsWith('/admin');
+  useEffect(() => {
+    document.documentElement.classList.toggle('native-cursor', isAdmin);
+  }, [isAdmin]);
+
   // Remove the static HTML splash (index.html) as soon as React has painted
   useEffect(() => {
     const splash = document.getElementById('splash');
@@ -136,7 +144,7 @@ export default function GlobalEffects() {
 
   return (
     <>
-      <CustomCursor />
+      {!isAdmin && <CustomCursor />}
       <ScrollProgress />
       {!reducedMotion && <div className="film-grain" aria-hidden="true" />}
     </>

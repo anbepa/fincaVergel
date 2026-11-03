@@ -45,6 +45,11 @@
   input, textarea, select, [contenteditable] { cursor: auto; }
 }
 
+/* Admin: native cursor everywhere */
+html.native-cursor { cursor: auto; }
+html.native-cursor a, html.native-cursor button, html.native-cursor label { cursor: pointer; }
+html.native-cursor input, html.native-cursor textarea, html.native-cursor select { cursor: auto; }
+
 /* ── Scroll Progress Bar ── */
 .scroll-progress {
   position: fixed;

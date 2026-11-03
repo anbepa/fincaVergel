@@ -72,6 +72,28 @@ This project is configured for Vercel.
 -   **Static Assets:** Ensure essential static assets are managed via Supabase Storage or placed in the `public` folder if strictly necessary for the build (though local images are ignored by default).
 -   **Supabase Setup:** The database schema is required. See `supabase_setup.sql` for the SQL commands to create the `content_pages` table and `page-images` bucket.
 
+## 🗄️ Database setup for the catalog, map and hero video
+
+Run the migration once in **Supabase → SQL Editor** (safe to re-run):
+
+```
+supabase/migrations/20261103_coffee_lots_requests_media.sql
+```
+
+It creates:
+
+| What | Where | Edited from |
+|---|---|---|
+| Coffee lots catalog | table `coffee_lots` (public read, admin write) | Admin → **Coffee Lots** |
+| Sample / waitlist requests | table `sample_requests` (visitors can only insert, admin reads) | Admin → **Sample Requests** |
+| Hero background video | `content_pages` row `heromedia` | Admin → **Hero Video** |
+| Interactive farm map | `content_pages` row `farmmap` | Admin → **Farm Map** |
+
+Notes:
+- The admin treats every logged-in user as an admin — keep public sign-ups **disabled** in Supabase (Authentication → Providers → Email → "Allow new users to sign up" off).
+- If uploading a video fails, your `page-images` bucket may only allow images: run the optional storage statement at the end of the migration.
+- The "Our Coffees" section stays hidden until at least one lot exists.
+
 ## 🔒 Admin Access
 
 Navigate to `/admin` to log in.

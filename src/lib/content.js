@@ -10,10 +10,10 @@ import { supabase } from '../supabaseClient';
 export const PUBLIC_SLUGS = [
   'landing', 'layout', 'home', 'contact', 'aboutus',
   'thefarm', 'ourprocess', 'gettoknowus', 'perfectcoffee',
-  'greenenergy', 'our-staff',
+  'greenenergy', 'our-staff', 'heromedia', 'farmmap',
 ];
 
-const STORAGE_KEY = 'fv-content-v1';
+const STORAGE_KEY = 'fv-content-v2';
 const cache = new Map();      // slug -> row | null
 const inflight = new Map();   // slug -> Promise<row|null>
 let batchPromise = null;

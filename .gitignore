@@ -60,3 +60,6 @@ desktop-layout-check.md
 index copy.html
 
 
+
+# Keep versioned migrations
+!supabase/migrations/*.sql
