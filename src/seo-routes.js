@@ -7,6 +7,8 @@
 
 export const SITE_NAME = 'Finca El Vergel';
 export const DEFAULT_SITE_URL = 'https://fincavergel.vercel.app';
+/* Google Search Console (HTML tag method) — public, safe to commit */
+export const GOOGLE_SITE_VERIFICATION = 'w9ablEGXGf30e_bXYKIwX3yWw9AUr1O4w0XkPwng9vw';
 export const INSTAGRAM_URL = 'https://www.instagram.com/fincaelvergel/';
 
 export const FARM = {

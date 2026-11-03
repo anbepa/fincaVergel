@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  ROUTES, SITE_NAME, DEFAULT_SITE_URL, fullTitle, structuredData,
+  ROUTES, SITE_NAME, DEFAULT_SITE_URL, GOOGLE_SITE_VERIFICATION, fullTitle, structuredData,
 } from './src/seo-routes.js'
 
 const esc = (s) => String(s)
@@ -80,6 +80,6 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const siteUrl = (env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, '')
   return {
-    plugins: [react(), seoPlugin(siteUrl, env.VITE_GOOGLE_SITE_VERIFICATION)],
+    plugins: [react(), seoPlugin(siteUrl, env.VITE_GOOGLE_SITE_VERIFICATION || GOOGLE_SITE_VERIFICATION)],
   }
 })
