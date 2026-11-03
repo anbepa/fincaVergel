@@ -1,22 +1,35 @@
 {
   "name": "Finca El Vergel",
   "short_name": "Finca Vergel",
-  "description": "Specialty Coffee · Costa Rica",
+  "description": "Specialty coffee from the Sierra Nevada de Santa Marta, Colombia",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#111111",
-  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "lang": "en",
+  "categories": [
+    "food",
+    "business"
+  ],
+  "id": "/"
 }

@@ -3,24 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Finca El Vergel — Specialty Coffee from Colombia</title>
-    <meta name="description" content="Finca El Vergel — Specialty Coffee from Colombia. Grown in the Sierra Nevada de Santa Marta, crafted with purpose." />
+    <!--seo:start--><!-- per-route title, description, canonical, Open Graph and JSON-LD are injected at build (vite.config.js) --><!--seo:end-->
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#111111" id="theme-color-meta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Finca Vergel" />
-
-    <!-- Social sharing -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Finca El Vergel" />
-    <meta property="og:title" content="Finca El Vergel — Specialty Coffee from Colombia" />
-    <meta property="og:description" content="Specialty coffee from the Sierra Nevada de Santa Marta, Colombia." />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="apple-mobile-web-app-title" content="Finca El Vergel" />
+    <meta name="geo.region" content="CO-MAG" />
+    <meta name="geo.placename" content="Ciénaga, Magdalena, Colombia" />
+    <meta name="geo.position" content="10.84976;-74.015902" />
+    <meta name="ICBM" content="10.84976, -74.015902" />
 
     <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- Connect early to the hosts the first screen needs -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -48,11 +47,15 @@
       }
       #splash.splash--hide { opacity: 0; visibility: hidden; }
       @media (prefers-reduced-motion: reduce) { #splash { transition: none; } }
+      /* Crawlable fallback content (replaced by the app on load) */
+      .seo-fallback { max-width: 720px; margin: 0 auto; padding: 120px 24px; color: #f7f3ee; font-family: system-ui, sans-serif; line-height: 1.6; }
+      .seo-fallback a { color: #b5956a; }
     </style>
   </head>
   <body>
     <div id="splash" aria-hidden="true">Finca El Vergel</div>
     <div id="root"></div>
+    
     <noscript><p style="color:#fff;font-family:sans-serif;text-align:center;padding:40px">Please enable JavaScript to view Finca El Vergel.</p></noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>

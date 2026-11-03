@@ -3,6 +3,7 @@ import { Suspense, lazy, useEffect } from 'react';
 import Landing from './pages/Landing';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import useRouteSeo from './lib/useRouteSeo';
 import GlobalEffects from './components/GlobalEffects';
 import {
   ToastProvider,
@@ -44,6 +45,7 @@ function ScrollToTop() {
 
 /* Global hooks component */
 function GlobalHooks() {
+  useRouteSeo();
   usePrefetchRoutes();
   useHapticFeedback();
   usePauseOffscreen();
