@@ -34,13 +34,13 @@ function farmIcon(label) {
  * - Admin (`editable`): click the map → onAdd({lat,lng}); drag pins → onMove(index, {lat,lng}).
  */
 export default function SatelliteMap({
-  location, points = [], active = -1, onSelect, editable = false, onAdd, onMove, onView,
+  location, points = [], active = -1, onSelect, editable = false, onAdd, onMove, onView, onFail,
 }) {
   const elRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
   const cb = useRef({});
-  cb.current = { onSelect, onAdd, onMove, onView };
+  cb.current = { onSelect, onAdd, onMove, onView, onFail };
 
   /* Create the map once */
   useEffect(() => {
@@ -58,7 +58,18 @@ export default function SatelliteMap({
       attributionControl: true,
     });
     map.attributionControl.setPrefix(false);
-    L.tileLayer(IMAGERY, { maxZoom: 19, maxNativeZoom: 18, attribution: ATTRIBUTION }).addTo(map);
+    const imagery = L.tileLayer(IMAGERY, { maxZoom: 19, maxNativeZoom: 18, attribution: ATTRIBUTION }).addTo(map);
+    // If the imagery host is blocked (network, ad-blocker…), report it so the
+    // section can fall back to the illustrated map instead of an empty box.
+    let loadedTiles = 0, failedTiles = 0, reported = false;
+    imagery.on('tileload', () => { loadedTiles += 1; });
+    imagery.on('tileerror', () => {
+      failedTiles += 1;
+      if (!reported && loadedTiles === 0 && failedTiles >= 4) { reported = true; cb.current.onFail?.(); }
+    });
+    const failTimer = setTimeout(() => {
+      if (!reported && loadedTiles === 0) { reported = true; cb.current.onFail?.(); }
+    }, 12000);
     L.tileLayer(LABELS, { maxZoom: 19, maxNativeZoom: 18, opacity: 0.85 }).addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -74,7 +85,18 @@ export default function SatelliteMap({
         cb.current.onView?.({ lat: +c.lat.toFixed(6), lng: +c.lng.toFixed(6), zoom: map.getZoom() });
       });
     }
-    return () => { map.remove(); mapRef.current = null; };
+    // Keep Leaflet in sync with the real container size (mobile address bar,
+    // rotation, late layout) — otherwise it can render blank until resized.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => map.invalidateSize()) : null;
+    ro?.observe(elRef.current);
+    const t1 = setTimeout(() => map.invalidateSize(), 300);
+    const t2 = setTimeout(() => map.invalidateSize(), 1200);
+
+    return () => {
+      clearTimeout(failTimer); clearTimeout(t1); clearTimeout(t2);
+      ro?.disconnect();
+      map.remove(); mapRef.current = null;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location?.lat, location?.lng, editable]);
 

@@ -142,3 +142,15 @@
 @media (prefers-reduced-motion: reduce) {
   .fmap-pin, .fmap-pin-dot::after, .fmap-card-img, .fmap-card-body { animation: none; }
 }
+
+/* Height fallback: browsers without aspect-ratio (Safari < 15, old Android
+   WebViews) would otherwise give the map a height of 0. */
+.fmap-canvas { min-height: 300px; }
+.fmap-canvas--satellite { min-height: 360px; }
+@supports not (aspect-ratio: 1 / 1) {
+  .fmap-canvas { height: 62vw; max-height: 640px; }
+  .fmap-canvas--satellite { height: 56vw; }
+  @media (max-width: 900px) {
+    .fmap-canvas, .fmap-canvas--satellite { height: 110vw; max-height: 72vh; }
+  }
+}

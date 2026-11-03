@@ -111,6 +111,7 @@ export default function FarmMap() {
   const [active, setActive] = useState(0);
   const [ratio, setRatio] = useState(null); // aspect ratio of an uploaded map image
   const [near, setNear] = useState(false);  // load the satellite map only when close
+  const [satFailed, setSatFailed] = useState(false); // imagery blocked → illustrated map
   const sectionRef = useRef(null);
 
   useEffect(() => subscribePage('farmmap', row => setConfig(parseMap(row) || DEFAULT_MAP)), []);
@@ -122,7 +123,7 @@ export default function FarmMap() {
     return () => io.disconnect();
   }, []);
 
-  const mode = mapMode(config);
+  const mode = satFailed && mapMode(config) === 'satellite' ? 'illustration' : mapMode(config);
   const points = mode === 'satellite'
     ? (config.points || []).filter(p => Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng)))
     : (config.points?.length ? config.points.filter(p => Number.isFinite(Number(p.x))) : (mode === 'illustration' ? DEFAULT_MAP.points : []));
@@ -146,7 +147,7 @@ export default function FarmMap() {
           {mode === 'satellite' ? (
             near && (
               <Suspense fallback={<div className="fmap-loading">Loading satellite view…</div>}>
-                <SatelliteMap location={loc} points={points} active={active} onSelect={setActive} />
+                <SatelliteMap location={loc} points={points} active={active} onSelect={setActive} onFail={() => setSatFailed(true)} />
               </Suspense>
             )
           ) : mode === 'image' ? (
