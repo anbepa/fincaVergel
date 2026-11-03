@@ -9,7 +9,7 @@ const Contact = () => {
   const [introText,  setIntroText]  = useState("If you have any questions about us, or if you are interested in obtaining our green coffee, please don't hesitate to reach out.");
   const [visitText,  setVisitText]  = useState("If you want to come visit our farm please let us know a little about yourself and what you are interested in seeing or learning. We'll put together a package that suits you perfectly.");
   const [contactEmail, setContactEmail] = useState("rosanabernal26@gmail.com");
-  const [contactLocation, setContactLocation] = useState("Alajuela, Costa Rica");
+  const [contactLocation, setContactLocation] = useState("Sierra Nevada de Santa Marta, Colombia");
 
   useEffect(() => {
     (async () => {

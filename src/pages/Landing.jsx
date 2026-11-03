@@ -6,7 +6,7 @@ import LazyBackground from '../components/LazyBackground';
 import Journey, { htmlExcerpt } from '../components/Journey';
 import FarmLive from '../components/FarmLive';
 import CoffeeLots from '../components/CoffeeLots';
-import FarmMap from '../components/FarmMap';
+import FarmMap, { parseMap, directionsUrl } from '../components/FarmMap';
 import {
   AnimatedCounter,
   useGyroParallax,
@@ -134,14 +134,14 @@ const defaultImages = [
 const defaults = {
   hero: {
     images:   defaultImages,
-    subtitle: 'Specialty Coffee · Costa Rica',
+    subtitle: 'Specialty Coffee · Colombia',
     title:    'FINCA EL VERGEL',
-    desc:     'Grown at the foot of the Poás Volcano. Shade-grown, sun-dried, and crafted with purpose.',
-    manifesto: 'We journey to grow the finest specialty coffee\nin the highlands of Costa Rica — with purpose,\npassion, and deep respect for the land.',
+    desc:     'Specialty coffee from the Sierra Nevada de Santa Marta, crafted with purpose.',
+    manifesto: 'We journey to grow the finest specialty coffee\nin the highlands of Colombia — with purpose,\npassion, and deep respect for the land.',
   },
   thefarm: {
     title:   'The Farm',
-    content: `<p>Finca El Vergel sits in the Central Valley of Costa Rica, on the slopes of the Poás Volcano. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level.</p><p>Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.</p>`,
+    content: `<p>Finca El Vergel sits in the mountains of the Sierra Nevada de Santa Marta, Colombia. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level.</p><p>Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.</p>`,
     images:  defaultImages,
   },
   process: {
@@ -158,7 +158,7 @@ const defaults = {
   },
   perfectcoffee: {
     title:   'Perfect Coffee',
-    content: `<p>Great coffee begins long before the roast. It starts with altitude, varietals, harvest timing, and the care taken at every processing stage. At Finca El Vergel we control all these variables — from planting under the shade of native trees to hand-selecting only ripe cherries at harvest.</p><p>The result: complex, clean, specialty-grade lots that express the unique terroir of Alajuela, Costa Rica.</p>`,
+    content: `<p>Great coffee begins long before the roast. It starts with altitude, varietals, harvest timing, and the care taken at every processing stage. At Finca El Vergel we control all these variables — from planting under the shade of native trees to hand-selecting only ripe cherries at harvest.</p><p>The result: complex, clean, specialty-grade lots that express the unique terroir of the Sierra Nevada de Santa Marta.</p>`,
     images:  defaultImages,
   },
   greenenergy: {
@@ -173,7 +173,7 @@ const defaults = {
   },
   aboutus: {
     title:   'Our Story',
-    content: 'Finca El Vergel is a family-owned coffee estate nestled in the highlands of Alajuela, Costa Rica. For generations we have cultivated specialty-grade Arabica under the shade of native trees, guided by a single belief: that great coffee is the fruit of great land, cared for with patience and respect.',
+    content: 'Finca El Vergel is a family-owned coffee estate nestled in the Sierra Nevada de Santa Marta, Colombia. For generations we have cultivated specialty-grade Arabica under the shade of native trees, guided by a single belief: that great coffee is the fruit of great land, cared for with patience and respect.',
     image:   defaultImages[2],
   },
 };
@@ -206,7 +206,7 @@ function parseContent(raw) {
    ════════════════════════════════════════════ */
 
 /* Infinite scrolling marquee */
-function Marquee({ text = 'SPECIALTY COFFEE · COSTA RICA · FINCA EL VERGEL · SHADE GROWN · SUN DRIED ·' }) {
+function Marquee({ text = 'SPECIALTY COFFEE · COLOMBIA · FINCA EL VERGEL · SHADE GROWN · SUN DRIED ·' }) {
   return (
     <div className="marquee-wrap" aria-hidden="true">
       <div className="marquee-track">
@@ -399,14 +399,14 @@ function SectionOurStory({ data }) {
   );
 }
 
-function SectionContact({ data }) {
+function SectionContact({ data, directions }) {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const toast = useToast();
   let introText = "If you have questions about us, or are interested in our green coffee, please don't hesitate to reach out.";
   let visitText = "If you want to visit the farm, let us know a little about yourself and what you'd like to see. We'll put together a package that suits you perfectly.";
   let contactEmail = "rosanabernal26@gmail.com";
-  let contactLocation = "Alajuela, Costa Rica";
+  let contactLocation = "Sierra Nevada de Santa Marta, Colombia";
   if (data?.content) {
     try {
       const p = JSON.parse(data.content);
@@ -468,6 +468,11 @@ function SectionContact({ data }) {
             <div className="lp-contact-detail">
               <span className="lp-contact-label">Location</span>
               <span className="lp-contact-value">{contactLocation}</span>
+              {directions && (
+                <a className="lp-contact-directions" href={directions} target="_blank" rel="noopener noreferrer">
+                  Get directions <span aria-hidden="true">↗</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -678,6 +683,7 @@ const Landing = () => {
     cachedLanding !== undefined ? parseLanding(cachedLanding) : { ...defaults.hero, images: null });
   const [layoutInfo, setLayoutInfo] = useState(() => parseLayout(getCachedPage('layout')));
   const [heroMedia, setHeroMedia] = useState(() => parseHeroMedia(getCachedPage('heromedia')));
+  const [mapCfg, setMapCfg] = useState(() => parseMap(getCachedPage('farmmap')));
   const [sections, setSections] = useState(() => {
     const init = {};
     Object.entries(SECTION_SLUGS).forEach(([k, slug]) => { init[k] = getCachedPage(slug) || null; });
@@ -699,6 +705,7 @@ const Landing = () => {
       subscribePage('landing', ld => setHeroData(parseLanding(ld))),
       subscribePage('layout', lay => setLayoutInfo(parseLayout(lay))),
       subscribePage('heromedia', row => setHeroMedia(parseHeroMedia(row))),
+      subscribePage('farmmap', row => setMapCfg(parseMap(row))),
       ...Object.entries(SECTION_SLUGS).map(([k, slug]) =>
         subscribePage(slug, row => setSections(prev => ({ ...prev, [k]: row || null })))),
     ];
@@ -818,7 +825,7 @@ const Landing = () => {
       <SectionOurStory data={aboutData} />
 
       {/* ═══ CONTACT ═══ */}
-      <SectionContact data={contactData} />
+      <SectionContact data={contactData} directions={directionsUrl(mapCfg?.location)} />
 
     </div>
   );

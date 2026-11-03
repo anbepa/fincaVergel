@@ -1,0 +1,63 @@
+.sat-map {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background: #1b2016;
+  font-family: var(--font-sans);
+}
+.sat-map .leaflet-control-attribution {
+  background: rgba(10,10,8,.55);
+  color: rgba(255,255,255,.7);
+  font-size: 10px;
+}
+.sat-map .leaflet-control-attribution a { color: rgba(255,255,255,.85); }
+.sat-map .leaflet-bar a {
+  background: rgba(17,17,17,.82);
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,.12);
+  min-height: 0;
+}
+.sat-map .leaflet-bar a:hover { background: #111; color: var(--color-accent); }
+.sat-map .leaflet-bar { border: 0; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+
+.sat-pin-wrap { background: none; border: 0; }
+.sat-pin {
+  position: relative;
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; color: #111;
+  font: 800 .9rem var(--font-condensed);
+  box-shadow: 0 6px 16px rgba(0,0,0,.45);
+  transition: transform .25s, background .25s;
+  cursor: pointer;
+}
+.sat-pin::after {
+  content: ''; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.8);
+  animation: pinPulse 2.4s ease-out infinite;
+}
+.sat-pin.is-active { background: var(--color-accent); transform: scale(1.18); }
+
+/* The farm itself */
+.sat-farm { position: relative; display: block; width: 20px; height: 20px; }
+.sat-farm-dot {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: var(--color-accent);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 0 rgba(181,149,106,.7);
+  animation: farmPulse 2.2s ease-out infinite;
+}
+@keyframes farmPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(181,149,106,.7); }
+  100% { box-shadow: 0 0 0 26px rgba(181,149,106,0); }
+}
+.sat-farm-label {
+  position: absolute; left: 28px; top: 50%; transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 6px 10px;
+  background: rgba(10,10,8,.78);
+  color: #fff;
+  font: 700 .72rem var(--font-sans); letter-spacing: 1.5px; text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sat-pin::after, .sat-farm-dot { animation: none; }
+}

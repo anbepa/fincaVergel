@@ -5,11 +5,8 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>Our micro coffee mill is built in the heart of Hacienda Sonora next to a traditional 150-year-old sugar cane mill that is preserved intact. All of our machines in the mill are tuned to perform in the best most efficient manner, using the energy harvested within the farm.</p>
-
-<p>We process all of our coffee using the honey and natural methods. Both of these methods require a lot more work and care than the traditional fully washed. However, it all makes sense when you taste the results in the cup. By playing and trying different techniques with these two methods we have been able to obtain distinct sweetness, with all types of cacao and enhanced fruit notes that complement the body of our cup profiles in our different varietals.</p>
-
-<p>Another important advantage is that we save great amounts of water by using the honey and the natural processes. Using the honey method saves more than 3 gallons of water per pound of coffee. Natural processed coffee doesn't need any water.</p>
+<p>From the ripe cherry to the exportable green coffee, we oversee every step of the process at the farm.</p>
+<p>Careful picking, processing and drying allow each lot to express the sweetness and character of our terroir.</p>
 `;
 
 const OurProcess = () => {

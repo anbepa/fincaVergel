@@ -5,9 +5,8 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>Hacienda Sonora is located in the Central Valley of Costa Rica, at the foot of the world renowned, Poas Volcano. The farm’s area is approximately 100 hectares, which is composed of 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (or 3,900 ft) above sea level.</p>
-
-<p>Our coffee grows in an environment surrounded by exotic trees and other vegetation, providing a great condition for quality, as well as improving the chemistry of the already naturally rich volcanic soil. Thanks to the farm’s diverse ecosystem, many different species of birds and animals seek refuge in our land.</p>
+<p>Finca El Vergel is a specialty coffee farm in the mountains of the Sierra Nevada de Santa Marta, Colombia.</p>
+<p>Our coffee grows surrounded by native trees and vegetation, in a rich ecosystem that gives every cup its character.</p>
 `;
 
 const TheFarm = () => {

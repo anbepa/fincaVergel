@@ -5,10 +5,8 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>Our employees are one of the crucial aspects of our success. Through their energy, consistency and local insights we have been able to build and maintain Hacienda Sonora. Their well-being is essential for us and for the tranquility of the farm.</p>
-<p>One of the many things that make Hacienda Sonora so different from other farms is the fact that we provide free accommodation for each worker and their families at the farm's houses. For each house, Hacienda Sonora covers for the cost of water, trash allocation, and a portion of their electricity. Every employee fully enjoys the benefits of the Costa Rica Health Insurance system.</p>
-<p>We enjoy a personal relationship built on respect with all our workers. We encourage our staff to become the best they can, and we are proud to often see them grow to greater opportunities in life.</p>
-<p>Pura vida!</p>
+<p>Our team is at the heart of Finca El Vergel. Their knowledge of the land, their care at every harvest and their daily dedication make our coffee possible.</p>
+<p>We are proud to work together as a community and to see our people grow with the farm.</p>
 `;
 
 const OurStaff = () => {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { getCachedPage, subscribePage } from '../lib/content';
 
-/* Finca location — slopes of Poás Volcano, Alajuela (approx.) */
-const LAT = 10.08;
-const LON = -84.23;
-const CACHE_KEY = 'fv-weather-v1';
+/* Location, time zone and harvest months come from Admin → Farm Map */
+const CACHE_KEY = 'fv-weather-v2';
 const CACHE_MS = 30 * 60 * 1000;
 
 /* WMO weather codes → short label */
@@ -19,17 +18,24 @@ function describe(code) {
   return 'Tropical storm';
 }
 
-/* Central Valley calendar: harvest ≈ Nov–Mar, flowering ≈ Apr–May */
-function season(month) {
-  if (month >= 10 || month <= 2) return 'Harvest season';
-  if (month <= 4) return 'Flowering season';
-  return 'Growing season';
+function readSettings(row) {
+  try {
+    const p = JSON.parse(row?.content || 'null');
+    const loc = p?.location;
+    if (!loc || !Number.isFinite(Number(loc.lat)) || !Number.isFinite(Number(loc.lng)) || loc.lat === '' || loc.lng === '') return null;
+    return {
+      lat: Number(loc.lat), lng: Number(loc.lng),
+      timezone: loc.timezone || 'auto',
+      harvestMonths: Array.isArray(p.harvestMonths) ? p.harvestMonths : [],
+      live: p.liveWidget !== false,
+    };
+  } catch { return null; }
 }
 
-function readCache() {
+function readCache(key) {
   try {
     const c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
-    if (c && Date.now() - c.t < CACHE_MS) return c.w;
+    if (c && c.key === key && Date.now() - c.t < CACHE_MS) return c.w;
   } catch { /* ignore */ }
   return null;
 }
@@ -39,10 +45,15 @@ function readCache() {
  * and the current stage of the coffee year. Hides itself on any failure.
  */
 export default function FarmLive() {
-  const [weather, setWeather] = useState(readCache);
+  const [settings, setSettings] = useState(() => readSettings(getCachedPage('farmmap')));
+  useEffect(() => subscribePage('farmmap', row => setSettings(readSettings(row))), []);
+  const key = settings ? `${settings.lat},${settings.lng}` : '';
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    if (weather) return;
+    if (!settings || !settings.live) return;
+    const cached = readCache(key);
+    if (cached) { setWeather(cached); return; }
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 6000);
     // Wait until the browser is idle so this never competes with the hero image
@@ -50,7 +61,7 @@ export default function FarmLive() {
     const id = idle(async () => {
       try {
         const res = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&timezone=America%2FCosta_Rica`,
+          `https://api.open-meteo.com/v1/forecast?latitude=${settings.lat}&longitude=${settings.lng}&current=temperature_2m,weather_code&timezone=${encodeURIComponent(settings.timezone)}`,
           { signal: ctrl.signal },
         );
         if (!res.ok) return;
@@ -58,16 +69,20 @@ export default function FarmLive() {
         const w = { temp: Math.round(j.current.temperature_2m), code: j.current.weather_code };
         if (Number.isFinite(w.temp)) {
           setWeather(w);
-          try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), w })); } catch { /* ignore */ }
+          try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ key, t: Date.now(), w })); } catch { /* ignore */ }
         }
       } catch { /* offline / blocked → stay hidden */ }
     });
     return () => { ctrl.abort(); clearTimeout(timer); (window.cancelIdleCallback || clearTimeout)(id); };
-  }, [weather]);
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!weather) return null;
+  if (!settings || !settings.live || !weather) return null;
 
-  const crMonth = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' })).getMonth();
+  let month = new Date().getMonth();
+  try {
+    if (settings.timezone !== 'auto') month = new Date(new Date().toLocaleString('en-US', { timeZone: settings.timezone })).getMonth();
+  } catch { /* invalid tz → local month */ }
+  const inHarvest = settings.harvestMonths.includes(month);
 
   return (
     <div className="farm-live" role="status" aria-label="Live conditions at the farm">
@@ -75,8 +90,7 @@ export default function FarmLive() {
       <span className="farm-live-label">Live from the farm</span>
       <span className="farm-live-sep" aria-hidden="true" />
       <span><b>{weather.temp}°C</b> · {describe(weather.code)}</span>
-      <span className="farm-live-sep" aria-hidden="true" />
-      <span>{season(crMonth)}</span>
+      {inHarvest && <><span className="farm-live-sep" aria-hidden="true" /><span>Harvest season</span></>}
     </div>
   );
 }

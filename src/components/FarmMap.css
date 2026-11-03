@@ -103,8 +103,38 @@
 }
 .fmap-card-nav button:hover { background: #111; color: #f7f3ee; }
 
+/* Satellite canvas is taller; full width when there's no detail card */
+.fmap-canvas--satellite { aspect-ratio: 16 / 9; }
+.fmap-layout--solo { grid-template-columns: 1fr; }
+.fmap-layout--solo .fmap-canvas--satellite { aspect-ratio: 21 / 9; }
+.fmap-loading {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.6); font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+}
+.fmap-directions {
+  position: absolute; z-index: 500; left: 16px; bottom: 16px;
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 46px; padding: 0 18px;
+  background: #fff; color: #111;
+  font: 700 .72rem var(--font-sans); letter-spacing: 1.8px; text-transform: uppercase;
+  box-shadow: 0 10px 24px -8px rgba(0,0,0,.5);
+  transition: background .25s, color .25s;
+}
+.fmap-directions svg { width: 18px; height: 18px; fill: currentColor; }
+.fmap-directions:hover { background: var(--color-accent); color: #111; opacity: 1; }
+.fmap-directions:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.fmap-facts {
+  max-width: var(--max-width);
+  margin: 18px auto 0;
+  display: flex; flex-wrap: wrap; gap: 8px 28px;
+  font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+}
+.fmap-facts b { color: #fff; }
+
 @media (max-width: 900px) {
   .fmap-layout { grid-template-columns: 1fr; }
+  .fmap-canvas--satellite, .fmap-layout--solo .fmap-canvas--satellite { aspect-ratio: 4 / 5; }
   .fmap-canvas { aspect-ratio: 4 / 3; }
   .fmap-pin-label { display: none; }
   .fmap-pin-dot { width: 30px; height: 30px; font-size: .82rem; }

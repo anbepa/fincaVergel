@@ -4,7 +4,7 @@ import { getPage } from '../lib/content';
 import './Home.css';
 
 const defaultItems = [
-  { id: '01', title: 'The Farm',       description: 'Explore our 100-hectare estate at the foot of Poás Volcano.',  href: '/thefarm' },
+  { id: '01', title: 'The Farm',       description: 'Explore our estate in the Sierra Nevada de Santa Marta.',  href: '/thefarm' },
   { id: '02', title: 'Our Process',    description: 'From cherry to cup — quality at every step of the harvest.',   href: '/ourprocess' },
   { id: '03', title: 'Get to Know Us', description: 'The story and values behind Finca El Vergel.',                 href: '/gettoknowus' },
   { id: '04', title: 'Perfect Coffee', description: 'What makes our specialty coffee stand apart in every brew.',   href: '/perfectcoffee' },

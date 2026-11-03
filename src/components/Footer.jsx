@@ -4,7 +4,7 @@ import { subscribePage } from '../lib/content';
 import './Footer.css';
 
 const Footer = () => {
-  const [footerText, setFooterText] = useState('Specialty Coffee · Costa Rica');
+  const [footerText, setFooterText] = useState('Specialty Coffee · Colombia');
   const [footerLogo, setFooterLogo] = useState(null);
   const [brandName, setBrandName]   = useState('FINCA VERGEL');
   const [footerCopyright, setFooterCopyright] = useState('Never settle for good enough.');

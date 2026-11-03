@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { subscribePage, getCachedPage } from '../lib/content';
 import { sizedImage } from '../lib/images';
 import './FarmMap.css';
+
+const SatelliteMap = lazy(() => import('./SatelliteMap'));
 
 /* Shown until the admin configures the map (positions in % of the map) */
 export const DEFAULT_MAP = {
   enabled: true,
   title: 'Explore the farm',
-  intro: '100 hectares on the slopes of the Poás Volcano. Tap a point to discover each corner of the estate.',
+  intro: 'Tap a point to discover each corner of the estate.',
   mapImage: '',
   points: [
     { id: 'plots',   x: 34, y: 58, title: 'Shaded coffee plots', text: '55 hectares of Arabica growing under native shade trees at around 1,200 m above sea level.', image: '' },
@@ -30,6 +32,22 @@ export function parseMap(row) {
       points: Array.isArray(p.points) ? p.points : [],
     };
   } catch { return null; }
+}
+
+export const validLocation = (loc) =>
+  !!loc && Number.isFinite(Number(loc.lat)) && Number.isFinite(Number(loc.lng)) && loc.lat !== '' && loc.lng !== '';
+
+/** 'satellite' | 'image' | 'illustration' (explicit setting, else inferred) */
+export function mapMode(cfg) {
+  if (cfg.mode === 'satellite' && validLocation(cfg.location)) return 'satellite';
+  if (cfg.mode === 'image' && cfg.mapImage) return 'image';
+  if (cfg.mode === 'illustration') return 'illustration';
+  if (validLocation(cfg.location)) return 'satellite';
+  return cfg.mapImage ? 'image' : 'illustration';
+}
+
+export function directionsUrl(loc) {
+  return validLocation(loc) ? `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}` : null;
 }
 
 /* Stylised topographic illustration (no image download) */
@@ -92,26 +110,46 @@ export default function FarmMap() {
   const [config, setConfig] = useState(() => parseMap(getCachedPage('farmmap')) || DEFAULT_MAP);
   const [active, setActive] = useState(0);
   const [ratio, setRatio] = useState(null); // aspect ratio of an uploaded map image
+  const [near, setNear] = useState(false);  // load the satellite map only when close
+  const sectionRef = useRef(null);
 
   useEffect(() => subscribePage('farmmap', row => setConfig(parseMap(row) || DEFAULT_MAP)), []);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } }, { rootMargin: '600px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-  const points = config.points?.length ? config.points : (config.mapImage ? [] : DEFAULT_MAP.points);
+  const mode = mapMode(config);
+  const points = mode === 'satellite'
+    ? (config.points || []).filter(p => Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng)))
+    : (config.points?.length ? config.points.filter(p => Number.isFinite(Number(p.x))) : (mode === 'illustration' ? DEFAULT_MAP.points : []));
   useEffect(() => { if (active >= points.length) setActive(0); }, [points.length, active]);
 
   if (config.enabled === false) return null;
   const current = points[active];
+  const loc = validLocation(config.location) ? config.location : null;
+  const directions = directionsUrl(loc);
 
   return (
-    <section id="farm-map" className="fmap" data-nav="dark">
+    <section id="farm-map" className="fmap" data-nav="dark" ref={sectionRef}>
       <div className="fmap-head">
-        <p className="lp-section-eyebrow">Interactive map</p>
+        <p className="lp-section-eyebrow">{mode === 'satellite' ? 'Satellite view' : 'Interactive map'}</p>
         <h2 className="fmap-title">{config.title || DEFAULT_MAP.title}</h2>
         {config.intro && <p className="fmap-intro">{config.intro}</p>}
       </div>
 
-      <div className="fmap-layout">
-        <div className="fmap-canvas" style={ratio ? { aspectRatio: ratio } : undefined}>
-          {config.mapImage ? (
+      <div className={`fmap-layout${current ? '' : ' fmap-layout--solo'}`}>
+        <div className={`fmap-canvas fmap-canvas--${mode}`} style={mode === 'image' && ratio ? { aspectRatio: ratio } : undefined}>
+          {mode === 'satellite' ? (
+            near && (
+              <Suspense fallback={<div className="fmap-loading">Loading satellite view…</div>}>
+                <SatelliteMap location={loc} points={points} active={active} onSelect={setActive} />
+              </Suspense>
+            )
+          ) : mode === 'image' ? (
             <img
               className="fmap-img"
               src={sizedImage(config.mapImage, 1400)}
@@ -122,7 +160,7 @@ export default function FarmMap() {
             />
           ) : <MapIllustration />}
 
-          {points.map((pt, i) => (
+          {mode !== 'satellite' && points.map((pt, i) => (
             <button
               key={pt.id || i}
               type="button"
@@ -137,6 +175,13 @@ export default function FarmMap() {
               <span className="fmap-pin-label" aria-hidden="true">{pt.title}</span>
             </button>
           ))}
+
+          {directions && (
+            <a className="fmap-directions" href={directions} target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 11.3l-9-9a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z" /></svg>
+              Get directions
+            </a>
+          )}
         </div>
 
         {current && (
@@ -156,6 +201,15 @@ export default function FarmMap() {
           </aside>
         )}
       </div>
+
+      {loc && (
+        <div className="fmap-facts">
+          {loc.label && <span><b>{loc.label}</b></span>}
+          {loc.region && <span>{loc.region}</span>}
+          {config.altitude ? <span>{Number(config.altitude).toLocaleString('en-US')} m a.s.l.</span> : null}
+          <span>{Math.abs(Number(loc.lat)).toFixed(4)}° {Number(loc.lat) >= 0 ? 'N' : 'S'} · {Math.abs(Number(loc.lng)).toFixed(4)}° {Number(loc.lng) >= 0 ? 'E' : 'W'}</span>
+        </div>
+      )}
     </section>
   );
 }

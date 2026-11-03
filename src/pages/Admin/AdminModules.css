@@ -164,3 +164,22 @@
   .am-request-head .am-muted:not(time), .am-request-head .am-lot { grid-column: 1 / -1; }
   .am-map-layout { grid-template-columns: 1fr; }
 }
+
+/* Map editor: location, style, months */
+.am-map-layout .am-map--sat { aspect-ratio: 16 / 10; cursor: crosshair; }
+.am-map-layout .am-map--sat .leaflet-container { cursor: crosshair; }
+.am-map-layout .am-map--sat .sat-pin { cursor: grab; }
+.am-radio {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border: 1px solid var(--color-border); background: #fff;
+  font-size: .86rem; font-weight: 600; cursor: pointer;
+}
+.am-radio input { margin: 0; min-height: 0; accent-color: var(--color-accent-dark); }
+.am-radio.is-disabled { opacity: .45; cursor: not-allowed; }
+.am-months { display: flex; flex-wrap: wrap; gap: 6px; }
+.am-month {
+  min-width: 52px; min-height: 36px; padding: 0 10px;
+  border: 1px solid var(--color-border); background: #fff;
+  font: 600 .78rem var(--font-sans); cursor: pointer;
+}
+.am-month.is-on { background: #2f7a47; border-color: #2f7a47; color: #fff; }

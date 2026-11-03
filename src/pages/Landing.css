@@ -756,3 +756,11 @@
   transition: opacity 1.2s ease;
 }
 .lp-hero-video.is-on { opacity: 1; }
+
+.lp-contact-directions {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px;
+  font-size: .74rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--color-accent);
+}
+.lp-contact-directions:hover { color: #fff; opacity: 1; }
