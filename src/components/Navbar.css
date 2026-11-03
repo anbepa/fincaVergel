@@ -288,3 +288,14 @@
   top: 0; left: 0; width: 100%;
   border-bottom: 1px solid rgba(175, 149, 73, 0.1);
 }
+
+/* Over dark sections (set by the landing page) */
+html.nav-dark .navbar-solid:not(.navbar-open) {
+  background: rgba(13,13,11,.55);
+  border-bottom-color: rgba(255,255,255,.08);
+  box-shadow: none;
+}
+html.nav-dark .navbar-solid .navbar-brand,
+html.nav-dark .navbar-solid .nav-anchor { color: #fff; }
+html.nav-dark .navbar-solid .hamburger span { background: #fff; }
+html.nav-dark .navbar-solid .nav-anchor--cta:hover { background: #fff; color: #111; border-color: #fff; }

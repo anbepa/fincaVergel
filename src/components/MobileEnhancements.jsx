@@ -94,6 +94,7 @@ export function DynamicThemeColor() {
       { selector: '.lp-manifesto',  color: '#111111' },
       { selector: '.lp-split--light', color: '#f7f3ee' },
       { selector: '.lp-split--dark',  color: '#111111' },
+      { selector: '.journey',       color: '#0d0d0b' },
       { selector: '.lp-tricard',    color: '#f7f3ee' },
       { selector: '.lp-staff',      color: '#111111' },
       { selector: '.lp-contact',    color: '#111111' },

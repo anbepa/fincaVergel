@@ -3,9 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { getCachedPage, subscribePage } from '../lib/content';
 import { preloadImage, sizedImage, viewportWidth } from '../lib/images';
 import LazyBackground from '../components/LazyBackground';
+import Journey, { htmlExcerpt } from '../components/Journey';
+import FarmLive from '../components/FarmLive';
 import {
   AnimatedCounter,
-  TextRevealByLine,
   useGyroParallax,
   useToast,
 } from '../components/MobileEnhancements';
@@ -81,6 +82,22 @@ function useHashScroll() {
   }, [hash]);
 }
 
+/* ── Dark navbar while it sits over a dark section ([data-nav="dark"]) ── */
+function useNavTheme() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-nav="dark"]');
+    if (!els.length) return;
+    const under = new Set();
+    // Observe only a thin strip at the top of the viewport (where the navbar is)
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => (e.isIntersecting ? under.add(e.target) : under.delete(e.target)));
+      document.documentElement.classList.toggle('nav-dark', under.size > 0);
+    }, { rootMargin: '0px 0px -93% 0px' });
+    els.forEach(el => io.observe(el));
+    return () => { io.disconnect(); document.documentElement.classList.remove('nav-dark'); };
+  }, []);
+}
+
 /* Share of viewport width a split-section image covers */
 const splitImageFraction = () => (viewportWidth() > 1024 ? 0.5 : 1);
 
@@ -122,7 +139,7 @@ const defaults = {
   },
   thefarm: {
     title:   'The Farm',
-    content: `<p>Hacienda Sonora is located in the Central Valley of Costa Rica, at the foot of the world renowned Poás Volcano. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level.</p><p>Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.</p>`,
+    content: `<p>Finca El Vergel sits in the Central Valley of Costa Rica, on the slopes of the Poás Volcano. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level.</p><p>Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.</p>`,
     images:  defaultImages,
   },
   process: {
@@ -149,7 +166,7 @@ const defaults = {
   },
   staff: {
     title:   'Our Staff',
-    content: `<p>Our employees are one of the crucial aspects of our success. Through their energy, consistency and local insights we have been able to build and maintain Hacienda Sonora. Their well-being is essential for us and for the tranquility of the farm.</p><p>One of the many things that make Hacienda Sonora so different from other farms is the fact that we provide free accommodation for each worker and their families at the farm's houses. We encourage our staff to become the best they can, and we are proud to often see them grow to greater opportunities in life.</p><p>Pura vida!</p>`,
+    content: `<p>Our employees are one of the crucial aspects of our success. Through their energy, consistency and local knowledge we have built Finca El Vergel together. Their well-being is essential for us and for the tranquility of the farm.</p><p>One of the things that makes our farm different is the fact that we provide free accommodation for each worker and their families at the farm's houses. We encourage our staff to become the best they can, and we are proud to often see them grow to greater opportunities in life.</p><p>Pura vida!</p>`,
     images:  defaultImages,
   },
   aboutus: {
@@ -222,42 +239,6 @@ function SplitTitle({ text, className }) {
    INLINE SECTION COMPONENTS
    ════════════════════════════════════════════ */
 
-function SectionFarm({ data }) {
-  const raw    = data?.content;
-  const parsed = raw ? parseContent(raw) : null;
-  const html   = (typeof parsed === 'object' && parsed?.isRichContent) ? parsed.text
-               : (typeof parsed === 'string') ? parsed
-               : defaults.thefarm.content;
-  return (
-    <section id="farm" className="lp-split lp-split--light">
-      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[0]} widthFraction={splitImageFraction()} aria-hidden="true" />
-      <div className="lp-split-text reveal reveal-delay-1">
-        <p className="lp-section-eyebrow">01 — The Farm</p>
-        <h2 className="lp-split-title">{data?.title || defaults.thefarm.title}</h2>
-        <div className="lp-split-body" dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
-    </section>
-  );
-}
-
-function SectionProcess({ data }) {
-  const raw    = data?.content;
-  const parsed = raw ? parseContent(raw) : null;
-  const html   = (typeof parsed === 'object' && parsed?.isRichContent) ? parsed.text
-               : (typeof parsed === 'string') ? parsed
-               : defaults.process.content;
-  return (
-    <section id="process" className="lp-split lp-split--dark lp-split--reverse">
-      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[1]} widthFraction={splitImageFraction()} aria-hidden="true" />
-      <div className="lp-split-text reveal reveal-delay-1">
-        <p className="lp-section-eyebrow">02 — Our Process</p>
-        <h2 className="lp-split-title">{data?.title || defaults.process.title}</h2>
-        <div className="lp-split-body" dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
-    </section>
-  );
-}
-
 function SectionGetToKnow({ data }) {
   const parsed = data ? parseContent(data.content) : null;
   const isObj  = typeof parsed === 'object' && parsed !== null;
@@ -289,44 +270,87 @@ function SectionGetToKnow({ data }) {
   );
 }
 
-function SectionPerfectCoffee({ data }) {
-  const t = data || defaults.perfectcoffee;
-  const raw = data?.content;
-  const parsed = raw ? parseContent(raw) : null;
-  const html = (typeof parsed === 'object' && parsed?.isRichContent) ? parsed.text
-             : (typeof parsed === 'string') ? parsed
-             : defaults.perfectcoffee.content;
+/* HTML body of a CMS section (rich JSON or plain HTML), or a fallback */
+function sectionHtml(data, fallback) {
+  const parsed = data?.content ? parseContent(data.content) : null;
+  if (typeof parsed === 'object' && parsed?.isRichContent) return parsed.text;
+  if (typeof parsed === 'string') return parsed;
+  return fallback;
+}
+
+/* Scroll-linked manifesto: words light up as you read */
+function ScrollWords({ text, className }) {
+  const ref = useRef(null);
+  const lines = text.split('\n').filter(Boolean);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const words = Array.from(el.querySelectorAll('.sw-word'));
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      words.forEach(w => w.classList.add('is-on'));
+      return;
+    }
+    let ticking = false;
+    let inView = false;
+    const update = () => {
+      ticking = false;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0 when the block enters the lower part of the screen, 1 when it reaches ~35% from top
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.5 + r.height * 0.6)));
+      const lit = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle('is-on', i < lit));
+    };
+    const onScroll = () => { if (inView && !ticking) { ticking = true; requestAnimationFrame(update); } };
+    const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) update(); });
+    io.observe(el);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { io.disconnect(); window.removeEventListener('scroll', onScroll); };
+  }, [text]);
+
   return (
-    <section id="perfect-coffee" className="lp-split lp-split--light">
-      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[2]} widthFraction={splitImageFraction()} aria-hidden="true" />
-      <div className="lp-split-text reveal reveal-delay-1">
-        <p className="lp-section-eyebrow">04 — Perfect Coffee</p>
-        <h2 className="lp-split-title">{data?.title || defaults.perfectcoffee.title}</h2>
-        <div className="lp-split-body" dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
-    </section>
+    <p ref={ref} className={`sw ${className}`} aria-label={lines.join(' ')}>
+      {lines.map((line, li) => (
+        <span key={li} className="sw-line" aria-hidden="true">
+          {line.split(/\s+/).filter(Boolean).map((w, wi) => (
+            <span key={wi} className="sw-word">{w} </span>
+          ))}
+        </span>
+      ))}
+    </p>
   );
 }
 
-function SectionGreenEnergy({ data }) {
-  const raw = data?.content;
-  const parsed = raw ? parseContent(raw) : null;
-  const html = (typeof parsed === 'object' && parsed?.isRichContent) ? parsed.text
-             : (typeof parsed === 'string') ? parsed
-             : defaults.greenenergy.content;
-  return (
-    <section id="green-energy" className="lp-split lp-split--dark lp-split--reverse">
-      <LazyBackground className="lp-split-image reveal" src={data?.images?.[0] || defaultImages[3]} widthFraction={splitImageFraction()} aria-hidden="true" />
-      <div className="lp-split-text reveal reveal-delay-1">
-        <p className="lp-section-eyebrow">05 — Green Energy</p>
-        <h2 className="lp-split-title">{data?.title || defaults.greenenergy.title}</h2>
-        <div className="lp-split-body" dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
-    </section>
-  );
+/* Expands from an inset rounded card to full-bleed as it scrolls in (desktop) */
+function useExpandOnScroll(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!window.matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)').matches) return;
+    let ticking = false;
+    let inView = false;
+    const update = () => {
+      ticking = false;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.85)));
+      const inset = (1 - p) * 7;          // % inset
+      const radius = (1 - p) * 28;        // px corner radius
+      el.style.clipPath = `inset(${inset.toFixed(2)}% ${inset.toFixed(2)}% 0 ${inset.toFixed(2)}% round ${radius.toFixed(1)}px)`;
+    };
+    const onScroll = () => { if (inView && !ticking) { ticking = true; requestAnimationFrame(update); } };
+    const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) update(); }, { rootMargin: '200px 0px' });
+    io.observe(el);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    return () => { io.disconnect(); window.removeEventListener('scroll', onScroll); };
+  }, [ref]);
 }
 
 function SectionStaff({ data }) {
+  const revealRef = useRef(null);
+  useExpandOnScroll(revealRef);
   const raw = data?.content;
   const parsed = raw ? parseContent(raw) : null;
   const html = (typeof parsed === 'object' && parsed?.isRichContent) ? parsed.text
@@ -334,7 +358,8 @@ function SectionStaff({ data }) {
              : defaults.staff.content;
   const imgSrc = data?.images?.[0] || defaultImages[0];
   return (
-    <section id="our-staff" className="lp-staff">
+    <section id="our-staff" className="lp-staff" data-nav="dark">
+      <div ref={revealRef} className="lp-staff-reveal">
       <LazyBackground className="lp-staff-bg" src={imgSrc}>
         <div className="lp-staff-overlay" />
         <div className="lp-staff-content reveal">
@@ -343,6 +368,7 @@ function SectionStaff({ data }) {
           <div className="lp-staff-body" dangerouslySetInnerHTML={{ __html: html }} />
         </div>
       </LazyBackground>
+      </div>
     </section>
   );
 }
@@ -423,7 +449,7 @@ function SectionContact({ data }) {
   };
 
   return (
-    <section id="contact" className="lp-contact">
+    <section id="contact" className="lp-contact" data-nav="dark">
       <div className="lp-contact-inner">
         <div className="lp-contact-info reveal">
           <p className="lp-section-eyebrow lp-eyebrow--light">Contact</p>
@@ -543,16 +569,47 @@ function HeroSlider({ images, sliderRef }) {
     return () => { cancelled = true; clearTimeout(id); };
   }, [current, urls, ready]);
 
+  const jump = (i) => {
+    if (i === current) return;
+    preloadImage(urls[i]).then(() => {
+      setReady(r => ({ ...r, [i]: true }));
+      setCurrent(i);
+    });
+  };
+
   return (
-    <div className="lp-bg-slider" ref={sliderRef}>
-      {urls.map((url, i) => (ready[i] || i === current) && (
-        <div
-          key={url}
-          className={`lp-bg-slide${i === current && ready[i] ? ' active' : ''}`}
-          style={ready[i] ? { backgroundImage: `url("${url}")` } : undefined}
-        />
-      ))}
-    </div>
+    <>
+      <div className="lp-bg-slider" ref={sliderRef}>
+        {urls.map((url, i) => (ready[i] || i === current) && (
+          <div
+            key={url}
+            className={`lp-bg-slide${i === current && ready[i] ? ' active' : ''}`}
+            style={ready[i] ? { backgroundImage: `url("${url}")` } : undefined}
+          />
+        ))}
+      </div>
+      {urls.length > 1 && (
+        <div className="lp-hero-slides" role="group" aria-label="Hero images">
+          <span className="lp-hero-count" aria-hidden="true">
+            <b>{String(current + 1).padStart(2, '0')}</b> / {String(urls.length).padStart(2, '0')}
+          </span>
+          <div className="lp-hero-bars">
+            {urls.map((url, i) => (
+              <button
+                key={url}
+                type="button"
+                className={`lp-hero-bar${i === current ? ' is-active' : ''}${i < current ? ' is-done' : ''}`}
+                onClick={() => jump(i)}
+                aria-label={`Show image ${i + 1}`}
+                aria-current={i === current ? 'true' : undefined}
+              >
+                <span key={i === current && ready[i] ? `run-${current}` : 'idle'} />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -575,6 +632,7 @@ const Landing = () => {
   useParallax();
   useMagnetic(heroBtnRef);
   useHashScroll();
+  useNavTheme();
 
   /* Subscribe to content (cache first, then network) */
   useEffect(() => {
@@ -606,6 +664,7 @@ const Landing = () => {
         <HeroSlider images={heroData.images} sliderRef={heroSliderRef} />
         <div className="lp-hero-overlay" />
         <div className="lp-hero-content">
+          <FarmLive />
           <p className="lp-eyebrow reveal">{heroData.subtitle}</p>
           <SplitTitle key={heroData.title} text={heroData.title} className="lp-hero-title" />
           <p className="lp-hero-desc reveal reveal-delay-2">{heroData.desc}</p>
@@ -625,10 +684,6 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        <button type="button" className="lp-scroll-hint" onClick={() => scrollTo('farm')} aria-label="Scroll to content">
-          <span>Scroll</span>
-          <span className="lp-scroll-line" />
-        </button>
       </section>
 
       {/* ═══ MARQUEE ═══ */}
@@ -652,30 +707,43 @@ const Landing = () => {
       </section>
 
       {/* ═══ MANIFESTO ═══ */}
-      <section className="lp-manifesto">
-        <div className="lp-manifesto-inner reveal">
+      <section className="lp-manifesto" data-nav="dark">
+        <div className="lp-manifesto-inner">
           <p className="lp-manifesto-eyebrow">Our Mission</p>
-          <TextRevealByLine
+          <ScrollWords
             text={heroData.manifesto || defaults.hero.manifesto}
             className="lp-manifesto-text"
           />
         </div>
       </section>
 
-      {/* ═══ THE FARM ═══ */}
-      <SectionFarm data={farmData} />
-
-      {/* ═══ OUR PROCESS ═══ */}
-      <SectionProcess data={processData} />
+      {/* ═══ FROM CHERRY TO CUP — Farm · Process · Perfect Coffee · Green Energy ═══ */}
+      <Journey
+        id="farm"
+        eyebrow="From cherry to cup"
+        title="From cherry to cup"
+        chapters={[
+          { key: 'farm',    anchor: undefined,        eyebrow: 'The Farm',       href: '/thefarm',
+            title: farmData?.title || defaults.thefarm.title,
+            text: htmlExcerpt(sectionHtml(farmData, defaults.thefarm.content)),
+            image: farmData?.images?.[0] || defaultImages[0] },
+          { key: 'process', anchor: 'process',        eyebrow: 'Our Process',    href: '/ourprocess',
+            title: processData?.title || defaults.process.title,
+            text: htmlExcerpt(sectionHtml(processData, defaults.process.content)),
+            image: processData?.images?.[0] || defaultImages[1] },
+          { key: 'perfect', anchor: 'perfect-coffee', eyebrow: 'Perfect Coffee', href: '/perfectcoffee',
+            title: perfectData?.title || defaults.perfectcoffee.title,
+            text: htmlExcerpt(sectionHtml(perfectData, defaults.perfectcoffee.content)),
+            image: perfectData?.images?.[0] || defaultImages[2] },
+          { key: 'green',   anchor: 'green-energy',   eyebrow: 'Green Energy',   href: '/greenenergy',
+            title: greenData?.title || defaults.greenenergy.title,
+            text: htmlExcerpt(sectionHtml(greenData, defaults.greenenergy.content)),
+            image: greenData?.images?.[0] || defaultImages[3] },
+        ]}
+      />
 
       {/* ═══ GET TO KNOW US ═══ */}
       <SectionGetToKnow data={getToKnowData} />
-
-      {/* ═══ PERFECT COFFEE ═══ */}
-      <SectionPerfectCoffee data={perfectData} />
-
-      {/* ═══ GREEN ENERGY ═══ */}
-      <SectionGreenEnergy data={greenData} />
 
       {/* ═══ OUR STAFF ═══ */}
       <SectionStaff data={staffData} />

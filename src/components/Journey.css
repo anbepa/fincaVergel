@@ -1,0 +1,204 @@
+/* ══════════════════════════════════════════════════════
+   JOURNEY — "From cherry to cup" chapters
+   ══════════════════════════════════════════════════════ */
+.journey {
+  position: relative;
+  background: #0d0d0b;
+  color: #fff;
+}
+
+/* ── Desktop: pinned, horizontal ── */
+.journey--h .journey-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.journey--h .journey-track {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+.journey--h .journey-panel { height: 100%; flex: none; }
+
+/* ── Mobile / reduced motion: stacked full-screen cards ── */
+.journey--stack .journey-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+}
+.journey--stack .journey-panel + .journey-panel {
+  box-shadow: 0 -24px 48px rgba(0,0,0,.45);
+}
+
+/* ── Panel ── */
+.journey-panel {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  background: #0d0d0b;
+}
+.journey-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #1b1b17;
+  transform: scale(1.12);
+  transition: transform 1.6s cubic-bezier(.22,1,.36,1);
+}
+.journey-panel.is-active .journey-bg,
+.journey--stack .journey-bg { transform: scale(1); }
+.journey-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(8,8,6,.92) 0%, rgba(8,8,6,.55) 38%, rgba(8,8,6,.12) 70%, rgba(8,8,6,.35) 100%);
+}
+
+/* Giant outlined chapter number */
+.journey-num {
+  position: absolute;
+  right: clamp(16px, 4vw, 72px);
+  top: clamp(72px, 12vh, 140px);
+  font-family: var(--font-condensed);
+  font-weight: 900;
+  font-size: clamp(8rem, 26vw, 28rem);
+  line-height: .8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,.28);
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: opacity 1s .1s, transform 1.2s .1s cubic-bezier(.22,1,.36,1);
+}
+.journey-panel.is-active .journey-num,
+.journey--stack .journey-num { opacity: 1; transform: none; }
+
+.journey-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  padding: 0 clamp(20px, 6vw, 96px) clamp(110px, 16vh, 170px);
+}
+.journey-eyebrow {
+  font-family: var(--font-sans);
+  font-size: .68rem; font-weight: 600;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 16px;
+}
+.journey-title {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(3rem, 7vw, 7.5rem);
+  line-height: .9;
+  text-transform: uppercase;
+  margin: 0 0 22px;
+}
+.journey-text {
+  font-family: var(--font-sans);
+  font-size: clamp(.95rem, 1.15vw, 1.08rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: rgba(255,255,255,.86);
+  margin: 0 0 28px;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.journey-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-sans);
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: #fff;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,.5);
+  transition: gap .3s, border-color .3s;
+}
+.journey-link:hover { gap: 16px; border-color: var(--color-accent); opacity: 1; }
+.journey-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+
+/* Content entrance (desktop: when chapter becomes active) */
+.journey--h .journey-content > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s, transform .9s cubic-bezier(.22,1,.36,1);
+}
+.journey--h .journey-panel.is-active .journey-content > * { opacity: 1; transform: none; }
+.journey--h .journey-panel.is-active .journey-content > *:nth-child(2) { transition-delay: .08s; }
+.journey--h .journey-panel.is-active .journey-content > *:nth-child(3) { transition-delay: .16s; }
+.journey--h .journey-panel.is-active .journey-content > *:nth-child(4) { transition-delay: .24s; }
+
+/* ── HUD (desktop) ── */
+.journey-hud {
+  position: absolute;
+  z-index: 5;
+  top: 104px;
+  left: clamp(20px, 6vw, 96px);
+  right: clamp(20px, 6vw, 96px);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-sans);
+  font-size: .68rem; font-weight: 600;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  pointer-events: none;
+}
+.journey-hud-count b { color: #fff; font-weight: 700; }
+
+.journey-progress {
+  position: absolute;
+  z-index: 5;
+  left: clamp(20px, 6vw, 96px);
+  right: clamp(20px, 6vw, 96px);
+  bottom: 40px;
+}
+.journey-progress-bar {
+  height: 1px;
+  background: rgba(255,255,255,.2);
+  margin-bottom: 4px;
+}
+.journey-progress-bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(.25);
+}
+.journey-dots { display: flex; }
+.journey-dot {
+  flex: 1;
+  background: none; border: 0; padding: 12px 0 0;
+  text-align: left;
+  color: rgba(255,255,255,.5);
+  font-family: var(--font-sans);
+  font-size: .64rem; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  cursor: pointer;
+  transition: color .3s;
+}
+.journey-dot:hover, .journey-dot.is-active { color: #fff; }
+.journey-dot:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+@media (max-width: 899px) {
+  .journey-num { font-size: clamp(7rem, 40vw, 12rem); top: auto; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); -webkit-text-stroke-width: 1px; }
+  .journey-content { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+/* Stacked cards: text at the TOP so the next card covers it last */
+.journey--stack .journey-panel { align-items: flex-start; }
+.journey--stack .journey-content { padding-top: 104px; padding-bottom: 0; }
+.journey--stack .journey-shade {
+  background: linear-gradient(to bottom, rgba(8,8,6,.9) 0%, rgba(8,8,6,.6) 45%, rgba(8,8,6,.1) 80%, rgba(8,8,6,.3) 100%);
+}
+@media (max-width: 899px) {
+  .journey-title { font-size: clamp(2.6rem, 12vw, 4rem); }
+  .journey-text { -webkit-line-clamp: 6; }
+}
