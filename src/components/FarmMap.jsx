@@ -22,7 +22,13 @@ export function parseMap(row) {
   if (!row?.content) return null;
   try {
     const p = JSON.parse(row.content);
-    return { ...DEFAULT_MAP, ...p, points: Array.isArray(p.points) ? p.points : [] };
+    return {
+      ...DEFAULT_MAP,
+      ...p,
+      title: p.title || DEFAULT_MAP.title,
+      intro: p.intro || DEFAULT_MAP.intro,
+      points: Array.isArray(p.points) ? p.points : [],
+    };
   } catch { return null; }
 }
 

@@ -100,8 +100,8 @@ create trigger coffee_lots_touch before update on public.coffee_lots
 -- Both are edited from the admin; these just create empty rows.
 insert into public.content_pages (slug, title, content, images)
 values
-  ('heromedia', 'Hero Video', '{"enabled":false,"videoUrl":"","posterUrl":"","mobileVideoUrl":""}', '{}'),
-  ('farmmap',   'Farm Map',   '{"enabled":true,"title":"Explore the farm","intro":"","mapImage":"","points":[]}', '{}')
+  ('heromedia', 'Hero Video', '{"enabled":false,"videoUrl":"","posterUrl":"","mobileVideoUrl":""}', '[]'::jsonb),
+  ('farmmap',   'Farm Map',   '{"enabled":true,"title":"Explore the farm","intro":"","mapImage":"","points":[]}', '[]'::jsonb)
 on conflict (slug) do nothing;
 
 -- ── 5. Storage: allow short videos in the existing bucket ──────────
