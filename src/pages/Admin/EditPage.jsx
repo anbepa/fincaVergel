@@ -59,11 +59,11 @@ const EditPage = () => {
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerLogo, setHeaderLogo] = useState("");
   const [footerLogo, setFooterLogo] = useState("");
-  const [footerCopyright, setFooterCopyright] = useState("Never settle for good enough.");
+  const [footerCopyright, setFooterCopyright] = useState("");
 
   // Contact details
   const [contactEmail, setContactEmail] = useState("rosanabernal26@gmail.com");
-  const [contactLocation, setContactLocation] = useState("Alajuela, Costa Rica");
+  const [contactLocation, setContactLocation] = useState("Sierra Nevada de Santa Marta, Colombia");
 
   // Landing manifesto
   const [landingManifesto, setLandingManifesto] = useState("");

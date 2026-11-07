@@ -250,6 +250,7 @@
   @keyframes sheetIn { from { transform: translateY(100%); } to { transform: none; } }
   .sample-row { grid-template-columns: 1fr; }
 }
+.lots-empty-cta { display: inline-block; margin-top: 14px; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   .lot-card, .sample-dialog, .sample-backdrop { animation: none; }
 }
