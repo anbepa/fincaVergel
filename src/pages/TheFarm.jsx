@@ -5,12 +5,12 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>Finca El Vergel is a specialty coffee farm in the mountains of the Sierra Nevada de Santa Marta, Colombia.</p>
-<p>Our coffee grows surrounded by native trees and vegetation, in a rich ecosystem that gives every cup its character.</p>
+<p>Finca El Vergel es una finca de café de especialidad en las montañas de la Sierra Nevada de Santa Marta, Colombia.</p>
+<p>Nuestro café crece rodeado de árboles y vegetación nativos, en un ecosistema rico que le da carácter a cada taza.</p>
 `;
 
 const TheFarm = () => {
-  const [title, setTitle] = useState("The Farm");
+  const [title, setTitle] = useState("La finca");
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState(defaultContent);
   const [captions, setCaptions] = useState({});
@@ -60,7 +60,7 @@ const TheFarm = () => {
   if (isLoading) {
     return (
       <ProjectLayout title="" images={[]} captions={{}}>
-        <div className="page-loading">Loading...</div>
+        <div className="page-loading">Cargando...</div>
       </ProjectLayout>
     );
   }

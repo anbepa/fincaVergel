@@ -5,12 +5,12 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>Our team is at the heart of Finca El Vergel. Their knowledge of the land, their care at every harvest and their daily dedication make our coffee possible.</p>
-<p>We are proud to work together as a community and to see our people grow with the farm.</p>
+<p>Nuestro equipo está en el corazón de Finca El Vergel. Su conocimiento de la tierra, su cuidado en cada cosecha y su dedicación diaria hacen posible nuestro café.</p>
+<p>Nos llena de orgullo trabajar juntos como comunidad y ver a nuestra gente crecer con la finca.</p>
 `;
 
 const OurStaff = () => {
-  const [title, setTitle] = useState("Our Staff");
+  const [title, setTitle] = useState("Nuestro equipo");
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState(defaultContent);
   const [captions, setCaptions] = useState({});
@@ -60,7 +60,7 @@ const OurStaff = () => {
   if (isLoading) {
     return (
       <ProjectLayout title="" images={[]} captions={{}}>
-         <div className="page-loading">Loading...</div>
+         <div className="page-loading">Cargando...</div>
       </ProjectLayout>
     );
   }
