@@ -134,46 +134,46 @@ const defaultImages = [
 const defaults = {
   hero: {
     images:   defaultImages,
-    subtitle: 'Specialty Coffee · Colombia',
+    subtitle: 'Café de especialidad · Colombia',
     title:    'FINCA EL VERGEL',
-    desc:     'Specialty coffee from the Sierra Nevada de Santa Marta, crafted with purpose.',
-    manifesto: 'We journey to grow the finest specialty coffee\nin the highlands of Colombia — with purpose,\npassion, and deep respect for the land.',
+    desc:     'Café de especialidad de la Sierra Nevada de Santa Marta, elaborado con propósito.',
+    manifesto: 'Cultivamos el mejor café de especialidad\nen las montañas de Colombia, con propósito,\npasión y un profundo respeto por la tierra.',
   },
   thefarm: {
-    title:   'The Farm',
-    content: `<p>Finca El Vergel sits in the mountains of the Sierra Nevada de Santa Marta, Colombia. The farm's area is approximately 100 hectares: 55 hectares of shaded coffee, 35 hectares of wild forest reserve, and 10 hectares of sugar cane. The average altitude is 1,200 m (3,900 ft) above sea level.</p><p>Our coffee grows surrounded by exotic trees and native vegetation, providing ideal conditions for quality and improving the already naturally rich volcanic soil. Thanks to the farm's diverse ecosystem, many species of birds and animals seek refuge in our land.</p>`,
+    title:   'La finca',
+    content: `<p>Finca El Vergel está ubicada en la Sierra Nevada de Santa Marta, Colombia, una de las cordilleras costeras más altas del mundo. La finca tiene una extensión aproximada de 100 hectáreas, incluidas 35 hectáreas de reserva de bosque silvestre. La altitud promedio es de 1.200 m (3.900 pies) sobre el nivel del mar.</p><p>Nuestro café crece rodeado de árboles exóticos y vegetación nativa, lo que brinda condiciones ideales de calidad y mejora el suelo de montaña, ya de por sí rico. Gracias al ecosistema diverso de la finca, muchas especies de aves y animales encuentran refugio en nuestras tierras.</p>`,
     images:  defaultImages,
   },
   process: {
-    title:   'Our Process',
-    content: `<p>Right next to our 150-year-old sugar cane mill sits our micro coffee mill, the heart of our operation. Here, we oversee every step from harvested cherry to exportable parchment. We specialize in honey and natural processing methods — a conscious choice that saves over 3 gallons of water per pound of coffee compared to washed processing.</p><p>The cherry pulp is composted and returned to the soil; drying energy comes directly from the farm. Every decision honors the land and elevates the cup.</p>`,
+    title:   'Nuestro proceso',
+    content: `<p>Junto a nuestro trapiche de caña de 150 años se encuentra nuestro microbeneficio de café, el corazón de la operación. Allí supervisamos cada paso, desde la cereza cosechada hasta el pergamino listo para exportar. Nos especializamos en procesos honey y natural, una elección consciente que ahorra más de 3 galones de agua por libra de café en comparación con el proceso lavado.</p><p>La pulpa de la cereza se compostea y regresa al suelo; la energía para el secado proviene directamente de la finca. Cada decisión honra la tierra y eleva la taza.</p>`,
     images:  defaultImages,
   },
   gettoknowus: {
-    title:   'Get to Know Us',
-    business:   'We grow 8 varietals of specialty-grade Arabica and export micro-lots of green coffee to roasters worldwide who share our commitment to quality and traceability.',
-    commitment: 'Our commitment is to quality at every level — from soil health to staff well-being — always in harmony with the natural environment that makes our coffee unique.',
-    goal:       'Our goal is simple: to have fun, meet amazing people, and create a positive impact on the environment and our community — one exceptional cup at a time.',
+    title:   'Conócenos',
+    business:   'Cultivamos 8 variedades de arábica de especialidad y exportamos microlotes de café verde a tostadores de todo el mundo que comparten nuestro compromiso con la calidad y la trazabilidad.',
+    commitment: 'Nuestro compromiso es la calidad en todos los niveles, desde la salud del suelo hasta el bienestar de nuestro equipo, siempre en armonía con el entorno natural que hace único a nuestro café.',
+    goal:       'Nuestro objetivo es sencillo: disfrutar el camino, conocer gente increíble y generar un impacto positivo en el medio ambiente y en nuestra comunidad, una taza excepcional a la vez.',
     images:  defaultImages,
   },
   perfectcoffee: {
-    title:   'Perfect Coffee',
-    content: `<p>Great coffee begins long before the roast. It starts with altitude, varietals, harvest timing, and the care taken at every processing stage. At Finca El Vergel we control all these variables — from planting under the shade of native trees to hand-selecting only ripe cherries at harvest.</p><p>The result: complex, clean, specialty-grade lots that express the unique terroir of the Sierra Nevada de Santa Marta.</p>`,
+    title:   'Café perfecto',
+    content: `<p>Un gran café nace mucho antes del tueste. Empieza con la altitud, las variedades, el momento de la cosecha y el cuidado en cada etapa del proceso. En Finca El Vergel controlamos todas estas variables: desde la siembra bajo la sombra de árboles nativos hasta la selección a mano de solo las cerezas maduras en la cosecha.</p><p>El resultado: lotes complejos y limpios, de grado de especialidad, que expresan el terroir único de la Sierra Nevada de Santa Marta, Colombia.</p>`,
     images:  defaultImages,
   },
   greenenergy: {
-    title:   'Green Energy',
-    content: `<p>Sustainability is not a marketing word for us — it is how we operate. The farm harnesses natural resources at every opportunity: compost from coffee pulp feeds the soil, gravity-fed water systems reduce pump energy, and we continually invest in reducing our carbon footprint.</p><p>We believe the most delicious coffee is also the most responsible one.</p>`,
+    title:   'Energía verde',
+    content: `<p>Para nosotros, la sostenibilidad no es una palabra de moda: es nuestra forma de operar. La finca aprovecha los recursos naturales en cada oportunidad: el compost de la pulpa del café alimenta el suelo, los sistemas de agua por gravedad reducen la energía de bombeo e invertimos continuamente en reducir nuestra huella de carbono.</p><p>Creemos que el café más delicioso es también el más responsable.</p>`,
     images:  defaultImages,
   },
   staff: {
-    title:   'Our Staff',
-    content: `<p>Our employees are one of the crucial aspects of our success. Through their energy, consistency and local knowledge we have built Finca El Vergel together. Their well-being is essential for us and for the tranquility of the farm.</p><p>One of the things that makes our farm different is the fact that we provide free accommodation for each worker and their families at the farm's houses. We encourage our staff to become the best they can, and we are proud to often see them grow to greater opportunities in life.</p><p>Pura vida!</p>`,
+    title:   'Nuestro equipo',
+    content: `<p>Nuestro equipo es uno de los pilares de nuestro éxito. Gracias a su energía, constancia y conocimiento del territorio hemos podido construir y mantener Finca El Vergel. Su bienestar es esencial para nosotros y para la tranquilidad de la finca.</p><p>Una de las cosas que hacen tan diferente a Finca El Vergel es que ofrecemos alojamiento gratuito a cada trabajador y a su familia en las casas de la finca. Animamos a nuestro equipo a dar lo mejor de sí, y nos llena de orgullo ver cómo crece hacia nuevas oportunidades en la vida.</p><p>De nuestra familia a la tuya.</p>`,
     images:  defaultImages,
   },
   aboutus: {
-    title:   'Our Story',
-    content: 'Finca El Vergel is a family-owned coffee estate nestled in the Sierra Nevada de Santa Marta, Colombia. For generations we have cultivated specialty-grade Arabica under the shade of native trees, guided by a single belief: that great coffee is the fruit of great land, cared for with patience and respect.',
+    title:   'Nuestra historia',
+    content: 'Finca El Vergel es una finca cafetera familiar enclavada en la Sierra Nevada de Santa Marta, Colombia. Durante generaciones hemos cultivado arábica de especialidad bajo la sombra de árboles nativos, guiados por una sola convicción: el gran café es fruto de una gran tierra, cuidada con paciencia y respeto.',
     image:   defaultImages[2],
   },
 };
@@ -206,7 +206,7 @@ function parseContent(raw) {
    ════════════════════════════════════════════ */
 
 /* Infinite scrolling marquee */
-function Marquee({ text = 'SPECIALTY COFFEE · COLOMBIA · FINCA EL VERGEL · SHADE GROWN · SUN DRIED ·' }) {
+function Marquee({ text = 'CAFÉ DE ESPECIALIDAD · COLOMBIA · FINCA EL VERGEL · CULTIVADO BAJO SOMBRA · SECADO AL SOL ·' }) {
   return (
     <div className="marquee-wrap" aria-hidden="true">
       <div className="marquee-track">
@@ -252,14 +252,14 @@ function SectionGetToKnow({ data }) {
   return (
     <section id="get-to-know-us" className="lp-tricard">
       <div className="lp-tricard-header reveal">
-        <p className="lp-section-eyebrow">03 — Get to Know Us</p>
+        <p className="lp-section-eyebrow">03 — Conócenos</p>
         <h2 className="lp-section-title">{title}</h2>
       </div>
       <div className="lp-tricard-grid">
         {[
-          { label: 'Our Business',    text: biz },
-          { label: 'Our Commitment',  text: com },
-          { label: 'Our Goal',        text: goal },
+          { label: 'Nuestro negocio',    text: biz },
+          { label: 'Nuestro compromiso', text: com },
+          { label: 'Nuestro objetivo',   text: goal },
         ].map((c, i) => (
           <div key={i} className="lp-tricard-item reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
             <span className="lp-tricard-num">0{i+1}</span>
@@ -365,7 +365,7 @@ function SectionStaff({ data }) {
       <LazyBackground className="lp-staff-bg" src={imgSrc}>
         <div className="lp-staff-overlay" />
         <div className="lp-staff-content reveal">
-          <p className="lp-section-eyebrow lp-eyebrow--light">06 — Our Staff</p>
+          <p className="lp-section-eyebrow lp-eyebrow--light">06 — Nuestro equipo</p>
           <h2 className="lp-staff-title">{data?.title || defaults.staff.title}</h2>
           <div className="lp-staff-body" dangerouslySetInnerHTML={{ __html: html }} />
         </div>
@@ -391,7 +391,7 @@ function SectionOurStory({ data }) {
     <section id="our-story" className="lp-split lp-split--light">
       <LazyBackground className="lp-split-image reveal" src={img} widthFraction={splitImageFraction()} aria-hidden="true" />
       <div className="lp-split-text reveal reveal-delay-1">
-        <p className="lp-section-eyebrow">Our Story</p>
+        <p className="lp-section-eyebrow">Nuestra historia</p>
         <h2 className="lp-split-title">{data?.title || defaults.aboutus.title}</h2>
         <p className="lp-split-body-text">{text}</p>
       </div>
@@ -403,8 +403,8 @@ function SectionContact({ data, directions }) {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const toast = useToast();
-  let introText = "If you have questions about us, or are interested in our green coffee, please don't hesitate to reach out.";
-  let visitText = "If you want to visit the farm, let us know a little about yourself and what you'd like to see. We'll put together a package that suits you perfectly.";
+  let introText = "Si tienes preguntas sobre nosotros o te interesa obtener nuestro café verde, no dudes en escribirnos.";
+  let visitText = "Si quieres venir a visitar nuestra finca, cuéntanos un poco sobre ti y qué te gustaría ver o aprender. Armaremos un plan a tu medida.";
   let contactEmail = "rosanabernal26@gmail.com";
   let contactLocation = "Sierra Nevada de Santa Marta, Colombia";
   if (data?.content) {
@@ -432,19 +432,19 @@ function SectionContact({ data, directions }) {
           name: fullName, email: fd.email,
           subject: fd.subject, message: fd.message,
           _template: 'table',
-          _subject: `New Contact from Website: ${fd.subject}`,
+          _subject: `Nuevo contacto desde el sitio web: ${fd.subject}`,
         }),
       });
       if (res.ok) {
         setSubmitted(true);
         form.reset();
-        if (toast) toast('Message sent successfully!', 'success');
+        if (toast) toast('¡Mensaje enviado correctamente!', 'success');
         if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
       } else {
-        if (toast) toast('Something went wrong. Please try again.', 'error');
+        if (toast) toast('Algo salió mal. Inténtalo de nuevo.', 'error');
       }
     } catch {
-      if (toast) toast('Connection error. Please check your internet.', 'error');
+      if (toast) toast('Error de conexión. Revisa tu internet.', 'error');
     } finally {
       setSending(false);
     }
@@ -454,23 +454,23 @@ function SectionContact({ data, directions }) {
     <section id="contact" className="lp-contact" data-nav="dark">
       <div className="lp-contact-inner">
         <div className="lp-contact-info reveal">
-          <p className="lp-section-eyebrow lp-eyebrow--light">Contact</p>
-          <h2 className="lp-contact-title">Get in Touch</h2>
+          <p className="lp-section-eyebrow lp-eyebrow--light">Contacto</p>
+          <h2 className="lp-contact-title">Escríbenos</h2>
           <p className="lp-contact-desc">{introText}</p>
           <p className="lp-contact-desc">{visitText}</p>
           <div className="lp-contact-details">
             <div className="lp-contact-detail">
-              <span className="lp-contact-label">Email</span>
+              <span className="lp-contact-label">Correo electrónico</span>
               <a href={`mailto:${contactEmail}`} className="lp-contact-value">
                 {contactEmail}
               </a>
             </div>
             <div className="lp-contact-detail">
-              <span className="lp-contact-label">Location</span>
+              <span className="lp-contact-label">Ubicación</span>
               <span className="lp-contact-value">{contactLocation}</span>
               {directions && (
                 <a className="lp-contact-directions" href={directions} target="_blank" rel="noopener noreferrer">
-                  Get directions <span aria-hidden="true">↗</span>
+                  Cómo llegar <span aria-hidden="true">↗</span>
                 </a>
               )}
             </div>
@@ -480,38 +480,38 @@ function SectionContact({ data, directions }) {
         <div className="lp-contact-form-col reveal reveal-delay-1">
           {submitted ? (
             <div className="lp-contact-success" role="status">
-              <h3>Thank you!</h3>
-              <p>Your message has been sent. We'll be in touch soon.</p>
+              <h3>¡Gracias!</h3>
+              <p>Tu mensaje ha sido enviado. Te contactaremos pronto.</p>
               <button className="btn-light" onClick={() => setSubmitted(false)}>
-                Send another message
+                Enviar otro mensaje
               </button>
             </div>
           ) : (
             <form className="lp-form" onSubmit={handleSubmit}>
               <div className="lp-form-row">
                 <div className="lp-form-group">
-                  <label htmlFor="cf-first">First Name <span className="req" aria-hidden="true">*</span></label>
+                  <label htmlFor="cf-first">Nombre <span className="req" aria-hidden="true">*</span></label>
                   <input id="cf-first" type="text" name="firstName" autoComplete="given-name" required />
                 </div>
                 <div className="lp-form-group">
-                  <label htmlFor="cf-last">Last Name <span className="req" aria-hidden="true">*</span></label>
+                  <label htmlFor="cf-last">Apellido <span className="req" aria-hidden="true">*</span></label>
                   <input id="cf-last" type="text" name="lastName" autoComplete="family-name" required />
                 </div>
               </div>
               <div className="lp-form-group">
-                <label htmlFor="cf-email">Email Address <span className="req" aria-hidden="true">*</span></label>
+                <label htmlFor="cf-email">Correo electrónico <span className="req" aria-hidden="true">*</span></label>
                 <input id="cf-email" type="email" name="email" autoComplete="email" inputMode="email" required />
               </div>
               <div className="lp-form-group">
-                <label htmlFor="cf-subject">Subject <span className="req" aria-hidden="true">*</span></label>
+                <label htmlFor="cf-subject">Asunto <span className="req" aria-hidden="true">*</span></label>
                 <input id="cf-subject" type="text" name="subject" required />
               </div>
               <div className="lp-form-group">
-                <label htmlFor="cf-message">Message <span className="req" aria-hidden="true">*</span></label>
+                <label htmlFor="cf-message">Mensaje <span className="req" aria-hidden="true">*</span></label>
                 <textarea id="cf-message" name="message" rows={5} required />
               </div>
               <button type="submit" className="btn-light lp-form-submit" disabled={sending} aria-busy={sending}>
-                {sending ? <><span className="btn-spinner" aria-hidden="true" />Sending…</> : 'Send Message'}
+                {sending ? <><span className="btn-spinner" aria-hidden="true" />Enviando…</> : 'Enviar mensaje'}
               </button>
             </form>
           )}
@@ -652,7 +652,7 @@ function HeroSlider({ images, sliderRef, video }) {
         {useVideo && <HeroVideo media={video} onPlaying={() => setVideoOn(true)} />}
       </div>
       {urls.length > 1 && !videoOn && (
-        <div className="lp-hero-slides" role="group" aria-label="Hero images">
+        <div className="lp-hero-slides" role="group" aria-label="Imágenes principales">
           <span className="lp-hero-count" aria-hidden="true">
             <b>{String(current + 1).padStart(2, '0')}</b> / {String(urls.length).padStart(2, '0')}
           </span>
@@ -663,7 +663,7 @@ function HeroSlider({ images, sliderRef, video }) {
                 type="button"
                 className={`lp-hero-bar${i === current ? ' is-active' : ''}${i < current ? ' is-done' : ''}`}
                 onClick={() => jump(i)}
-                aria-label={`Show image ${i + 1}`}
+                aria-label={`Mostrar imagen ${i + 1}`}
                 aria-current={i === current ? 'true' : undefined}
               >
                 <span key={i === current && ready[i] ? `run-${current}` : 'idle'} />
@@ -717,7 +717,7 @@ const Landing = () => {
   }, []);
 
   const socialLinks = layoutInfo.social;
-  const btnLabel = layoutInfo.btnLabel || 'Discover Our Farm';
+  const btnLabel = layoutInfo.btnLabel || 'Conoce nuestra finca';
   const {
     farm: farmData, process: processData, getToKnow: getToKnowData, perfect: perfectData,
     green: greenData, staff: staffData, about: aboutData, contact: contactData,
@@ -760,10 +760,10 @@ const Landing = () => {
       <section className="lp-stats">
         <div className="lp-stats-grid">
           {(heroData.stats || [
-            { value: 100, suffix: '+', label: 'Hectares of Estate' },
-            { value: 1200, suffix: 'm', label: 'Altitude (m.a.s.l.)' },
-            { value: 8, suffix: '', label: 'Arabica Varietals' },
-            { value: 35, suffix: 'ha', label: 'Forest Reserve' }
+            { value: 100, suffix: '+', label: 'Hectáreas de la finca' },
+            { value: 1200, suffix: 'm', label: 'Altitud (m s. n. m.)' },
+            { value: 8, suffix: '', label: 'Variedades de arábica' },
+            { value: 35, suffix: 'ha', label: 'Reserva forestal' }
           ]).map((s, i) => (
               <div key={i} className="lp-stat reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
                 <AnimatedCounter end={s.value} suffix={s.suffix} prefix="" />
@@ -776,7 +776,7 @@ const Landing = () => {
       {/* ═══ MANIFESTO ═══ */}
       <section className="lp-manifesto" data-nav="dark">
         <div className="lp-manifesto-inner">
-          <p className="lp-manifesto-eyebrow">Our Mission</p>
+          <p className="lp-manifesto-eyebrow">Nuestra misión</p>
           <ScrollWords
             text={heroData.manifesto || defaults.hero.manifesto}
             className="lp-manifesto-text"
@@ -787,22 +787,22 @@ const Landing = () => {
       {/* ═══ FROM CHERRY TO CUP — Farm · Process · Perfect Coffee · Green Energy ═══ */}
       <Journey
         id="farm"
-        eyebrow="From cherry to cup"
-        title="From cherry to cup"
+        eyebrow="De la cereza a la taza"
+        title="De la cereza a la taza"
         chapters={[
-          { key: 'farm',    anchor: undefined,        eyebrow: 'The Farm',       href: '/thefarm',
+          { key: 'farm',    anchor: undefined,        eyebrow: 'La finca',       href: '/thefarm',
             title: farmData?.title || defaults.thefarm.title,
             text: htmlExcerpt(sectionHtml(farmData, defaults.thefarm.content)),
             image: farmData?.images?.[0] || defaultImages[0] },
-          { key: 'process', anchor: 'process',        eyebrow: 'Our Process',    href: '/ourprocess',
+          { key: 'process', anchor: 'process',        eyebrow: 'Nuestro proceso', href: '/ourprocess',
             title: processData?.title || defaults.process.title,
             text: htmlExcerpt(sectionHtml(processData, defaults.process.content)),
             image: processData?.images?.[0] || defaultImages[1] },
-          { key: 'perfect', anchor: 'perfect-coffee', eyebrow: 'Perfect Coffee', href: '/perfectcoffee',
+          { key: 'perfect', anchor: 'perfect-coffee', eyebrow: 'Café perfecto',  href: '/perfectcoffee',
             title: perfectData?.title || defaults.perfectcoffee.title,
             text: htmlExcerpt(sectionHtml(perfectData, defaults.perfectcoffee.content)),
             image: perfectData?.images?.[0] || defaultImages[2] },
-          { key: 'green',   anchor: 'green-energy',   eyebrow: 'Green Energy',   href: '/greenenergy',
+          { key: 'green',   anchor: 'green-energy',   eyebrow: 'Energía verde',  href: '/greenenergy',
             title: greenData?.title || defaults.greenenergy.title,
             text: htmlExcerpt(sectionHtml(greenData, defaults.greenenergy.content)),
             image: greenData?.images?.[0] || defaultImages[3] },

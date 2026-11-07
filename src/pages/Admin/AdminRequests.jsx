@@ -6,10 +6,10 @@ import './Admin.css';
 import './AdminModules.css';
 
 const STATUSES = [
-  { id: 'new',       label: 'New' },
-  { id: 'contacted', label: 'Contacted' },
-  { id: 'sent',      label: 'Sample sent' },
-  { id: 'closed',    label: 'Closed' },
+  { id: 'new',       label: 'Nueva' },
+  { id: 'contacted', label: 'Contactada' },
+  { id: 'sent',      label: 'Muestra enviada' },
+  { id: 'closed',    label: 'Cerrada' },
 ];
 
 function toCsv(rows) {
@@ -38,7 +38,7 @@ export default function AdminRequests() {
     const { data, error } = await supabase
       .from('sample_requests').select('*').order('created_at', { ascending: false }).limit(500);
     if (error) setError(error.message.includes('does not exist')
-      ? 'The sample_requests table does not exist yet. Run the SQL migration in supabase/migrations first.'
+      ? 'La tabla sample_requests aún no existe. Ejecuta primero la migración SQL en supabase/migrations.'
       : error.message);
     else { setRows(data || []); setError(''); }
     setLoading(false);
@@ -59,7 +59,7 @@ export default function AdminRequests() {
   };
 
   const remove = async (row) => {
-    if (!window.confirm(`Delete the request from ${row.name}?`)) return;
+    if (!window.confirm(`¿Eliminar la solicitud de ${row.name}?`)) return;
     const { error } = await supabase.from('sample_requests').delete().eq('id', row.id);
     if (error) { alert(error.message); return; }
     setRows(rs => rs.filter(r => r.id !== row.id));
@@ -74,18 +74,18 @@ export default function AdminRequests() {
     URL.revokeObjectURL(a.href);
   };
 
-  if (!session) return <div className="admin-page-container">Loading…</div>;
+  if (!session) return <div className="admin-page-container">Cargando…</div>;
 
   return (
     <div className="admin-page-container">
       <div className="admin-header">
-        <Link to="/admin/dashboard" className="am-back">← Dashboard</Link>
-        <h1 className="admin-title">Sample Requests</h1>
-        <button type="button" className="am-btn" onClick={exportCsv} disabled={!visible.length}>Export CSV</button>
+        <Link to="/admin/dashboard" className="am-back">← Panel</Link>
+        <h1 className="admin-title">Solicitudes de muestra</h1>
+        <button type="button" className="am-btn" onClick={exportCsv} disabled={!visible.length}>Exportar CSV</button>
       </div>
 
       <div className="am-tabs" role="tablist">
-        {[{ id: 'all', label: 'All' }, ...STATUSES].map(s => (
+        {[{ id: 'all', label: 'Todas' }, ...STATUSES].map(s => (
           <button key={s.id} type="button" role="tab" aria-selected={filter === s.id}
             className={`am-tab${filter === s.id ? ' is-active' : ''}`} onClick={() => setFilter(s.id)}>
             {s.label} <span>{counts[s.id] || 0}</span>
@@ -94,8 +94,8 @@ export default function AdminRequests() {
       </div>
 
       {error && <div className="am-error">{error}</div>}
-      {loading ? <p>Loading…</p> : visible.length === 0 ? (
-        <div className="am-empty"><p>No requests here yet.</p></div>
+      {loading ? <p>Cargando…</p> : visible.length === 0 ? (
+        <div className="am-empty"><p>Aún no hay solicitudes aquí.</p></div>
       ) : (
         <ul className="am-list">
           {visible.map(r => (
@@ -104,26 +104,26 @@ export default function AdminRequests() {
                 <span className={`am-status am-status--${r.status}`}>{STATUSES.find(s => s.id === r.status)?.label || r.status}</span>
                 <strong>{r.name}</strong>
                 <span className="am-muted">{[r.company, r.country].filter(Boolean).join(' · ')}</span>
-                <span className="am-lot">{r.lot_name || 'General enquiry'}</span>
+                <span className="am-lot">{r.lot_name || 'Consulta general'}</span>
                 <time className="am-muted">{new Date(r.created_at).toLocaleDateString()}</time>
               </button>
               {open === r.id && (
                 <div className="am-request-body">
                   <dl>
-                    <div><dt>Email</dt><dd><a href={`mailto:${r.email}?subject=${encodeURIComponent(`Finca El Vergel — ${r.lot_name || 'your enquiry'}`)}`}>{r.email}</a></dd></div>
-                    <div><dt>Looking for</dt><dd>{r.quantity || '—'}</dd></div>
-                    <div><dt>Received</dt><dd>{new Date(r.created_at).toLocaleString()}</dd></div>
+                    <div><dt>Correo</dt><dd><a href={`mailto:${r.email}?subject=${encodeURIComponent(`Finca El Vergel — ${r.lot_name || 'tu consulta'}`)}`}>{r.email}</a></dd></div>
+                    <div><dt>Busca</dt><dd>{r.quantity || '—'}</dd></div>
+                    <div><dt>Recibida</dt><dd>{new Date(r.created_at).toLocaleString()}</dd></div>
                   </dl>
                   {r.message && <p className="am-message">{r.message}</p>}
                   <div className="am-request-actions">
-                    <label>Status{' '}
+                    <label>Estado{' '}
                       <select value={r.status} onChange={e => setStatus(r, e.target.value)}>
                         {STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
                       </select>
                     </label>
-                    <a className="am-btn am-btn--primary" href={`mailto:${r.email}?subject=${encodeURIComponent(`Finca El Vergel — ${r.lot_name || 'your enquiry'}`)}`}
-                      onClick={() => r.status === 'new' && setStatus(r, 'contacted')}>Reply by email</a>
-                    <button type="button" className="am-btn am-danger" onClick={() => remove(r)}>Delete</button>
+                    <a className="am-btn am-btn--primary" href={`mailto:${r.email}?subject=${encodeURIComponent(`Finca El Vergel — ${r.lot_name || 'tu consulta'}`)}`}
+                      onClick={() => r.status === 'new' && setStatus(r, 'contacted')}>Responder por correo</a>
+                    <button type="button" className="am-btn am-danger" onClick={() => remove(r)}>Eliminar</button>
                   </div>
                 </div>
               )}

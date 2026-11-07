@@ -15,7 +15,7 @@ export function htmlExcerpt(html, maxChars = 260) {
 }
 
 /**
- * "From cherry to cup" — an immersive chapter journey.
+ * "De la cereza a la taza" — an immersive chapter journey.
  * Desktop: the section is pinned and vertical scroll moves the chapters
  * horizontally (native scroll, no scroll-jacking).
  * Mobile / reduced motion: full-screen cards that stack over each other.
@@ -137,7 +137,7 @@ export default function Journey({ id, eyebrow, title, chapters }) {
                   <p className="journey-text">{c.text}</p>
                   {c.href && (
                     <Link to={c.href} className="journey-link">
-                      Discover more <span aria-hidden="true">→</span>
+                      Descubre más <span aria-hidden="true">→</span>
                     </Link>
                   )}
                 </div>
@@ -156,7 +156,7 @@ export default function Journey({ id, eyebrow, title, chapters }) {
                   type="button"
                   className={`journey-dot${i === active ? ' is-active' : ''}`}
                   onClick={() => goToChapter(i)}
-                  aria-label={`Go to ${c.title}`}
+                  aria-label={`Ir a ${c.title}`}
                   aria-current={i === active ? 'step' : undefined}
                 >
                   <span>{c.eyebrow}</span>

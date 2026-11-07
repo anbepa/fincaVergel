@@ -5,18 +5,29 @@ import './FarmMap.css';
 
 const SatelliteMap = lazy(() => import('./SatelliteMap'));
 
+/* If the satellite chunk itself fails to load (blocked/slow network), the
+   lazy import throws during render. Without a boundary the whole section
+   would hang on the loading text or break; fall back to the illustrated
+   map instead, same as when the imagery tiles fail. */
+class MapErrorBoundary extends React.Component {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch() { this.props.onError?.(); }
+  render() { return this.state.failed ? null : this.props.children; }
+}
+
 /* Shown until the admin configures the map (positions in % of the map) */
 export const DEFAULT_MAP = {
   enabled: true,
-  title: 'Explore the farm',
-  intro: 'Tap a point to discover each corner of the estate.',
+  title: 'Explora la finca',
+  intro: 'Toca un punto para descubrir cada rincón de la finca.',
   mapImage: '',
   points: [
-    { id: 'plots',   x: 34, y: 58, title: 'Shaded coffee plots', text: '55 hectares of Arabica growing under native shade trees at around 1,200 m above sea level.', image: '' },
-    { id: 'forest',  x: 70, y: 28, title: 'Forest reserve',      text: '35 hectares of wild forest that shelter birds and wildlife and protect our water springs.', image: '' },
-    { id: 'mill',    x: 56, y: 70, title: 'Micro-mill',          text: 'Where every lot is processed: honey and natural methods that save water and build flavor.', image: '' },
-    { id: 'trapiche',x: 22, y: 32, title: '150-year-old sugar mill', text: 'The historic trapiche next to our micro-mill — the heart of the farm for generations.', image: '' },
-    { id: 'drying',  x: 80, y: 62, title: 'Drying patios',       text: 'Cherries dry slowly under the sun on raised beds and patios, turned by hand.', image: '' },
+    { id: 'plots',   x: 34, y: 58, title: 'Cafetales bajo sombra', text: '55 hectáreas de arábica que crecen bajo árboles nativos de sombra, a unos 1.200 m sobre el nivel del mar.', image: '' },
+    { id: 'forest',  x: 70, y: 28, title: 'Reserva forestal',      text: '35 hectáreas de bosque silvestre que albergan aves y fauna, y protegen nuestros nacimientos de agua.', image: '' },
+    { id: 'mill',    x: 56, y: 70, title: 'Microbeneficio',        text: 'Donde se procesa cada lote: métodos honey y natural que ahorran agua y construyen sabor.', image: '' },
+    { id: 'trapiche',x: 22, y: 32, title: 'Trapiche de 150 años',  text: 'El histórico trapiche junto a nuestro microbeneficio: el corazón de la finca durante generaciones.', image: '' },
+    { id: 'drying',  x: 80, y: 62, title: 'Patios de secado',      text: 'Las cerezas se secan lentamente al sol en camas elevadas y patios, volteadas a mano.', image: '' },
   ],
 };
 
@@ -137,7 +148,7 @@ export default function FarmMap() {
   return (
     <section id="farm-map" className="fmap" data-nav="dark" ref={sectionRef}>
       <div className="fmap-head">
-        <p className="lp-section-eyebrow">{mode === 'satellite' ? 'Satellite view' : 'Interactive map'}</p>
+        <p className="lp-section-eyebrow">{mode === 'satellite' ? 'Vista satelital' : 'Mapa interactivo'}</p>
         <h2 className="fmap-title">{config.title || DEFAULT_MAP.title}</h2>
         {config.intro && <p className="fmap-intro">{config.intro}</p>}
       </div>
@@ -146,15 +157,17 @@ export default function FarmMap() {
         <div className={`fmap-canvas fmap-canvas--${mode}`} style={mode === 'image' && ratio ? { aspectRatio: ratio } : undefined}>
           {mode === 'satellite' ? (
             near && (
-              <Suspense fallback={<div className="fmap-loading">Loading satellite view…</div>}>
-                <SatelliteMap location={loc} points={points} active={active} onSelect={setActive} onFail={() => setSatFailed(true)} />
-              </Suspense>
+              <MapErrorBoundary onError={() => setSatFailed(true)}>
+                <Suspense fallback={<div className="fmap-loading">Cargando vista satelital…</div>}>
+                  <SatelliteMap location={loc} points={points} active={active} onSelect={setActive} onFail={() => setSatFailed(true)} />
+                </Suspense>
+              </MapErrorBoundary>
             )
           ) : mode === 'image' ? (
             <img
               className="fmap-img"
               src={sizedImage(config.mapImage, 1400)}
-              alt={`Map of ${config.title || 'the farm'}`}
+              alt={`Mapa de ${config.title || 'la finca'}`}
               loading="lazy"
               decoding="async"
               onLoad={e => setRatio(`${e.currentTarget.naturalWidth} / ${e.currentTarget.naturalHeight}`)}
@@ -180,7 +193,7 @@ export default function FarmMap() {
           {directions && (
             <a className="fmap-directions" href={directions} target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 11.3l-9-9a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z" /></svg>
-              Get directions
+              Cómo llegar
             </a>
           )}
         </div>
@@ -195,8 +208,8 @@ export default function FarmMap() {
               <h3 className="fmap-card-title">{current.title}</h3>
               {current.text && <p className="fmap-card-text">{current.text}</p>}
               <div className="fmap-card-nav">
-                <button type="button" onClick={() => setActive(a => (a - 1 + points.length) % points.length)} aria-label="Previous point">←</button>
-                <button type="button" onClick={() => setActive(a => (a + 1) % points.length)} aria-label="Next point">→</button>
+                <button type="button" onClick={() => setActive(a => (a - 1 + points.length) % points.length)} aria-label="Punto anterior">←</button>
+                <button type="button" onClick={() => setActive(a => (a + 1) % points.length)} aria-label="Punto siguiente">→</button>
               </div>
             </div>
           </aside>
@@ -207,8 +220,8 @@ export default function FarmMap() {
         <div className="fmap-facts">
           {loc.label && <span><b>{loc.label}</b></span>}
           {loc.region && <span>{loc.region}</span>}
-          {config.altitude ? <span>{Number(config.altitude).toLocaleString('en-US')} m a.s.l.</span> : null}
-          <span>{Math.abs(Number(loc.lat)).toFixed(4)}° {Number(loc.lat) >= 0 ? 'N' : 'S'} · {Math.abs(Number(loc.lng)).toFixed(4)}° {Number(loc.lng) >= 0 ? 'E' : 'W'}</span>
+          {config.altitude ? <span>{Number(config.altitude).toLocaleString('es-CO')} m s. n. m.</span> : null}
+          <span>{Math.abs(Number(loc.lat)).toFixed(4)}° {Number(loc.lat) >= 0 ? 'N' : 'S'} · {Math.abs(Number(loc.lng)).toFixed(4)}° {Number(loc.lng) >= 0 ? 'E' : 'O'}</span>
         </div>
       )}
     </section>

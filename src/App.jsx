@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import Landing from './pages/Landing';
 import Navbar from './components/Navbar';
@@ -33,6 +33,17 @@ const AdminLots = lazy(() => import('./pages/Admin/AdminLots'));
 const AdminRequests = lazy(() => import('./pages/Admin/AdminRequests'));
 const AdminHeroVideo = lazy(() => import('./pages/Admin/AdminHeroVideo'));
 const AdminMap = lazy(() => import('./pages/Admin/AdminMap'));
+
+/* In-app 404 for client-side navigation to an unknown route */
+function NotFound() {
+  return (
+    <div style={{ textAlign: 'center', padding: '90px 24px' }}>
+      <h1 style={{ margin: '0 0 12px' }}>Página no encontrada</h1>
+      <p style={{ margin: '0 0 28px' }}>La página que buscas no existe o se movió.</p>
+      <Link to="/" style={{ background: '#111', color: '#fff', padding: '12px 26px', textDecoration: 'none', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '.8rem', fontWeight: 700 }}>Volver al inicio</Link>
+    </div>
+  );
+}
 
 /* Scroll to top on route change (unless navigating to a #section) */
 function ScrollToTop() {
@@ -84,6 +95,7 @@ function App() {
           <Route path="/admin/requests" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminRequests /></Suspense></Layout>} />
           <Route path="/admin/hero-video" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminHeroVideo /></Suspense></Layout>} />
           <Route path="/admin/map" element={<Layout><Suspense fallback={<SkeletonPage />}><AdminMap /></Suspense></Layout>} />
+          <Route path="*" element={<Layout><NotFound /></Layout>} />
         </Routes>
       </ToastProvider>
     </Router>
@@ -93,7 +105,7 @@ function App() {
 // Simple Layout component to include Nav and Footer on inner pages
 const Layout = ({ children, noPad }) => (
   <div className="layout">
-    <a href="#main" className="skip-link">Skip to content</a>
+    <a href="#main" className="skip-link">Saltar al contenido</a>
     <Navbar />
     <main id="main" style={noPad ? {} : { paddingTop: '70px' }}>{children}</main>
     <Footer />

@@ -5,7 +5,7 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const PerfectCoffee = () => {
-  const [title, setTitle] = useState("Perfect coffee");
+  const [title, setTitle] = useState("Café perfecto");
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState("");
   const [captions, setCaptions] = useState({});
@@ -55,7 +55,7 @@ const PerfectCoffee = () => {
   if (isLoading) {
     return (
       <ProjectLayout title="" images={[]} captions={{}}>
-         <div className="page-loading">Loading...</div>
+         <div className="page-loading">Cargando...</div>
       </ProjectLayout>
     );
   }

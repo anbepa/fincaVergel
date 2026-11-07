@@ -4,12 +4,12 @@ import { getPage } from '../lib/content';
 import './Home.css';
 
 const defaultItems = [
-  { id: '01', title: 'The Farm',       description: 'Explore our estate in the Sierra Nevada de Santa Marta.',  href: '/thefarm' },
-  { id: '02', title: 'Our Process',    description: 'From cherry to cup — quality at every step of the harvest.',   href: '/ourprocess' },
-  { id: '03', title: 'Get to Know Us', description: 'The story and values behind Finca El Vergel.',                 href: '/gettoknowus' },
-  { id: '04', title: 'Perfect Coffee', description: 'What makes our specialty coffee stand apart in every brew.',   href: '/perfectcoffee' },
-  { id: '05', title: 'Green Energy',   description: 'Our commitment to sustainable, clean power on the farm.',      href: '/greenenergy' },
-  { id: '06', title: 'Our Staff',      description: 'The dedicated hands and hearts behind every harvest.',         href: '/our-staff' },
+  { id: '01', title: 'La finca',       description: 'Explora nuestra finca en la Sierra Nevada de Santa Marta.',  href: '/thefarm' },
+  { id: '02', title: 'Nuestro proceso', description: 'De la cereza a la taza: calidad en cada paso de la cosecha.',   href: '/ourprocess' },
+  { id: '03', title: 'Conócenos',      description: 'La historia y los valores detrás de Finca El Vergel.',                 href: '/gettoknowus' },
+  { id: '04', title: 'Café perfecto',  description: 'Qué hace que nuestro café de especialidad se destaque en cada preparación.',   href: '/perfectcoffee' },
+  { id: '05', title: 'Energía verde',  description: 'Nuestro compromiso con la energía limpia y sostenible en la finca.',      href: '/greenenergy' },
+  { id: '06', title: 'Nuestro equipo', description: 'Las manos y los corazones dedicados detrás de cada cosecha.',         href: '/our-staff' },
 ];
 
 const Home = () => {
@@ -81,8 +81,8 @@ const Home = () => {
   return (
     <main className="home-page">
       <section className="home-hero">
-        <p className="eyebrow">Explore</p>
-        <h1 className="home-headline">Our World</h1>
+        <p className="eyebrow">Explora</p>
+        <h1 className="home-headline">Nuestro mundo</h1>
       </section>
 
       <section className="home-grid" ref={gridRef}>

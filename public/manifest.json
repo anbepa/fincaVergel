@@ -1,7 +1,7 @@
 {
   "name": "Finca El Vergel",
   "short_name": "Finca Vergel",
-  "description": "Specialty coffee from the Sierra Nevada de Santa Marta, Colombia",
+  "description": "Café de especialidad de la Sierra Nevada de Santa Marta, Colombia",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111111",

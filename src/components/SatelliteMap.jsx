@@ -58,6 +58,11 @@ export default function SatelliteMap({
       attributionControl: true,
     });
     map.attributionControl.setPrefix(false);
+    /* Leaflet's zoom buttons ship English titles; localize them */
+    const zin = elRef.current.querySelector('.leaflet-control-zoom-in');
+    if (zin) { zin.title = 'Acercar'; zin.setAttribute('aria-label', 'Acercar'); }
+    const zout = elRef.current.querySelector('.leaflet-control-zoom-out');
+    if (zout) { zout.title = 'Alejar'; zout.setAttribute('aria-label', 'Alejar'); }
     const imagery = L.tileLayer(IMAGERY, { maxZoom: 19, maxNativeZoom: 18, attribution: ATTRIBUTION }).addTo(map);
     // If the imagery host is blocked (network, ad-blocker…), report it so the
     // section can fall back to the illustrated map instead of an empty box.
@@ -125,7 +130,7 @@ export default function SatelliteMap({
       const m = L.marker([Number(p.lat), Number(p.lng)], {
         icon: pinIcon(i + 1, i === active),
         draggable: editable,
-        title: p.title || `Point ${i + 1}`,
+        title: p.title || `Punto ${i + 1}`,
         riseOnHover: true,
         zIndexOffset: i === active ? 1000 : 0,
       }).addTo(layer);
@@ -151,5 +156,5 @@ export default function SatelliteMap({
   }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!location) return null;
-  return <div ref={elRef} className="sat-map" aria-label="Satellite map of the farm" role="region" />;
+  return <div ref={elRef} className="sat-map" aria-label="Mapa satelital de la finca" role="region" />;
 }

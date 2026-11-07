@@ -32,10 +32,10 @@ const EditPage = () => {
   const [landingTitle, setLandingTitle] = useState("");
   const [landingDesc, setLandingDesc] = useState("");
   const [landingStats, setLandingStats] = useState([
-      { value: 100, suffix: '+', label: 'Hectares of Estate' },
-      { value: 1200, suffix: 'm', label: 'Altitude (m.a.s.l.)' },
-      { value: 8, suffix: '', label: 'Arabica Varietals' },
-      { value: 35, suffix: 'ha', label: 'Forest Reserve' }
+      { value: 100, suffix: '+', label: 'Hectáreas de la finca' },
+      { value: 1200, suffix: 'm', label: 'Altitud (m s. n. m.)' },
+      { value: 8, suffix: '', label: 'Variedades de arábica' },
+      { value: 35, suffix: 'ha', label: 'Reserva forestal' }
   ]);
 
   // Home (Titles for the 6 grid items)
@@ -43,9 +43,9 @@ const EditPage = () => {
 
   // About Us (Dynamic sections)
   const [aboutSections, setAboutSections] = useState([
-     { title: "Our Business", content: "" },
-     { title: "Our Commitment", content: "" },
-     { title: "Our Goal", content: "" }
+     { title: "Nuestro negocio", content: "" },
+     { title: "Nuestro compromiso", content: "" },
+     { title: "Nuestro objetivo", content: "" }
   ]);
 
   // Get To Know Us  (3 pillars displayed as cards on the homepage)
@@ -81,12 +81,12 @@ const EditPage = () => {
   
   // Custom Navigation Labels
   const [navLabels, setNavLabels] = useState({
-      home: "Home",
-      about: "About us",
-      contact: "Contact",
-      admin: "ADMIN",
-      landingBtn: "Get to know us",
-      coffees: "Our Coffees"
+      home: "Inicio",
+      about: "Nosotros",
+      contact: "Contacto",
+      admin: "Admin",
+      landingBtn: "Conoce nuestra finca",
+      coffees: "Nuestros cafés"
   });
 
   useEffect(() => {
@@ -148,14 +148,14 @@ const EditPage = () => {
             setHomeDescriptions(["", "", "", "", "", ""]);
           } else if (parsed.titles) {
             // New format: {titles, descriptions}
-            setHomeTitles(parsed.titles || ["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+            setHomeTitles(parsed.titles || ["La finca", "Nuestro proceso", "Conócenos", "Café perfecto", "Energía verde", "Nuestro equipo"]);
             setHomeDescriptions(parsed.descriptions || ["", "", "", "", "", ""]);
           } else {
-            setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+            setHomeTitles(["La finca", "Nuestro proceso", "Conócenos", "Café perfecto", "Energía verde", "Nuestro equipo"]);
             setHomeDescriptions(["", "", "", "", "", ""]);
           }
         } catch (e) {
-          setHomeTitles(["The Farm", "Our process", "Get to know us", "Perfect coffee", "Green Energy", "Our Staff"]);
+          setHomeTitles(["La finca", "Nuestro proceso", "Conócenos", "Café perfecto", "Energía verde", "Nuestro equipo"]);
           setHomeDescriptions(["", "", "", "", "", ""]);
         }
       }
@@ -167,16 +167,16 @@ const EditPage = () => {
               } else {
                   // Migration from old format or default
                   setAboutSections([
-                      { title: "Our Business", content: parsed.business || "is to create high quality green coffee micro-lots..." },
-                      { title: "Our Commitment", content: parsed.commitment || "is to achieve the best quality..." },
-                      { title: "Our Goal", content: parsed.goal || "is to have fun, meet great people..." }
+                      { title: "Nuestro negocio", content: parsed.business || "es crear microlotes de café verde de alta calidad..." },
+                      { title: "Nuestro compromiso", content: parsed.commitment || "es lograr la mejor calidad..." },
+                      { title: "Nuestro objetivo", content: parsed.goal || "es disfrutar el camino, conocer gente increíble..." }
                   ]);
               }
           } catch (e) {
               setAboutSections([
-                  { title: "Our Business", content: "is to create high quality green coffee micro-lots..." },
-                  { title: "Our Commitment", content: "is to achieve the best quality..." },
-                  { title: "Our Goal", content: "is to have fun, meet great people..." }
+                  { title: "Nuestro negocio", content: "es crear microlotes de café verde de alta calidad..." },
+                  { title: "Nuestro compromiso", content: "es lograr la mejor calidad..." },
+                  { title: "Nuestro objetivo", content: "es disfrutar el camino, conocer gente increíble..." }
               ]);
           }
       }
@@ -186,10 +186,10 @@ const EditPage = () => {
               setContactIntro(parsed.intro || "");
               setContactVisit(parsed.visit || "");
               setContactEmail(parsed.email || "rosanabernal26@gmail.com");
-              setContactLocation(parsed.location || "Alajuela, Costa Rica");
+              setContactLocation(parsed.location || "Santa Marta, Colombia");
           } catch (e) {
-              setContactIntro("If you have any questions about us...");
-              setContactVisit("If you want to come visit our farm...");
+              setContactIntro("Si tienes preguntas sobre nosotros...");
+              setContactVisit("Si quieres venir a visitar nuestra finca...");
           }
       }
       else if (slug === 'gettoknowus') {
@@ -241,17 +241,17 @@ const EditPage = () => {
                 setFooterText(parsed.text || "");
                 setFacebookUrl(parsed.facebook || "");
                 setInstagramUrl(parsed.instagram || "");
-                setHeaderTitle(parsed.headerTitle || "sonora coffee");
-                setFooterCopyright(parsed.footerCopyright || "Never settle for good enough.");
+                setHeaderTitle(parsed.headerTitle || "FINCA VERGEL");
+                setFooterCopyright(parsed.footerCopyright || "Nunca te conformes con lo suficientemente bueno.");
                 
                 if (parsed.navLabels) {
                     setNavLabels({
-                        home: parsed.navLabels.home || "Home",
-                        about: parsed.navLabels.about || "About us",
-                        contact: parsed.navLabels.contact || "Contact",
-                        admin: parsed.navLabels.admin || "ADMIN",
-                        landingBtn: parsed.navLabels.landingBtn || "Get to know us",
-                        coffees: parsed.navLabels.coffees || "Our Coffees"
+                        home: parsed.navLabels.home || "Inicio",
+                        about: parsed.navLabels.about || "Nosotros",
+                        contact: parsed.navLabels.contact || "Contacto",
+                        admin: parsed.navLabels.admin || "Admin",
+                        landingBtn: parsed.navLabels.landingBtn || "Conoce nuestra finca",
+                        coffees: parsed.navLabels.coffees || "Nuestros cafés"
                     });
                 }
                 
@@ -274,13 +274,13 @@ const EditPage = () => {
             } else {
                 // Legacy plain text
                 setFooterText(rawContent);
-                setHeaderTitle("sonora coffee");
+                setHeaderTitle("FINCA VERGEL");
                 if (rawImages.length > 0) setHeaderLogo(rawImages[0]);
                 if (rawImages.length > 1) setFooterLogo(rawImages[1]);
             }
         } catch (e) {
             setFooterText(rawContent);
-            setHeaderTitle("sonora coffee");
+            setHeaderTitle("FINCA VERGEL");
         }
       } 
       // Generic Pages (TheFarm, etc.)
@@ -390,17 +390,17 @@ const EditPage = () => {
 
     setSaving(false);
     if (error) {
-      alert('Error saving: ' + error.message);
+      alert('Error al guardar: ' + error.message);
     } else {
       invalidatePages();
-      alert('Page updated successfully!');
+      alert('¡Página actualizada correctamente!');
     }
   };
 
   const handleGenericImageUpload = async (event) => {
     try {
       setUploading(true);
-      if (!event.target.files || event.target.files.length === 0) throw new Error('Select at least one image.');
+      if (!event.target.files || event.target.files.length === 0) throw new Error('Selecciona al menos una imagen.');
       
       const files = Array.from(event.target.files);
       const newImages = [];
@@ -456,7 +456,7 @@ const EditPage = () => {
         if (type === 'footer') setFooterLogo(data.publicUrl);
 
       } catch (error) {
-          alert('Upload failed: ' + error.message);
+          alert('Error al subir: ' + error.message);
       } finally {
           setUploading(false);
       }
@@ -469,17 +469,17 @@ const EditPage = () => {
     }));
   };
 
-  if (loading) return <div className="admin-page-container">Loading...</div>;
+  if (loading) return <div className="admin-page-container">Cargando...</div>;
 
   if (!EDITABLE_SLUGS.includes(slug)) {
     const modulePath = MODULE_SLUGS[slug];
     return (
       <div className="admin-page-container">
         <div className="admin-header">
-          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Dashboard</button>
-          <h1 className="admin-title">Edit: {slug}</h1>
+          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Panel</button>
+          <h1 className="admin-title">Editar: {slug}</h1>
         </div>
-        <p>This content is not edited here{modulePath ? <> — it has its own module: <button onClick={() => navigate(modulePath)} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}>open it</button></> : '.'}</p>
+        <p>Este contenido no se edita aquí{modulePath ? <>: tiene su propio módulo: <button onClick={() => navigate(modulePath)} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}>abrirlo</button></> : '.'}</p>
       </div>
     );
   }
@@ -488,11 +488,11 @@ const EditPage = () => {
     return (
       <div className="admin-page-container">
         <div className="admin-header">
-          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Dashboard</button>
-          <h1 className="admin-title">Edit: {slug}</h1>
+          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Panel</button>
+          <h1 className="admin-title">Editar: {slug}</h1>
         </div>
-        <p>Could not load this page's stored content ({loadError}). Editing is disabled so nothing gets overwritten by mistake.</p>
-        <button onClick={fetchPageData} className="btn-admin-action btn-save">Retry</button>
+        <p>No se pudo cargar el contenido guardado de esta página ({loadError}). La edición está desactivada para que nada se sobrescriba por error.</p>
+        <button onClick={fetchPageData} className="btn-admin-action btn-save">Reintentar</button>
       </div>
     );
   }
@@ -500,13 +500,13 @@ const EditPage = () => {
   return (
     <div className="admin-page-container">
       <div className="admin-header">
-        <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Dashboard</button>
-        <h1 className="admin-title">Edit: {slug}</h1>
+        <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Panel</button>
+        <h1 className="admin-title">Editar: {slug}</h1>
       </div>
 
       <form onSubmit={handleSave} className="edit-container">
         <div className="edit-section">
-          <label className="edit-label">Page Title (Internal/Admin)</label>
+          <label className="edit-label">Título de la página (interno/admin)</label>
           <input
             type="text"
             value={formData.title}
@@ -520,34 +520,34 @@ const EditPage = () => {
         {/* LANDING */}
         {slug === 'landing' ? (
              <div className="edit-section">
-                <h3 style={{marginTop:0}}>Landing Details</h3>
+                <h3 style={{marginTop:0}}>Detalles de la página principal</h3>
                 <div className="mb-10">
-                    <label className="edit-label">Subtitle (Top)</label>
+                    <label className="edit-label">Subtítulo (arriba)</label>
                     <input type="text" value={landingSub} onChange={e => setLandingSub(e.target.value)} className="edit-input" />
                 </div>
                 <div className="mb-10">
-                    <label className="edit-label">Main Title (Middle)</label>
+                    <label className="edit-label">Título principal (centro)</label>
                     <input type="text" value={landingTitle} onChange={e => setLandingTitle(e.target.value)} className="edit-input" />
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Description (Bottom)</label>
+                    <label className="edit-label">Descripción (abajo)</label>
                     <textarea value={landingDesc} onChange={e => setLandingDesc(e.target.value)} rows={3} className="edit-textarea" />
                 </div>
                 <div className="mb-10">
-                    <label className="edit-label">Manifesto / Mission Statement</label>
-                    <textarea value={landingManifesto} onChange={e => setLandingManifesto(e.target.value)} rows={4} className="edit-textarea" placeholder="We journey to grow the finest specialty coffee..." />
-                    <small style={{color:'#888', fontSize:'0.75rem'}}>Use line breaks for multi-line display. Leave blank to show the default text.</small>
+                    <label className="edit-label">Manifiesto / Declaración de misión</label>
+                    <textarea value={landingManifesto} onChange={e => setLandingManifesto(e.target.value)} rows={4} className="edit-textarea" placeholder="Cultivamos el mejor café de especialidad..." />
+                    <small style={{color:'#888', fontSize:'0.75rem'}}>Usa saltos de línea para mostrarlo en varias líneas. Déjalo en blanco para mostrar el texto por defecto.</small>
                 </div>
                 <hr style={{margin:'20px 0', borderTop: '1px solid #eee'}}/>
-                <h4 style={{marginTop:0, marginBottom:'10px'}}>Stats Counters</h4>
+                <h4 style={{marginTop:0, marginBottom:'10px'}}>Contadores de cifras</h4>
                 <div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'10px'}}>
                   {landingStats.map((stat, i) => (
                     <div key={i} style={{padding: '10px', background: '#f9f9f9', borderRadius: '4px'}}>
-                      <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>{`Stat ${i+1} Label:`}</label>
+                      <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>{`Etiqueta de la cifra ${i+1}:`}</label>
                       <input type="text" value={stat.label} onChange={e => {
                          const n = [...landingStats]; n[i].label = e.target.value; setLandingStats(n);
                       }} className="edit-input" style={{marginBottom:'5px'}} />
-                       <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>Value:</label>
+                       <label style={{fontSize:'0.75rem', fontWeight:'bold'}}>Valor:</label>
                       <input type="number" value={stat.value} onChange={e => {
                          const n = [...landingStats]; n[i].value = Number(e.target.value); setLandingStats(n);
                       }} className="edit-input" style={{marginBottom:'5px'}} />
@@ -563,55 +563,55 @@ const EditPage = () => {
         /* LAYOUT */
         : slug === 'layout' ? (
              <div className="edit-section">
-                <h3 style={{marginTop:0}}>Global Settings</h3>
+                <h3 style={{marginTop:0}}>Configuración global</h3>
                  <div className="mb-10">
-                    <label className="edit-label">Header Title (Navbar)</label>
-                    <input type="text" value={headerTitle} onChange={e => setHeaderTitle(e.target.value)} className="edit-input" placeholder="sonora coffee" />
+                    <label className="edit-label">Título del encabezado (barra de navegación)</label>
+                    <input type="text" value={headerTitle} onChange={e => setHeaderTitle(e.target.value)} className="edit-input" placeholder="FINCA VERGEL" />
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Footer Text (Tagline)</label>
+                    <label className="edit-label">Texto del pie de página</label>
                     <input type="text" value={footerText} onChange={e => setFooterText(e.target.value)} className="edit-input" />
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Footer Copyright Text</label>
-                    <input type="text" value={footerCopyright} onChange={e => setFooterCopyright(e.target.value)} className="edit-input" placeholder="Never settle for good enough." />
-                    <small style={{color:'#888', fontSize:'0.75rem'}}>Shown before © {new Date().getFullYear()} Finca Vergel. All rights reserved.</small>
+                    <label className="edit-label">Texto de copyright del pie</label>
+                    <input type="text" value={footerCopyright} onChange={e => setFooterCopyright(e.target.value)} className="edit-input" placeholder="Nunca te conformes con lo suficientemente bueno." />
+                    <small style={{color:'#888', fontSize:'0.75rem'}}>Se muestra antes de © {new Date().getFullYear()} Finca Vergel. Todos los derechos reservados.</small>
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Facebook URL</label>
+                    <label className="edit-label">URL de Facebook</label>
                     <input type="text" value={facebookUrl} onChange={e => setFacebookUrl(e.target.value)} className="edit-input" placeholder="https://facebook.com/..." />
                 </div>
                  <div className="mb-10">
-                    <label className="edit-label">Instagram URL</label>
+                    <label className="edit-label">URL de Instagram</label>
                     <input type="text" value={instagramUrl} onChange={e => setInstagramUrl(e.target.value)} className="edit-input" placeholder="https://instagram.com/..." />
                 </div>
 
                 <hr style={{margin:'20px 0', borderTop: '1px solid #ddd'}}/>
                 
-                <h3 style={{marginTop:0}}>Menu & Button Labels</h3>
+                <h3 style={{marginTop:0}}>Etiquetas del menú y botones</h3>
                 <div className="nav-labels-grid">
                     <div>
-                        <label className="edit-label">Home Menu item</label>
+                        <label className="edit-label">Ítem del menú: Inicio</label>
                         <input type="text" value={navLabels.home} onChange={e => setNavLabels({...navLabels, home: e.target.value})} className="edit-input" />
                     </div>
                     <div>
-                        <label className="edit-label">About Us Menu item</label>
+                        <label className="edit-label">Ítem del menú: Nosotros</label>
                         <input type="text" value={navLabels.about} onChange={e => setNavLabels({...navLabels, about: e.target.value})} className="edit-input" />
                     </div>
                     <div>
-                        <label className="edit-label">Coffees Menu item</label>
-                        <input type="text" value={navLabels.coffees || ''} onChange={e => setNavLabels({...navLabels, coffees: e.target.value})} className="edit-input" placeholder="Our Coffees" />
+                        <label className="edit-label">Ítem del menú: Cafés</label>
+                        <input type="text" value={navLabels.coffees || ''} onChange={e => setNavLabels({...navLabels, coffees: e.target.value})} className="edit-input" placeholder="Nuestros cafés" />
                     </div>
                     <div>
-                        <label className="edit-label">Contact Menu item</label>
+                        <label className="edit-label">Ítem del menú: Contacto</label>
                         <input type="text" value={navLabels.contact} onChange={e => setNavLabels({...navLabels, contact: e.target.value})} className="edit-input" />
                     </div>
                     <div>
-                        <label className="edit-label">Admin Menu item</label>
+                        <label className="edit-label">Ítem del menú: Admin</label>
                         <input type="text" value={navLabels.admin} onChange={e => setNavLabels({...navLabels, admin: e.target.value})} className="edit-input" />
                     </div>
                     <div>
-                        <label className="edit-label">Landing Button (Get to know us)</label>
+                        <label className="edit-label">Botón principal (Conócenos)</label>
                         <input type="text" value={navLabels.landingBtn} onChange={e => setNavLabels({...navLabels, landingBtn: e.target.value})} className="edit-input" />
                     </div>
                 </div>
@@ -620,34 +620,34 @@ const EditPage = () => {
                 
                 {/* HEADER LOGO */}
                 <div className="mb-20">
-                    <label className="edit-label">Header Logo</label>
+                    <label className="edit-label">Logo del encabezado</label>
                     {headerLogo ? (
                         <div className="mb-10">
                              <img src={headerLogo} style={{maxHeight:'60px', display:'block', marginBottom:'5px', border:'1px solid #ccc'}} />
-                             <button type="button" onClick={() => setHeaderLogo("")} style={{color:'red', cursor:'pointer', border:'none', background:'none', padding:0, textDecoration:'underline'}}>Remove Header Logo</button>
+                             <button type="button" onClick={() => setHeaderLogo("")} style={{color:'red', cursor:'pointer', border:'none', background:'none', padding:0, textDecoration:'underline'}}>Quitar logo del encabezado</button>
                         </div>
                     ) : (
-                        <p style={{fontStyle:'italic', color:'#888'}}>No header logo selected.</p>
+                        <p style={{fontStyle:'italic', color:'#888'}}>No se ha seleccionado un logo de encabezado.</p>
                     )}
                     <label className="btn-admin-action" style={{background:'#eee', border:'1px solid #ccc', display:'inline-block'}}>
-                        {uploading ? 'Uploading...' : 'Upload Header Logo'}
+                        {uploading ? 'Subiendo...' : 'Subir logo del encabezado'}
                         <input type="file" accept="image/*" onChange={(e) => handleSpcificLogoUpload(e, 'header')} disabled={uploading} style={{display: 'none'}} />
                     </label>
                 </div>
 
                 {/* FOOTER LOGO */}
                 <div>
-                    <label className="edit-label">Footer Logo</label>
+                    <label className="edit-label">Logo del pie</label>
                     {footerLogo ? (
                         <div className="mb-10">
                              <img src={footerLogo} style={{maxHeight:'60px', display:'block', marginBottom:'5px', border:'1px solid #ccc'}} />
-                             <button type="button" onClick={() => setFooterLogo("")} style={{color:'red', cursor:'pointer', border:'none', background:'none', padding:0, textDecoration:'underline'}}>Remove Footer Logo</button>
+                             <button type="button" onClick={() => setFooterLogo("")} style={{color:'red', cursor:'pointer', border:'none', background:'none', padding:0, textDecoration:'underline'}}>Quitar logo del pie</button>
                         </div>
                     ) : (
-                        <p style={{fontStyle:'italic', color:'#888'}}>No footer logo selected.</p>
+                        <p style={{fontStyle:'italic', color:'#888'}}>No se ha seleccionado un logo de pie.</p>
                     )}
                      <label className="btn-admin-action" style={{background:'#eee', border:'1px solid #ccc', display:'inline-block'}}>
-                        {uploading ? 'Uploading...' : 'Upload Footer Logo'}
+                        {uploading ? 'Subiendo...' : 'Subir logo del pie'}
                         <input type="file" accept="image/*" onChange={(e) => handleSpcificLogoUpload(e, 'footer')} disabled={uploading} style={{display: 'none'}} />
                     </label>
                 </div>
@@ -657,11 +657,11 @@ const EditPage = () => {
         /* ABOUT US */
         : slug === 'aboutus' ? (
              <div className="edit-section">
-                <h3 style={{marginTop:0}}>Mission Statements</h3>
+                <h3 style={{marginTop:0}}>Declaraciones de misión</h3>
                 {aboutSections.map((section, idx) => (
                     <div className="mb-20" key={idx} style={{backgroundColor:'#f9f9f9', padding:'15px', borderRadius:'6px'}}>
                         <div className="mb-10">
-                            <label className="edit-label">Title {idx + 1}</label>
+                            <label className="edit-label">Título {idx + 1}</label>
                             <input 
                                 type="text"
                                 value={section.title} 
@@ -675,7 +675,7 @@ const EditPage = () => {
                             />
                         </div>
                         <div className="mb-10">
-                            <label className="edit-label">Content {idx + 1}</label>
+                            <label className="edit-label">Contenido {idx + 1}</label>
                             <textarea 
                                 value={section.content} 
                                 onChange={e => {
@@ -694,41 +694,41 @@ const EditPage = () => {
         /* CONTACT */
         : slug === 'contact' ? (
              <div className="edit-section">
-                <h3 style={{marginTop:0}}>Contact Info Text</h3>
+                <h3 style={{marginTop:0}}>Textos de contacto</h3>
                 <div className="mb-10">
-                    <label className="edit-label">Intro Text (General Inquiries)</label>
+                    <label className="edit-label">Texto de introducción (consultas generales)</label>
                     <textarea value={contactIntro} onChange={e => setContactIntro(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
                 <div className="mb-10">
-                    <label className="edit-label">Visit Text (Farm Visits)</label>
+                    <label className="edit-label">Texto de visitas (visitas a la finca)</label>
                     <textarea value={contactVisit} onChange={e => setContactVisit(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
                 <hr style={{margin:'16px 0', border:'none', borderTop:'1px solid #eee'}}/>
                 <div className="mb-10">
-                    <label className="edit-label">Contact Email</label>
+                    <label className="edit-label">Correo de contacto</label>
                     <input type="text" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="edit-input" placeholder="info@example.com" />
                 </div>
                 <div className="mb-10">
-                    <label className="edit-label">Location</label>
-                    <input type="text" value={contactLocation} onChange={e => setContactLocation(e.target.value)} className="edit-input" placeholder="City, Country" />
+                    <label className="edit-label">Ubicación</label>
+                    <input type="text" value={contactLocation} onChange={e => setContactLocation(e.target.value)} className="edit-input" placeholder="Ciudad, País" />
                 </div>
              </div>
         )
         /* GET TO KNOW US */
         : slug === 'gettoknowus' ? (
              <div className="edit-section">
-                <h3>Get To Know Us — 3 Pillars</h3>
-                <p className="edit-hint">These three texts appear as cards in the "Get to Know Us" section on the main page.</p>
+                <h3>Conócenos: los 3 pilares</h3>
+                <p className="edit-hint">Estos tres textos aparecen como tarjetas en la sección «Conócenos» de la página principal.</p>
                 <div className="mb-20">
-                    <label className="edit-label">Our Business</label>
+                    <label className="edit-label">Nuestro negocio</label>
                     <textarea value={gtkBusiness} onChange={e => setGtkBusiness(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
                 <div className="mb-20">
-                    <label className="edit-label">Our Commitment</label>
+                    <label className="edit-label">Nuestro compromiso</label>
                     <textarea value={gtkCommitment} onChange={e => setGtkCommitment(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
                 <div className="mb-10">
-                    <label className="edit-label">Our Goal</label>
+                    <label className="edit-label">Nuestro objetivo</label>
                     <textarea value={gtkGoal} onChange={e => setGtkGoal(e.target.value)} rows={4} className="edit-textarea" />
                 </div>
              </div>
@@ -736,11 +736,11 @@ const EditPage = () => {
         /* HOME Grid */
         : slug === 'home' ? (
               <div className="edit-section">
-                 <h3 style={{marginTop:0}}>Grid Menu Items</h3>
-                 <p className="edit-hint">Edit the title and description for each of the 6 menu cards.</p>
+                 <h3 style={{marginTop:0}}>Ítems de la cuadrícula</h3>
+                 <p className="edit-hint">Edita el título y la descripción de cada una de las 6 tarjetas del menú.</p>
                  {homeTitles.map((t, idx) => (
                     <div key={idx} style={{backgroundColor:'#f9f9f9', padding:'12px', borderRadius:'4px', marginBottom:'12px'}}>
-                        <label className="edit-label">Item {idx+1} — Title</label>
+                        <label className="edit-label">Ítem {idx+1} — Título</label>
                         <input type="text" value={t} onChange={(e) => {
                                 const newTitles = [...homeTitles];
                                 newTitles[idx] = e.target.value;
@@ -749,7 +749,7 @@ const EditPage = () => {
                             className="edit-input"
                             style={{marginBottom:'8px'}}
                         />
-                        <label className="edit-label">Item {idx+1} — Description</label>
+                        <label className="edit-label">Ítem {idx+1} — Descripción</label>
                         <input type="text" value={homeDescriptions[idx] || ""} onChange={(e) => {
                                 const newDescs = [...homeDescriptions];
                                 newDescs[idx] = e.target.value;
@@ -764,30 +764,30 @@ const EditPage = () => {
         /* GENERIC CONTENT */
         : (
             <div className="edit-section">
-            <label className="edit-label">Content (Text)</label>
+            <label className="edit-label">Contenido (texto)</label>
             <textarea
                 value={formData.content}
                 onChange={(e) => setFormData({...formData, content: e.target.value})}
                 rows={10}
                 className="edit-textarea"
             />
-            <small>Use &lt;p&gt; tags for paragraphs.</small>
+            <small>Usa etiquetas &lt;p&gt; para los párrafos.</small>
             </div>
         )}
 
         {/* Generic Image Gallery (HIDDEN FOR LAYOUT) */}
         {slug !== 'layout' && (
             <div className="edit-section">
-            <label className="edit-label">Images</label>
+            <label className="edit-label">Imágenes</label>
             
             <div className="gallery-grid">
                 {formData.images.map((img, idx) => (
                 <div key={idx} className="gallery-item">
-                    <img src={img} alt={`Gallery ${idx}`} className="gallery-img" />
+                    <img src={img} alt={`Galería ${idx}`} className="gallery-img" />
                     
                     <input 
                         type="text" 
-                        placeholder="Image Caption"
+                        placeholder="Pie de foto"
                         value={captions[img] || ""}
                         onChange={(e) => setCaptions({...captions, [img]: e.target.value})}
                         className="gallery-caption-input"
@@ -806,7 +806,7 @@ const EditPage = () => {
 
             <div className="upload-zone">
                 <label className="btn-upload" style={{cursor: 'pointer'}}>
-                {uploading ? 'Uploading...' : 'Upload New Image(s)'}
+                {uploading ? 'Subiendo...' : 'Subir imagen(es) nueva(s)'}
                 <input 
                     type="file" 
                     multiple
@@ -825,7 +825,7 @@ const EditPage = () => {
           disabled={saving}
           className="btn-admin-action btn-save"
         >
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving ? 'Guardando...' : 'Guardar cambios'}
         </button>
       </form>
     </div>

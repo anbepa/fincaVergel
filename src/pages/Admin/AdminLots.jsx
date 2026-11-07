@@ -32,7 +32,7 @@ export default function AdminLots() {
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: true });
     if (error) setError(error.message.includes('does not exist')
-      ? 'The coffee_lots table does not exist yet. Run the SQL migration in supabase/migrations first.'
+      ? 'La tabla coffee_lots aún no existe. Ejecuta primero la migración SQL en supabase/migrations.'
       : error.message);
     else { setLots(data || []); setError(''); }
     setLoading(false);
@@ -66,14 +66,14 @@ export default function AdminLots() {
       : supabase.from('coffee_lots').insert(row);
     const { error } = await q;
     setSaving(false);
-    if (error) { alert('Error saving: ' + error.message); return; }
+    if (error) { alert('Error al guardar: ' + error.message); return; }
     invalidateLots();
     setEditing(null);
     load();
   };
 
   const remove = async (lot) => {
-    if (!window.confirm(`Delete "${lot.name}"? This cannot be undone.`)) return;
+    if (!window.confirm(`¿Eliminar "${lot.name}"? Esto no se puede deshacer.`)) return;
     const { error } = await supabase.from('coffee_lots').delete().eq('id', lot.id);
     if (error) { alert(error.message); return; }
     invalidateLots();
@@ -99,7 +99,7 @@ export default function AdminLots() {
     if (failed) {
       /* Do not leave the screen showing an order the database rejected. */
       setLots(prev);
-      setError('Could not save the new order: ' + failed.error.message);
+      setError('No se pudo guardar el nuevo orden: ' + failed.error.message);
       load();
       return;
     }
@@ -111,30 +111,30 @@ export default function AdminLots() {
     if (!file) return;
     setUploading(true);
     try { set('image_url', await uploadPublicFile(file, 'lots')); }
-    catch (err) { alert('Upload failed: ' + err.message); }
+    catch (err) { alert('Error al subir: ' + err.message); }
     finally { setUploading(false); e.target.value = ''; }
   };
 
-  if (!session) return <div className="admin-page-container">Loading…</div>;
+  if (!session) return <div className="admin-page-container">Cargando…</div>;
 
   return (
     <div className="admin-page-container">
       <div className="admin-header">
-        <Link to="/admin/dashboard" className="am-back">← Dashboard</Link>
-        <h1 className="admin-title">Coffee Lots</h1>
-        <button type="button" className="am-btn am-btn--primary" onClick={startNew}>+ New lot</button>
+        <Link to="/admin/dashboard" className="am-back">← Panel</Link>
+        <h1 className="admin-title">Lotes de café</h1>
+        <button type="button" className="am-btn am-btn--primary" onClick={startNew}>+ Nuevo lote</button>
       </div>
 
       <p className="am-hint">
-        Lots appear in the <b>“Our Coffees”</b> section of the homepage (it stays hidden while the list is empty).
-        Visitors can request a sample of each lot; requests arrive in <Link to="/admin/requests">Sample Requests</Link> and by email.
+        Los lotes aparecen en la sección <b>“Nuestros cafés”</b> de la página principal.
+        Los visitantes pueden pedir una muestra de cada lote; las solicitudes llegan a <Link to="/admin/requests">Solicitudes de muestra</Link> y por correo.
       </p>
 
       {error && <div className="am-error">{error}</div>}
-      {loading ? <p>Loading…</p> : lots.length === 0 && !error ? (
+      {loading ? <p>Cargando…</p> : lots.length === 0 && !error ? (
         <div className="am-empty">
-          <p>No lots yet.</p>
-          <button type="button" className="am-btn am-btn--primary" onClick={startNew}>Create the first lot</button>
+          <p>Aún no hay lotes.</p>
+          <button type="button" className="am-btn am-btn--primary" onClick={startNew}>Crear el primer lote</button>
         </div>
       ) : (
         <ul className="am-list">
@@ -145,15 +145,15 @@ export default function AdminLots() {
                 <strong>{lot.name}</strong>
                 <span>{[lot.varietal, lot.process, lot.altitude_m && `${lot.altitude_m} m`, lot.score && `${lot.score} pts`].filter(Boolean).join(' · ')}</span>
               </div>
-              <label className="am-switch" title="Available">
+              <label className="am-switch" title="Disponible">
                 <input type="checkbox" checked={!!lot.available} onChange={() => toggleAvailable(lot)} />
-                <span>{lot.available ? 'Available' : 'Sold out'}</span>
+                <span>{lot.available ? 'Disponible' : 'Agotado'}</span>
               </label>
               <div className="am-row-actions">
-                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up">↑</button>
-                <button type="button" onClick={() => move(i, 1)} disabled={i === lots.length - 1} aria-label="Move down">↓</button>
-                <button type="button" onClick={() => setEditing({ ...EMPTY, ...lot, profile: { ...EMPTY.profile, ...(lot.profile || {}) } })}>Edit</button>
-                <button type="button" className="am-danger" onClick={() => remove(lot)}>Delete</button>
+                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Subir">↑</button>
+                <button type="button" onClick={() => move(i, 1)} disabled={i === lots.length - 1} aria-label="Bajar">↓</button>
+                <button type="button" onClick={() => setEditing({ ...EMPTY, ...lot, profile: { ...EMPTY.profile, ...(lot.profile || {}) } })}>Editar</button>
+                <button type="button" className="am-danger" onClick={() => remove(lot)}>Eliminar</button>
               </div>
             </li>
           ))}
@@ -164,47 +164,47 @@ export default function AdminLots() {
         <div className="am-drawer-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) setEditing(null); }}>
           <form className="am-drawer" onSubmit={save}>
             <div className="am-drawer-head">
-              <h2>{editing.id ? 'Edit lot' : 'New lot'}</h2>
-              <button type="button" className="am-close" onClick={() => setEditing(null)} aria-label="Close">×</button>
+              <h2>{editing.id ? 'Editar lote' : 'Nuevo lote'}</h2>
+              <button type="button" className="am-close" onClick={() => setEditing(null)} aria-label="Cerrar">×</button>
             </div>
 
             <div className="am-grid2">
-              <label className="am-field am-span2">Name *
-                <input required value={editing.name} onChange={e => set('name', e.target.value)} placeholder="e.g. La Quebrada — Red Honey" />
+              <label className="am-field am-span2">Nombre *
+                <input required value={editing.name} onChange={e => set('name', e.target.value)} placeholder="ej. La Quebrada — Honey rojo" />
               </label>
-              <label className="am-field">Varietal
+              <label className="am-field">Variedad
                 <input value={editing.varietal || ''} onChange={e => set('varietal', e.target.value)} placeholder="Caturra, Catuaí, Geisha…" />
               </label>
-              <label className="am-field">Process
+              <label className="am-field">Proceso
                 <input list="process-list" value={editing.process || ''} onChange={e => set('process', e.target.value)} placeholder="Honey" />
                 <datalist id="process-list">{PROCESS_SUGGESTIONS.map(p => <option key={p} value={p} />)}</datalist>
               </label>
-              <label className="am-field">Altitude (m)
+              <label className="am-field">Altitud (m)
                 <input type="number" min="0" value={editing.altitude_m ?? ''} onChange={e => set('altitude_m', e.target.value)} />
               </label>
-              <label className="am-field">SCA score
+              <label className="am-field">Puntaje SCA
                 <input type="number" step="0.25" min="0" max="100" value={editing.score ?? ''} onChange={e => set('score', e.target.value)} placeholder="86.5" />
               </label>
-              <label className="am-field">Harvest
+              <label className="am-field">Cosecha
                 <input value={editing.harvest || ''} onChange={e => set('harvest', e.target.value)} placeholder="2025/26" />
               </label>
-              <label className="am-field">Bag size
+              <label className="am-field">Tamaño de bolsa
                 <input value={editing.bag_size || ''} onChange={e => set('bag_size', e.target.value)} placeholder="30 kg GrainPro" />
               </label>
-              <label className="am-field am-span2">Tasting notes <small>(comma separated)</small>
+              <label className="am-field am-span2">Notas de cata <small>(separadas por comas)</small>
                 <input
                   value={(editing.flavor_notes || []).join(', ')}
                   onChange={e => set('flavor_notes', e.target.value.split(','))}
-                  placeholder="Panela, red apple, cacao nibs"
+                  placeholder="Panela, manzana roja, nibs de cacao"
                 />
               </label>
-              <label className="am-field am-span2">Short description
+              <label className="am-field am-span2">Descripción corta
                 <textarea rows={3} maxLength={400} value={editing.description || ''} onChange={e => set('description', e.target.value)} />
               </label>
             </div>
 
             <fieldset className="am-fieldset">
-              <legend>Flavor profile (0–5)</legend>
+              <legend>Perfil de sabor (0–5)</legend>
               <div className="am-profile">
                 <div className="am-sliders">
                   {PROFILE_AXES.map(ax => (
@@ -222,30 +222,30 @@ export default function AdminLots() {
             </fieldset>
 
             <fieldset className="am-fieldset">
-              <legend>Photo</legend>
+              <legend>Foto</legend>
               <div className="am-media-row">
                 {editing.image_url
                   ? <img className="am-media-preview" src={editing.image_url} alt="" />
-                  : <div className="am-media-preview am-media-empty">No photo</div>}
+                  : <div className="am-media-preview am-media-empty">Sin foto</div>}
                 <div className="am-media-actions">
                   <label className="am-btn">
-                    {uploading ? 'Uploading…' : 'Upload photo'}
+                    {uploading ? 'Subiendo…' : 'Subir foto'}
                     <input type="file" accept="image/*" onChange={onImage} disabled={uploading} hidden />
                   </label>
-                  {editing.image_url && <button type="button" className="am-btn am-danger" onClick={() => set('image_url', '')}>Remove</button>}
-                  <small>Landscape, ~1200 px wide works best.</small>
+                  {editing.image_url && <button type="button" className="am-btn am-danger" onClick={() => set('image_url', '')}>Quitar</button>}
+                  <small>Horizontal, de ~1200 px de ancho funciona mejor.</small>
                 </div>
               </div>
             </fieldset>
 
             <label className="am-switch am-switch--big">
               <input type="checkbox" checked={!!editing.available} onChange={e => set('available', e.target.checked)} />
-              <span>{editing.available ? 'Available — visitors can request samples' : 'Sold out — visitors can join a waitlist'}</span>
+              <span>{editing.available ? 'Disponible: los visitantes pueden pedir muestras' : 'Agotado: los visitantes pueden unirse a la lista de espera'}</span>
             </label>
 
             <div className="am-drawer-foot">
-              <button type="button" className="am-btn" onClick={() => setEditing(null)}>Cancel</button>
-              <button type="submit" className="am-btn am-btn--primary" disabled={saving || uploading}>{saving ? 'Saving…' : 'Save lot'}</button>
+              <button type="button" className="am-btn" onClick={() => setEditing(null)}>Cancelar</button>
+              <button type="submit" className="am-btn am-btn--primary" disabled={saving || uploading}>{saving ? 'Guardando…' : 'Guardar lote'}</button>
             </div>
           </form>
         </div>,

@@ -16,13 +16,13 @@ const ProjectLayout = ({ title, children, images = [], captions = {} }) => {
     <div className="project-page">
       <nav className="project-topnav">
         <Link to="/home" className="project-topnav-home">
-          <span className="project-topnav-arrow">←</span> All Topics
+          <span className="project-topnav-arrow">←</span> Todos los temas
         </Link>
         {currentProject && (
           <div className="project-topnav-pager">
-            <Link to={currentProject.prev} className="pager-btn" title="Previous">← Prev</Link>
+            <Link to={currentProject.prev} className="pager-btn" title="Anterior">← Ant.</Link>
             <span className="pager-divider" />
-            <Link to={currentProject.next} className="pager-btn" title="Next">Next →</Link>
+            <Link to={currentProject.next} className="pager-btn" title="Siguiente">Sig. →</Link>
           </div>
         )}
       </nav>
@@ -50,14 +50,14 @@ const ProjectLayout = ({ title, children, images = [], captions = {} }) => {
       {currentProject && (
         <footer className="project-footer-nav">
           <Link to={currentProject.prev} className="project-nav-link project-nav-prev">
-            <span className="pnav-dir">← Previous</span>
+            <span className="pnav-dir">← Anterior</span>
             <span className="pnav-title">{projects.find(p => p.path === currentProject.prev)?.title}</span>
           </Link>
           <Link to="/home" className="project-nav-link project-nav-all">
-            <span className="pnav-dir">All Topics</span>
+            <span className="pnav-dir">Todos los temas</span>
           </Link>
           <Link to={currentProject.next} className="project-nav-link project-nav-next">
-            <span className="pnav-dir">Next →</span>
+            <span className="pnav-dir">Siguiente →</span>
             <span className="pnav-title">{projects.find(p => p.path === currentProject.next)?.title}</span>
           </Link>
         </footer>

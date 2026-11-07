@@ -11,7 +11,7 @@ const Navbar = () => {
   const [logoUrl,     setLogoUrl]     = useState(null);
   const [headerTitle, setHeaderTitle] = useState('FINCA VERGEL');
   const [labels, setLabels] = useState({
-    home: 'Home', about: 'About Us', contact: 'Contact', coffees: 'Our Coffees',
+    home: 'Inicio', about: 'Nosotros', contact: 'Contacto', coffees: 'Nuestros cafés',
   });
   const [hasLots, setHasLots] = useState(false);
   const location  = useLocation();
@@ -58,7 +58,7 @@ const Navbar = () => {
   const go = (id) => { setIsOpen(false); goTo(id); };
 
   return (
-    <nav className={`navbar ${isTransparent ? 'navbar-transparent' : 'navbar-solid'}${isOpen ? ' navbar-open' : ''}`} aria-label="Main">
+    <nav className={`navbar ${isTransparent ? 'navbar-transparent' : 'navbar-solid'}${isOpen ? ' navbar-open' : ''}`} aria-label="Principal">
       <div className="navbar-container">
         <Link
           to="/"
@@ -71,7 +71,7 @@ const Navbar = () => {
         </Link>
 
         <ul id="primary-nav" className={`nav-links${isOpen ? ' active' : ''}`}>
-          <li><button type="button" className="nav-anchor" onClick={() => go('farm')}>{labels.home}</button></li>
+          <li><button type="button" className="nav-anchor" onClick={() => go('top')}>{labels.home}</button></li>
           {hasLots && <li><button type="button" className="nav-anchor" onClick={() => go('coffees')}>{labels.coffees}</button></li>}
           <li><button type="button" className="nav-anchor" onClick={() => go('our-story')}>{labels.about}</button></li>
           <li><button type="button" className="nav-anchor nav-anchor--cta" onClick={() => go('contact')}>{labels.contact}</button></li>
@@ -81,7 +81,7 @@ const Navbar = () => {
           type="button"
           className="mobile-menu-btn"
           onClick={() => setIsOpen(o => !o)}
-          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={isOpen}
           aria-controls="primary-nav"
         >

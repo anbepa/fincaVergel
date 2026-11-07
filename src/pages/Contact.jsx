@@ -5,9 +5,9 @@ import './Contact.css';
 const Contact = () => {
   const [submitted,  setSubmitted]  = useState(false);
   const [heroImage,  setHeroImage]  = useState(null);
-  const [pageTitle,  setPageTitle]  = useState('Get in Touch');
-  const [introText,  setIntroText]  = useState("If you have any questions about us, or if you are interested in obtaining our green coffee, please don't hesitate to reach out.");
-  const [visitText,  setVisitText]  = useState("If you want to come visit our farm please let us know a little about yourself and what you are interested in seeing or learning. We'll put together a package that suits you perfectly.");
+  const [pageTitle,  setPageTitle]  = useState('Escríbenos');
+  const [introText,  setIntroText]  = useState("Si tienes preguntas sobre nosotros o te interesa obtener nuestro café verde, no dudes en escribirnos.");
+  const [visitText,  setVisitText]  = useState("Si quieres venir a visitar nuestra finca, cuéntanos un poco sobre ti y qué te gustaría ver o aprender. Armaremos un plan a tu medida.");
   const [contactEmail, setContactEmail] = useState("rosanabernal26@gmail.com");
   const [contactLocation, setContactLocation] = useState("Sierra Nevada de Santa Marta, Colombia");
 
@@ -41,12 +41,12 @@ const Contact = () => {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           name: fullName, email: fd.email, subject: fd.subject, message: fd.message,
-          _template: 'table', _subject: `New Contact from Website: ${fd.subject}`,
+          _template: 'table', _subject: `Nuevo contacto desde el sitio web: ${fd.subject}`,
         }),
       });
       if (res.ok) { setSubmitted(true); form.reset(); }
-      else alert('Something went wrong. Please try again.');
-    } catch { alert('Error sending message. Please check your connection.'); }
+      else alert('Algo salió mal. Inténtalo de nuevo.');
+    } catch { alert('Error al enviar el mensaje. Revisa tu conexión.'); }
   };
 
   return (
@@ -57,7 +57,7 @@ const Contact = () => {
 
       <div className="contact-body container">
         <header className="contact-header">
-          <p className="eyebrow">Contact</p>
+          <p className="eyebrow">Contacto</p>
           <h1 className="contact-title">{pageTitle}</h1>
         </header>
 
@@ -68,11 +68,11 @@ const Contact = () => {
 
             <div className="contact-details">
               <div className="contact-detail-item">
-                <span className="contact-detail-label">Email</span>
+                <span className="contact-detail-label">Correo electrónico</span>
                 <a href={`mailto:${contactEmail}`} className="contact-detail-value">{contactEmail}</a>
               </div>
               <div className="contact-detail-item">
-                <span className="contact-detail-label">Location</span>
+                <span className="contact-detail-label">Ubicación</span>
                 <span className="contact-detail-value">{contactLocation}</span>
               </div>
             </div>
@@ -81,39 +81,39 @@ const Contact = () => {
           <div className="contact-form-col">
             {submitted ? (
               <div className="contact-success">
-                <h3>Thank you!</h3>
-                <p>Your message has been sent. We'll be in touch soon.</p>
-                <button className="btn-primary" onClick={() => setSubmitted(false)}>Send another message</button>
+                <h3>¡Gracias!</h3>
+                <p>Tu mensaje ha sido enviado. Te contactaremos pronto.</p>
+                <button className="btn-primary" onClick={() => setSubmitted(false)}>Enviar otro mensaje</button>
               </div>
             ) : (
               <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>First Name <span className="req">*</span></label>
+                    <label>Nombre <span className="req">*</span></label>
                     <input type="text" name="firstName" required />
                   </div>
                   <div className="form-group">
-                    <label>Last Name <span className="req">*</span></label>
+                    <label>Apellido <span className="req">*</span></label>
                     <input type="text" name="lastName" required />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Email Address <span className="req">*</span></label>
+                  <label>Correo electrónico <span className="req">*</span></label>
                   <input type="email" name="email" required />
                 </div>
 
                 <div className="form-group">
-                  <label>Subject <span className="req">*</span></label>
+                  <label>Asunto <span className="req">*</span></label>
                   <input type="text" name="subject" required />
                 </div>
 
                 <div className="form-group">
-                  <label>Message <span className="req">*</span></label>
+                  <label>Mensaje <span className="req">*</span></label>
                   <textarea name="message" rows={6} required />
                 </div>
 
-                <button type="submit" className="btn-primary">Send Message</button>
+                <button type="submit" className="btn-primary">Enviar mensaje</button>
               </form>
             )}
           </div>

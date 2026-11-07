@@ -19,14 +19,14 @@ function headFor(route, siteUrl, verification) {
     `<link rel="canonical" href="${url}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
-    `<meta property="og:locale" content="en_US" />`,
+    `<meta property="og:locale" content="es_CO" />`,
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(route.description)}" />`,
     `<meta property="og:url" content="${url}" />`,
     `<meta property="og:image" content="${siteUrl}/og-image.jpg" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="Finca El Vergel — Specialty Coffee, Sierra Nevada de Santa Marta, Colombia" />`,
+    `<meta property="og:image:alt" content="Finca El Vergel — Café de especialidad, Sierra Nevada de Santa Marta, Colombia" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(route.description)}" />`,
@@ -39,8 +39,8 @@ function headFor(route, siteUrl, verification) {
 /* Crawlable content inside #root (React replaces it on load) */
 function bodyFor(route) {
   const links = ROUTES.filter(r => r.path !== route.path)
-    .map(r => `<li><a href="${r.path}">${esc(r.title === ROUTES[0].title ? 'Home' : r.title)}</a></li>`).join('')
-  return `<main class="seo-fallback"><h1>${esc(route.h1)}</h1><p>${esc(route.description)}</p><nav aria-label="Pages"><ul>${links}</ul></nav></main>`
+    .map(r => `<li><a href="${r.path}">${esc(r.title === ROUTES[0].title ? 'Inicio' : r.title)}</a></li>`).join('')
+  return `<main class="seo-fallback"><h1>${esc(route.h1)}</h1><p>${esc(route.description)}</p><nav aria-label="Páginas"><ul>${links}</ul></nav></main>`
 }
 
 /**

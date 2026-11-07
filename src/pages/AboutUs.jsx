@@ -6,7 +6,7 @@ import './AboutUs.css';
 const AboutUs = () => {
   const [loading, setLoading]   = useState(true);
   const [images,  setImages]    = useState([]);
-  const [title,   setTitle]     = useState('Our Story');
+  const [title,   setTitle]     = useState('Nuestra historia');
   const [content, setContent]   = useState([]);
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const AboutUs = () => {
               setContent(parsed.sections);
             } else {
               setContent([
-                { title: 'Our Business',    content: parsed.business   || '' },
-                { title: 'Our Commitment',  content: parsed.commitment || '' },
-                { title: 'Our Goal',        content: parsed.goal       || '' },
+                { title: 'Nuestro negocio',    content: parsed.business   || '' },
+                { title: 'Nuestro compromiso', content: parsed.commitment || '' },
+                { title: 'Nuestro objetivo',   content: parsed.goal       || '' },
               ]);
             }
           } catch {}
@@ -35,7 +35,7 @@ const AboutUs = () => {
   }, []);
 
   if (loading) {
-    return <div className="page-loading">Loading…</div>;
+    return <div className="page-loading">Cargando…</div>;
   }
 
   return (
@@ -48,7 +48,7 @@ const AboutUs = () => {
 
       <div className="about-body container">
         <header className="about-header">
-          <p className="eyebrow">About Us</p>
+          <p className="eyebrow">Nosotros</p>
           <h1 className="about-title">{title}</h1>
         </header>
 
