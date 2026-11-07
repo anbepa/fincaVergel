@@ -14,7 +14,15 @@ export function useAdminSession() {
       if (!session) navigate('/admin');
       else setSession(session);
     });
-    return () => { active = false; };
+    /* Keep watching: if the session ends while a long form is open
+       (revoked, refresh expired, signed out in another tab), leave the
+       screen instead of failing silently on Save. */
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
+      if (!active) return;
+      if (!sess) navigate('/admin');
+      else setSession(sess);
+    });
+    return () => { active = false; sub.subscription.unsubscribe(); };
   }, [navigate]);
   return session;
 }

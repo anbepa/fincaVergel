@@ -14,7 +14,14 @@ const STATUSES = [
 
 function toCsv(rows) {
   const cols = ['created_at', 'status', 'lot_name', 'name', 'company', 'email', 'country', 'quantity', 'message'];
-  const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  /* These fields come from the public form: a cell starting with = + - @
+     (after spaces) would run as a formula when the CSV is opened in a
+     spreadsheet. Neutralize it with a leading apostrophe. */
+  const safe = v => {
+    const s = String(v ?? '');
+    return /^[ \t]*[=+\-@]/.test(s) ? `'${s}` : s;
+  };
+  const esc = v => `"${safe(v).replace(/"/g, '""')}"`;
   return [cols.join(','), ...rows.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');
 }
 

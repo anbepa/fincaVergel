@@ -4,10 +4,18 @@ import { supabase } from '../../supabaseClient';
 import { invalidatePages } from '../../lib/content';
 import './Admin.css';
 
+/* Only these slugs have a dedicated editor here (same list as the Dashboard).
+   Other content rows keep their own format and must not be rewritten by the
+   generic editor: heromedia and farmmap are settings JSON edited from their
+   own modules. */
+const EDITABLE_SLUGS = ['landing', 'thefarm', 'ourprocess', 'gettoknowus', 'perfectcoffee', 'greenenergy', 'our-staff', 'aboutus', 'contact', 'layout', 'home'];
+const MODULE_SLUGS = { heromedia: '/admin/hero-video', farmmap: '/admin/map' };
+
 const EditPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   
@@ -87,6 +95,7 @@ const EditPage = () => {
 
   const fetchPageData = async () => {
     setLoading(true);
+    setLoadError('');
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       navigate('/admin');
@@ -100,7 +109,9 @@ const EditPage = () => {
       .single();
 
     if (error && error.code !== 'PGRST116') {
-      alert('Error fetching page data: ' + error.message);
+      /* Real load failure: block the form entirely. Saving from here would
+         upsert the template defaults over the stored content. */
+      setLoadError(error.message);
     } else if (data) {
       const rawContent = data.content || '';
       const rawImages = Array.isArray(data.images) ? data.images : [];
@@ -310,6 +321,7 @@ const EditPage = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (loadError) return;
     setSaving(true);
     
     let contentToSave = formData.content;
@@ -458,6 +470,32 @@ const EditPage = () => {
   };
 
   if (loading) return <div className="admin-page-container">Loading...</div>;
+
+  if (!EDITABLE_SLUGS.includes(slug)) {
+    const modulePath = MODULE_SLUGS[slug];
+    return (
+      <div className="admin-page-container">
+        <div className="admin-header">
+          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Dashboard</button>
+          <h1 className="admin-title">Edit: {slug}</h1>
+        </div>
+        <p>This content is not edited here{modulePath ? <> — it has its own module: <button onClick={() => navigate(modulePath)} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}>open it</button></> : '.'}</p>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="admin-page-container">
+        <div className="admin-header">
+          <button onClick={() => navigate('/admin/dashboard')} className="btn-admin-action" style={{background:'none', textDecoration:'underline', padding:0}}> &larr; Dashboard</button>
+          <h1 className="admin-title">Edit: {slug}</h1>
+        </div>
+        <p>Could not load this page's stored content ({loadError}). Editing is disabled so nothing gets overwritten by mistake.</p>
+        <button onClick={fetchPageData} className="btn-admin-action btn-save">Retry</button>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-page-container">

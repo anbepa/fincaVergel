@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import './Admin.css';
@@ -9,6 +9,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  /* Already signed in? Go straight to the dashboard. */
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) navigate('/admin/dashboard', { replace: true });
+    });
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

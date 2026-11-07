@@ -90,10 +90,19 @@ export default function AdminLots() {
   const move = async (index, dir) => {
     const j = index + dir;
     if (j < 0 || j >= lots.length) return;
+    const prev = lots;
     const next = [...lots];
     [next[index], next[j]] = [next[j], next[index]];
     setLots(next);
-    await Promise.all(next.map((l, i) => supabase.from('coffee_lots').update({ sort_order: i }).eq('id', l.id)));
+    const results = await Promise.all(next.map((l, i) => supabase.from('coffee_lots').update({ sort_order: i }).eq('id', l.id)));
+    const failed = results.find(r => r.error);
+    if (failed) {
+      /* Do not leave the screen showing an order the database rejected. */
+      setLots(prev);
+      setError('Could not save the new order: ' + failed.error.message);
+      load();
+      return;
+    }
     invalidateLots();
   };
 
