@@ -33,7 +33,7 @@ const Footer = () => {
         <div className="footer-brand-col">
           {footerLogo
             ? <img src={footerLogo} alt={brandName} className="footer-logo" loading="lazy" decoding="async" />
-            : <Link to="/" className="footer-brand">{brandName}</Link>}
+            : <Link to="/" className="footer-brand" onClick={(e) => { if (window.location.pathname === '/') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}>{brandName}</Link>}
           <p className="footer-tagline" dangerouslySetInnerHTML={{ __html: footerText }} />
           <div className="footer-social">
             {links.facebook && (

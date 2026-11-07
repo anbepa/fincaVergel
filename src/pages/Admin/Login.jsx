@@ -28,7 +28,10 @@ const Login = () => {
     });
 
     if (error) {
-      setError(error.message);
+      /* Auth errors come from Supabase in English; show them in Spanish. */
+      setError(/invalid login credentials/i.test(error.message)
+        ? 'Correo o contraseña incorrectos.'
+        : 'No se pudo iniciar sesión. Inténtalo de nuevo.');
       setLoading(false);
     } else {
       setLoading(false);

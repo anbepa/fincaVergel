@@ -69,7 +69,9 @@ function seoPlugin(siteUrl, verification) {
          route or direct loads/refreshes return 404 (the SPA rewrite does
          not cover them). Write plain copies of the app shell so /admin
          and its sections load directly; React Router takes over inside. */
-      const ADMIN_ROUTES = ['admin', 'admin/dashboard', 'admin/lots', 'admin/requests', 'admin/hero-video', 'admin/map']
+      const ADMIN_ROUTES = ['admin', 'admin/dashboard', 'admin/lots', 'admin/requests', 'admin/hero-video', 'admin/map',
+        /* Direct loads of an edit page 404 without their own shell file. */
+        ...['landing', 'thefarm', 'ourprocess', 'gettoknowus', 'perfectcoffee', 'greenenergy', 'our-staff', 'aboutus', 'contact', 'layout', 'home'].map(s => `admin/edit/${s}`)]
       for (const r of ADMIN_ROUTES) {
         const dest = path.join(outDir, `${r}.html`)
         fs.mkdirSync(path.dirname(dest), { recursive: true })
