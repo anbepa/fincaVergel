@@ -136,7 +136,7 @@
 
 .home-card-arrow {
   font-size: 1.25rem;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   transition: color 0.28s, transform 0.28s;
   display: inline-block;
 }

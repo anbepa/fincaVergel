@@ -93,8 +93,8 @@ export function MapIllustration() {
         fill="none" stroke="#e8dcc4" strokeOpacity=".35" strokeWidth="3" strokeDasharray="10 10" />
       {/* Labels */}
       <g fontFamily="'Barlow Condensed', sans-serif" fontWeight="700" letterSpacing="6" fill="#e8dcc4" fillOpacity=".55" fontSize="22">
-        <text x="1250" y="70">▲ POÁS VOLCANO</text>
-        <text x="60" y="960" fontSize="18" fillOpacity=".4">ALAJUELA · COSTA RICA</text>
+        <text x="1250" y="70">▲ SIERRA NEVADA</text>
+        <text x="60" y="960" fontSize="18" fillOpacity=".4">SANTA MARTA · COLOMBIA</text>
       </g>
       {/* Compass */}
       <g transform="translate(1500 900)" stroke="#e8dcc4" strokeOpacity=".5" fill="none">

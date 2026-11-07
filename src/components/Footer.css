@@ -56,7 +56,7 @@
   font-family: var(--font-sans);
   font-size: 0.65rem; font-weight: 600;
   letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
   margin: 0 0 20px;
 }
 .footer-col ul         { list-style: none; margin: 0; padding: 0; }
@@ -103,7 +103,7 @@
 .footer-admin {
   font-family: var(--font-sans);
   font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
   display: inline-flex; align-items: center;
 }
 .footer-admin:hover { color: rgba(255,255,255,0.7); opacity: 1; }

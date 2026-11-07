@@ -218,7 +218,29 @@ export default function CoffeeLots() {
     return ['All', ...set];
   }, [lots]);
 
-  if (!lots || lots.length === 0) return null; // nothing to show until the admin adds lots
+  if (!lots) return null; // still loading
+  if (lots.length === 0) {
+    // No lots published yet: keep the section visible with a direct
+    // invitation instead of making the catalog (and its nav link) vanish.
+    return (
+      <section id="coffees" className="lots">
+        <div className="lots-head">
+          <div>
+            <p className="lp-section-eyebrow">Our Coffees</p>
+            <h2 className="lots-title">Current<br />Micro-lots</h2>
+          </div>
+          <div className="lots-head-side">
+            <p className="lots-intro">
+              The new harvest lots are being cupped and scored. Ask us what is
+              coming off the farm right now, or request a sample of the lots in
+              preparation.
+            </p>
+            <a className="lots-btn lots-empty-cta" href="/contact">Contact the farm</a>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const visible = filter === 'All' ? lots : lots.filter(l => l.process === filter);
 

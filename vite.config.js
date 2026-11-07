@@ -65,6 +65,16 @@ function seoPlugin(siteUrl, verification) {
         if (route.path === '/') continue
         fs.writeFileSync(path.join(outDir, `${route.path.slice(1)}.html`), render(base, route))
       }
+      /* Admin routes are not SEO pages, but Vercel needs a real file per
+         route or direct loads/refreshes return 404 (the SPA rewrite does
+         not cover them). Write plain copies of the app shell so /admin
+         and its sections load directly; React Router takes over inside. */
+      const ADMIN_ROUTES = ['admin', 'admin/dashboard', 'admin/lots', 'admin/requests', 'admin/hero-video', 'admin/map']
+      for (const r of ADMIN_ROUTES) {
+        const dest = path.join(outDir, `${r}.html`)
+        fs.mkdirSync(path.dirname(dest), { recursive: true })
+        fs.writeFileSync(dest, base)
+      }
       const today = new Date().toISOString().slice(0, 10)
       const urls = ROUTES.map(r => `  <url>\n    <loc>${siteUrl}${r.path}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${r.priority.toFixed(1)}</priority>\n  </url>`).join('\n')
       fs.writeFileSync(path.join(outDir, 'sitemap.xml'),

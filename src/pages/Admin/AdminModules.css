@@ -4,7 +4,7 @@
 .am-back { font-size: .85rem; text-decoration: underline; color: var(--color-text); display: inline-flex; align-items: center; }
 .am-hint { color: #66665f; font-size: .9rem; line-height: 1.6; margin: 0 0 18px; max-width: 760px; }
 .am-hint a { text-decoration: underline; }
-.am-muted { color: #8a8a80; font-size: .82rem; }
+.am-muted { color: #6f6f66; font-size: .82rem; }
 .am-error { background: #fdecea; color: #8a1c12; border: 1px solid #f5c2bc; padding: 14px 16px; margin: 0 0 20px; }
 .am-empty { padding: 48px 20px; text-align: center; border: 1px dashed var(--color-border); background: #fff; }
 .am-empty p { margin: 0 0 16px; color: #66665f; }
@@ -77,7 +77,7 @@
 .am-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 .am-span2 { grid-column: 1 / -1; }
 .am-field { display: flex; flex-direction: column; gap: 6px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #55554f; }
-.am-field small { text-transform: none; letter-spacing: 0; font-weight: 400; color: #8a8a80; }
+.am-field small { text-transform: none; letter-spacing: 0; font-weight: 400; color: #6f6f66; }
 .am-field input, .am-field textarea, .am-input, .am-request-actions select {
   font: 400 .95rem var(--font-sans); letter-spacing: 0; text-transform: none;
   padding: 10px 12px; border: 1px solid var(--color-border); background: #fff; color: var(--color-text);
@@ -99,7 +99,7 @@
 .am-media-empty { display: flex; align-items: center; justify-content: center; color: #999; font-size: .85rem; border: 1px dashed #ccc; }
 .am-media-actions { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 220px; }
 .am-media-actions--row { flex-direction: row; flex-wrap: wrap; align-items: center; }
-.am-media-actions small { color: #8a8a80; }
+.am-media-actions small { color: #6f6f66; }
 
 /* Requests */
 .am-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; }
@@ -122,7 +122,7 @@
 .am-status--closed { background: #eee; color: #666; }
 .am-request-body { padding: 4px 16px 18px; border-top: 1px solid var(--color-border); }
 .am-request-body dl { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 14px 0; }
-.am-request-body dt { font-size: .66rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8a8a80; }
+.am-request-body dt { font-size: .66rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6f6f66; }
 .am-request-body dd { margin: 2px 0 0; }
 .am-request-body dd a { text-decoration: underline; }
 .am-message { white-space: pre-wrap; background: var(--color-bg); padding: 14px 16px; margin: 0 0 14px; line-height: 1.6; }

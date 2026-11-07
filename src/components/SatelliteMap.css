@@ -14,7 +14,8 @@
   background: rgba(17,17,17,.82);
   color: #fff;
   border-bottom-color: rgba(255,255,255,.12);
-  min-height: 0;
+  width: 44px; height: 44px; line-height: 44px;
+  min-height: 44px;
 }
 .sat-map .leaflet-bar a:hover { background: #111; color: var(--color-accent); }
 .sat-map .leaflet-bar { border: 0; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
@@ -22,7 +23,7 @@
 .sat-pin-wrap { background: none; border: 0; }
 .sat-pin {
   position: relative;
-  width: 34px; height: 34px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: #fff; color: #111;
   font: 800 .9rem var(--font-condensed);

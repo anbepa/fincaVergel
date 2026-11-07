@@ -584,7 +584,7 @@ function HeroVideo({ media, onPlaying }) {
       loop
       autoPlay
       playsInline
-      preload="auto"
+      preload="metadata"
       aria-hidden="true"
       onPlaying={() => { setOn(true); onPlaying?.(); }}
     />
