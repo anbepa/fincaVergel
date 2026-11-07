@@ -7,15 +7,15 @@ const CACHE_MS = 30 * 60 * 1000;
 
 /* WMO weather codes → short label */
 function describe(code) {
-  if (code === 0) return 'Clear sky';
-  if (code <= 2) return 'Partly cloudy';
-  if (code === 3) return 'Overcast';
-  if (code <= 48) return 'Misty';
-  if (code <= 57) return 'Drizzle';
-  if (code <= 67) return 'Rain';
-  if (code <= 77) return 'Cool & cloudy';
-  if (code <= 82) return 'Showers';
-  return 'Tropical storm';
+  if (code === 0) return 'Cielo despejado';
+  if (code <= 2) return 'Parcialmente nublado';
+  if (code === 3) return 'Nublado';
+  if (code <= 48) return 'Neblina';
+  if (code <= 57) return 'Llovizna';
+  if (code <= 67) return 'Lluvia';
+  if (code <= 77) return 'Fresco y nublado';
+  if (code <= 82) return 'Chubascos';
+  return 'Tormenta tropical';
 }
 
 function readSettings(row) {
@@ -85,12 +85,12 @@ export default function FarmLive() {
   const inHarvest = settings.harvestMonths.includes(month);
 
   return (
-    <div className="farm-live" role="status" aria-label="Live conditions at the farm">
+    <div className="farm-live" role="status" aria-label="Condiciones en vivo en la finca">
       <span className="farm-live-dot" aria-hidden="true" />
-      <span className="farm-live-label">Live from the farm</span>
+      <span className="farm-live-label">En vivo desde la finca</span>
       <span className="farm-live-sep" aria-hidden="true" />
       <span><b>{weather.temp}°C</b> · {describe(weather.code)}</span>
-      {inHarvest && <><span className="farm-live-sep" aria-hidden="true" /><span>Harvest season</span></>}
+      {inHarvest && <><span className="farm-live-sep" aria-hidden="true" /><span>Temporada de cosecha</span></>}
     </div>
   );
 }

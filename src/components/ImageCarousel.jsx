@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ImageCarousel.css';
 
-const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
+const ImageCarousel = ({ images = [], altTitle = "Imagen", captions = {} }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef(null);
@@ -61,7 +61,7 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
       return (
         <div className="carousel-empty">
             <span>📷</span>
-            <p>No images available</p>
+            <p>No hay imágenes disponibles</p>
         </div>
       );
   }
@@ -92,8 +92,8 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
       >
          {images.length > 1 && (
              <>
-                <button type="button" className="carousel-arrow left" onClick={prevSlide} aria-label="Previous image">&#10094;</button>
-                <button type="button" className="carousel-arrow right" onClick={nextSlide} aria-label="Next image">&#10095;</button>
+                <button type="button" className="carousel-arrow left" onClick={prevSlide} aria-label="Imagen anterior">&#10094;</button>
+                <button type="button" className="carousel-arrow right" onClick={nextSlide} aria-label="Imagen siguiente">&#10095;</button>
              </>
          )}
 
@@ -127,12 +127,12 @@ const ImageCarousel = ({ images = [], altTitle = "Image", captions = {} }) => {
                     key={index}
                     className={`thumbnail-item ${index === currentIndex ? 'active' : ''}`}
                     onClick={() => handleThumbnailClick(index)}
-                    aria-label={`Show image ${index + 1}`}
+                    aria-label={`Mostrar imagen ${index + 1}`}
                     aria-current={index === currentIndex ? 'true' : undefined}
                 >
                     <img 
                       src={img} 
-                      alt={`Thumb ${index + 1}`} 
+                      alt={`Miniatura ${index + 1}`} 
                       loading="lazy"
                       decoding="async"
                     />

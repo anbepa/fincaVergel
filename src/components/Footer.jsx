@@ -4,10 +4,10 @@ import { subscribePage } from '../lib/content';
 import './Footer.css';
 
 const Footer = () => {
-  const [footerText, setFooterText] = useState('Specialty Coffee · Colombia');
+  const [footerText, setFooterText] = useState('Café de especialidad · Colombia');
   const [footerLogo, setFooterLogo] = useState(null);
   const [brandName, setBrandName]   = useState('FINCA VERGEL');
-  const [footerCopyright, setFooterCopyright] = useState('Never settle for good enough.');
+  const [footerCopyright, setFooterCopyright] = useState('Nunca te conformes con lo suficientemente bueno.');
   const [links, setLinks] = useState({
     facebook:  '',
     instagram: '',
@@ -51,30 +51,30 @@ const Footer = () => {
 
         {/* Navigation column */}
         <div className="footer-col">
-          <h4>Explore</h4>
+          <h4>Explora</h4>
           <ul>
-            <li><Link to="/home">Home</Link></li>
-            <li><Link to="/aboutus">About Us</Link></li>
-            <li><Link to="/thefarm">The Farm</Link></li>
-            <li><Link to="/ourprocess">Our Process</Link></li>
-            <li><Link to="/perfectcoffee">Perfect Coffee</Link></li>
-            <li><Link to="/greenenergy">Green Energy</Link></li>
+            <li><Link to="/home">Inicio</Link></li>
+            <li><Link to="/aboutus">Nosotros</Link></li>
+            <li><Link to="/thefarm">La finca</Link></li>
+            <li><Link to="/ourprocess">Nuestro proceso</Link></li>
+            <li><Link to="/perfectcoffee">Café perfecto</Link></li>
+            <li><Link to="/greenenergy">Energía verde</Link></li>
           </ul>
         </div>
 
         {/* Contact column */}
         <div className="footer-col">
-          <h4>Connect</h4>
+          <h4>Conecta</h4>
           <ul>
-            <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/gettoknowus">Get to Know Us</Link></li>
-            <li><Link to="/our-staff">Our Staff</Link></li>
+            <li><Link to="/contact">Contacto</Link></li>
+            <li><Link to="/gettoknowus">Conócenos</Link></li>
+            <li><Link to="/our-staff">Nuestro equipo</Link></li>
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p className="footer-copy">{footerCopyright} &copy; {new Date().getFullYear()} Finca Vergel. All rights reserved.</p>
+        <p className="footer-copy">{footerCopyright} &copy; {new Date().getFullYear()} Finca Vergel. Todos los derechos reservados.</p>
         <Link to="/admin" className="footer-admin">Admin</Link>
       </div>
     </footer>
