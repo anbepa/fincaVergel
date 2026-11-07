@@ -176,7 +176,7 @@ function LotCard({ lot, onRequest, index }) {
             <b>{Number(lot.score).toString()}</b><small>SCA</small>
           </span>
         ) : null}
-        {soldOut && <span className="lot-badge">Sold out</span>}
+        {soldOut ? <span className="lot-badge">Sold out</span> : <span className="lot-badge lot-badge--available">Available</span>}
       </div>
 
       <div className="lot-body">
