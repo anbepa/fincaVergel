@@ -14,10 +14,10 @@ try {
 
 export const PROFILE_AXES = [
   { key: 'aroma',      label: 'Aroma' },
-  { key: 'acidity',    label: 'Acidity' },
-  { key: 'body',       label: 'Body' },
-  { key: 'sweetness',  label: 'Sweetness' },
-  { key: 'aftertaste', label: 'Aftertaste' },
+  { key: 'acidity',    label: 'Acidez' },
+  { key: 'body',       label: 'Cuerpo' },
+  { key: 'sweetness',  label: 'Dulzor' },
+  { key: 'aftertaste', label: 'Posgusto' },
 ];
 
 export function fetchLots() {
