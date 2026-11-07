@@ -5,13 +5,13 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p><strong>Our business</strong> is to create high quality green coffee micro-lots that we harvest on our land. We produce eight different coffee varietals, which we process under special techniques such as the honey and natural methods.</p>
-<p><strong>Our commitment</strong> is to achieve the best quality among our different varietals while maintaining perfect harmony with nature and our staff.</p>
-<p><strong>Our goal</strong> is to have fun, meet great people from different parts of the world, have a positive impact on the environment and on the people that surround our business, all while producing outstanding coffees.</p>
+<p><strong>Nuestro negocio</strong> es crear microlotes de café verde de alta calidad que cosechamos en nuestra tierra. Producimos ocho variedades de café, que procesamos con técnicas especiales como los métodos honey y natural.</p>
+<p><strong>Nuestro compromiso</strong> es lograr la mejor calidad en nuestras diferentes variedades, manteniendo una armonía perfecta con la naturaleza y con nuestro equipo.</p>
+<p><strong>Nuestro objetivo</strong> es disfrutar el camino, conocer gente maravillosa de diferentes partes del mundo y tener un impacto positivo en el medio ambiente y en las personas que rodean nuestro negocio, produciendo cafés sobresalientes.</p>
 `;
 
 const GetToKnowUs = () => {
-  const [title, setTitle] = useState("Get to know us");
+  const [title, setTitle] = useState("Conócenos");
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState(defaultContent);
   const [captions, setCaptions] = useState({});
@@ -39,9 +39,9 @@ const GetToKnowUs = () => {
                    } else if (parsed.business !== undefined) {
                        // Format saved by admin: {business, commitment, goal}
                        const html = [
-                         parsed.business   ? `<p><strong>Our Business</strong><br/>${parsed.business}</p>`   : '',
-                         parsed.commitment ? `<p><strong>Our Commitment</strong><br/>${parsed.commitment}</p>` : '',
-                         parsed.goal       ? `<p><strong>Our Goal</strong><br/>${parsed.goal}</p>`             : '',
+                         parsed.business   ? `<p><strong>Nuestro negocio</strong><br/>${parsed.business}</p>`   : '',
+                         parsed.commitment ? `<p><strong>Nuestro compromiso</strong><br/>${parsed.commitment}</p>` : '',
+                         parsed.goal       ? `<p><strong>Nuestro objetivo</strong><br/>${parsed.goal}</p>`             : '',
                        ].join('');
                        setContent(html || defaultContent);
                    } else {
@@ -69,7 +69,7 @@ const GetToKnowUs = () => {
   if (isLoading) {
     return (
       <ProjectLayout title="" images={[]} captions={{}}>
-         <div className="page-loading">Loading...</div>
+         <div className="page-loading">Cargando...</div>
       </ProjectLayout>
     );
   }

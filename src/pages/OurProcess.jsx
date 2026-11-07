@@ -5,12 +5,12 @@ import { getPage } from '../lib/content';
 const defaultImages = [];
 
 const defaultContent = `
-<p>From the ripe cherry to the exportable green coffee, we oversee every step of the process at the farm.</p>
-<p>Careful picking, processing and drying allow each lot to express the sweetness and character of our terroir.</p>
+<p>De la cereza madura al café verde exportable, supervisamos cada paso del proceso en la finca.</p>
+<p>Una recolección, un beneficio y un secado cuidadosos permiten que cada lote exprese la dulzura y el carácter de nuestro terroir.</p>
 `;
 
 const OurProcess = () => {
-  const [title, setTitle] = useState("Our process");
+  const [title, setTitle] = useState("Nuestro proceso");
   const [images, setImages] = useState(defaultImages);
   const [content, setContent] = useState(defaultContent);
   const [captions, setCaptions] = useState({});
@@ -60,7 +60,7 @@ const OurProcess = () => {
   if (isLoading) {
     return (
       <ProjectLayout title="" images={[]} captions={{}}>
-         <div className="page-loading">Loading...</div>
+         <div className="page-loading">Cargando...</div>
       </ProjectLayout>
     );
   }
