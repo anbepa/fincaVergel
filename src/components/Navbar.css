@@ -22,7 +22,7 @@
 .navbar-transparent::before {
   content: '';
   position: absolute; inset: 0 0 -40px 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.35), transparent);
+  background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent);
   pointer-events: none;
   z-index: -1;
 }
@@ -32,7 +32,7 @@
   background: rgba(247,243,238,0.97);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border-bottom: 1px solid rgba(175,149,73,0.18);
+  border-bottom: 1px solid rgba(181,149,106,0.18);
   box-shadow: 0 1px 24px rgba(0,0,0,0.07);
 }
 .navbar-solid .navbar-brand,
@@ -46,7 +46,7 @@
   backdrop-filter: blur(8px);
   position: fixed;
   top: 0; left: 0; width: 100%;
-  border-bottom: 1px solid rgba(175, 149, 73, 0.1);
+  border-bottom: 1px solid rgba(181, 149, 106, 0.1);
 }
 
 .navbar-container {
@@ -286,7 +286,7 @@
   backdrop-filter: blur(8px);
   position: fixed;
   top: 0; left: 0; width: 100%;
-  border-bottom: 1px solid rgba(175, 149, 73, 0.1);
+  border-bottom: 1px solid rgba(181, 149, 106, 0.1);
 }
 
 /* Over dark sections (set by the landing page) */

@@ -122,7 +122,7 @@
 }
 .lot-specs { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; }
 .lot-specs div { display: flex; flex-direction: column; gap: 2px; }
-.lot-specs dt { font-size: .6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8a8a80; }
+.lot-specs dt { font-size: .6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6f6f66; }
 .lot-specs dd { margin: 0; font-size: .92rem; font-weight: 500; color: var(--color-text); }
 .lot-notes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .lot-notes li {

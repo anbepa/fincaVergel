@@ -208,7 +208,7 @@
 }
 .lp-stat .animated-counter {
   font-size: clamp(2.2rem, 4vw, 4rem);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   line-height: 1;
 }
 .lp-stat-label {
@@ -317,7 +317,7 @@
 .lp-section-eyebrow {
   font-family: var(--font-sans); font-size: .62rem; font-weight: 600;
   letter-spacing: 4.5px; text-transform: uppercase;
-  color: var(--color-accent); margin: 0 0 18px;
+  color: var(--color-accent-text); margin: 0 0 18px;
 }
 .lp-eyebrow--light { color: rgba(255,255,255,.7); }
 .lp-section-title {
@@ -403,7 +403,7 @@
 .lp-tricard-num {
   font-family: var(--font-sans); font-size: .58rem; font-weight: 700;
   letter-spacing: 3px; text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   display: inline-block;
   transition: transform 0.4s;
 }
