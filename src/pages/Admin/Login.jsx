@@ -38,11 +38,11 @@ const Login = () => {
 
   return (
     <div className="admin-page-container login-wrapper">
-      <h2 className="admin-title" style={{textAlign:'center', marginBottom: '30px'}}>Admin Access</h2>
+      <h2 className="admin-title" style={{textAlign:'center', marginBottom: '30px'}}>Acceso al panel</h2>
       <form onSubmit={handleLogin} className="login-form">
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Correo electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -50,7 +50,7 @@ const Login = () => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -63,7 +63,7 @@ const Login = () => {
           className="btn-admin-action btn-save"
           style={{marginTop: 0}}
         >
-          {loading ? 'Loading...' : 'Login'}
+          {loading ? 'Cargando...' : 'Ingresar'}
         </button>
       </form>
     </div>

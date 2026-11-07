@@ -12,7 +12,7 @@ const BASE = {
   mode: '', location: { lat: '', lng: '', zoom: 15, label: 'Finca El Vergel', region: '', timezone: 'auto' },
   altitude: '', harvestMonths: [], liveWidget: true,
 };
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 /** Extract "lat,lng" from coordinates or any full Google Maps URL */
 export function parseCoords(text) {
@@ -112,11 +112,11 @@ export default function AdminMap() {
 
   const applyCoords = () => {
     if (/maps\.app\.goo\.gl|goo\.gl\/maps/.test(coordInput)) {
-      alert('Short links can’t be read directly. Open the link, then right-click the farm in Google Maps and click the coordinates to copy them (e.g. 10.849760, -74.015902), and paste them here.');
+      alert('Los enlaces cortos no se pueden leer directamente. Abre el enlace, haz clic derecho sobre la finca en Google Maps y clic en las coordenadas para copiarlas (ej. 10.849760, -74.015902), y pégalas aquí.');
       return;
     }
     const c = parseCoords(coordInput);
-    if (!c) { alert('Couldn’t find coordinates. Paste something like 10.849760, -74.015902 or a full Google Maps URL.'); return; }
+    if (!c) { alert('No se encontraron coordenadas. Pega algo como 10.849760, -74.015902 o una URL completa de Google Maps.'); return; }
     setLoc(c);
     setCoordInput(`${c.lat}, ${c.lng}`);
     if (!cfg.mode) set('mode', 'satellite');
@@ -129,8 +129,8 @@ export default function AdminMap() {
       const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${cfg.location.lat}&longitude=${cfg.location.lng}`);
       const j = await r.json();
       if (Array.isArray(j.elevation)) set('altitude', Math.round(j.elevation[0]));
-      else alert(j.reason || 'Could not detect the altitude.');
-    } catch (e) { alert('Could not detect the altitude: ' + e.message); }
+      else alert(j.reason || 'No se pudo detectar la altitud.');
+    } catch (e) { alert('No se pudo detectar la altitud: ' + e.message); }
     finally { setDetecting(false); }
   };
 
@@ -140,19 +140,19 @@ export default function AdminMap() {
   const upload = async (file, onDone) => {
     setUploading(true);
     try { onDone(await uploadPublicFile(file, 'map')); }
-    catch (err) { alert('Upload failed: ' + err.message); }
+    catch (err) { alert('Error al subir: ' + err.message); }
     finally { setUploading(false); }
   };
 
   const save = async (e) => {
     e.preventDefault();
     setSaving(true);
-    try { await saveSettings('farmmap', 'Farm Map', cfg); alert('Farm map saved!'); }
-    catch (err) { alert('Error saving: ' + err.message); }
+    try { await saveSettings('farmmap', 'Farm Map', cfg); alert('¡Mapa de la finca guardado!'); }
+    catch (err) { alert('Error al guardar: ' + err.message); }
     finally { setSaving(false); }
   };
 
-  if (!session || loading) return <div className="admin-page-container">Loading…</div>;
+  if (!session || loading) return <div className="admin-page-container">Cargando…</div>;
   const sel = cfg.points.find(p => p.id === selected);
   const isSat = mapMode(cfg) === 'satellite';
   const satPoints = cfg.points.filter(p => Number.isFinite(Number(p.lat)) && p.lat !== '' && Number.isFinite(Number(p.lng)));
@@ -162,58 +162,58 @@ export default function AdminMap() {
   return (
     <div className="admin-page-container">
       <div className="admin-header">
-        <Link to="/admin/dashboard" className="am-back">← Dashboard</Link>
-        <h1 className="admin-title">Farm Map</h1>
+        <Link to="/admin/dashboard" className="am-back">← Panel</Link>
+        <h1 className="admin-title">Mapa de la finca</h1>
       </div>
 
       <form onSubmit={save} className="am-form">
         <label className="am-switch am-switch--big">
           <input type="checkbox" checked={cfg.enabled !== false} onChange={e => set('enabled', e.target.checked)} />
-          <span>{cfg.enabled !== false ? 'Map visible on the homepage' : 'Map hidden'}</span>
+          <span>{cfg.enabled !== false ? 'Mapa visible en la página principal' : 'Mapa oculto'}</span>
         </label>
 
         <div className="am-grid2">
-          <label className="am-field">Section title
+          <label className="am-field">Título de la sección
             <input value={cfg.title} onChange={e => set('title', e.target.value)} />
           </label>
-          <label className="am-field">Intro text
+          <label className="am-field">Texto de introducción
             <input value={cfg.intro} onChange={e => set('intro', e.target.value)} />
           </label>
         </div>
 
         <fieldset className="am-fieldset">
-          <legend>Farm location</legend>
+          <legend>Ubicación de la finca</legend>
           <p className="am-hint">
-            Paste the coordinates from Google Maps (right-click the farm → click the numbers to copy them)
-            or a full Google Maps URL. Used for the satellite view, the “Get directions” button and the live weather.
+            Pega las coordenadas desde Google Maps (clic derecho sobre la finca → clic en los números para copiarlos)
+            o una URL completa de Google Maps. Se usa para la vista satelital, el botón «Cómo llegar» y el clima en vivo.
           </p>
           <div className="am-media-actions am-media-actions--row">
             <input className="am-input" style={{ flex: 1, minWidth: 260 }} value={coordInput}
               onChange={e => setCoordInput(e.target.value)} placeholder="10.849760, -74.015902"
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); applyCoords(); } }} />
-            <button type="button" className="am-btn" onClick={applyCoords}>Set location</button>
+            <button type="button" className="am-btn" onClick={applyCoords}>Definir ubicación</button>
             {validLocation(cfg.location) && (
-              <a className="am-btn" href={`https://www.google.com/maps/search/?api=1&query=${cfg.location.lat},${cfg.location.lng}`} target="_blank" rel="noopener noreferrer">Check in Google Maps ↗</a>
+              <a className="am-btn" href={`https://www.google.com/maps/search/?api=1&query=${cfg.location.lat},${cfg.location.lng}`} target="_blank" rel="noopener noreferrer">Ver en Google Maps ↗</a>
             )}
           </div>
           {validLocation(cfg.location) && (
             <div className="am-grid2" style={{ marginTop: 14 }}>
-              <label className="am-field">Marker label
+              <label className="am-field">Etiqueta del marcador
                 <input value={cfg.location.label || ''} onChange={e => setLoc({ label: e.target.value })} placeholder="Finca El Vergel" />
               </label>
-              <label className="am-field">Region (shown under the map)
+              <label className="am-field">Región (se muestra bajo el mapa)
                 <input value={cfg.location.region || ''} onChange={e => setLoc({ region: e.target.value })} placeholder="Sierra Nevada de Santa Marta, Colombia" />
               </label>
-              <label className="am-field">Altitude (m a.s.l.)
+              <label className="am-field">Altitud (m s. n. m.)
                 <div style={{ display: 'flex', gap: 8 }}>
                   <input type="number" style={{ flex: 1 }} value={cfg.altitude ?? ''} onChange={e => set('altitude', e.target.value)} />
-                  <button type="button" className="am-btn" onClick={detectAltitude} disabled={detecting}>{detecting ? '…' : 'Detect'}</button>
+                  <button type="button" className="am-btn" onClick={detectAltitude} disabled={detecting}>{detecting ? '…' : 'Detectar'}</button>
                 </div>
               </label>
-              <label className="am-field">Time zone
+              <label className="am-field">Zona horaria
                 <input value={cfg.location.timezone || ''} onChange={e => setLoc({ timezone: e.target.value })} placeholder="America/Bogota" />
               </label>
-              <label className="am-field am-span2">Initial zoom: {cfg.location.zoom || 15}
+              <label className="am-field am-span2">Zoom inicial: {cfg.location.zoom || 15}
                 <input type="range" min="10" max="18" value={cfg.location.zoom || 15} onChange={e => setLoc({ zoom: Number(e.target.value) })} />
               </label>
             </div>
@@ -221,12 +221,12 @@ export default function AdminMap() {
         </fieldset>
 
         <fieldset className="am-fieldset">
-          <legend>Map style</legend>
+          <legend>Estilo del mapa</legend>
           <div className="am-media-actions am-media-actions--row">
             {[
-              { id: 'satellite', label: 'Satellite (real)', disabled: !validLocation(cfg.location) },
-              { id: 'image', label: 'My uploaded image', disabled: !cfg.mapImage },
-              { id: 'illustration', label: 'Illustrated map' },
+              { id: 'satellite', label: 'Satelital (real)', disabled: !validLocation(cfg.location) },
+              { id: 'image', label: 'Mi imagen subida', disabled: !cfg.mapImage },
+              { id: 'illustration', label: 'Mapa ilustrado' },
             ].map(o => (
               <label key={o.id} className={`am-radio${o.disabled ? ' is-disabled' : ''}`}>
                 <input type="radio" name="map-mode" checked={mapMode(cfg) === o.id} disabled={o.disabled}
@@ -237,18 +237,18 @@ export default function AdminMap() {
           </div>
           {mapMode(cfg) === 'satellite' && (
             <p className="am-hint" style={{ marginTop: 12 }}>
-              Satellite points use real coordinates — click the satellite map below to add them. Points placed on an image or the illustration are kept separately.
+              Los puntos satelitales usan coordenadas reales: haz clic en el mapa satelital de abajo para agregarlos. Los puntos ubicados en una imagen o en la ilustración se guardan por separado.
             </p>
           )}
         </fieldset>
 
         <fieldset className="am-fieldset">
-          <legend>Live widget on the homepage</legend>
+          <legend>Widget en vivo en la página principal</legend>
           <label className="am-switch">
             <input type="checkbox" checked={cfg.liveWidget !== false} onChange={e => set('liveWidget', e.target.checked)} />
-            <span>Show “Live from the farm” (real temperature &amp; weather at the location)</span>
+            <span>Mostrar «En vivo desde la finca» (temperatura y clima reales en la ubicación)</span>
           </label>
-          <p className="am-hint" style={{ margin: '14px 0 8px' }}>Harvest months — the widget shows “Harvest season” during these months:</p>
+          <p className="am-hint" style={{ margin: '14px 0 8px' }}>Meses de cosecha: el widget muestra «Temporada de cosecha» durante estos meses:</p>
           <div className="am-months">
             {MONTHS.map((m, i) => (
               <button key={m} type="button" className={`am-month${cfg.harvestMonths.includes(i) ? ' is-on' : ''}`}
@@ -258,32 +258,32 @@ export default function AdminMap() {
         </fieldset>
 
         <fieldset className="am-fieldset">
-          <legend>Map image</legend>
+          <legend>Imagen del mapa</legend>
           <p className="am-hint">
-            Upload an aerial photo, drone shot or illustrated map of the farm. Without one, a stylised
-            topographic map is shown.
+            Sube una foto aérea, una toma de dron o un mapa ilustrado de la finca. Sin una imagen,
+            se muestra un mapa topográfico estilizado.
           </p>
           <div className="am-media-actions am-media-actions--row">
             <label className="am-btn">
-              {uploading ? 'Uploading…' : (cfg.mapImage ? 'Replace map image' : 'Upload map image')}
+              {uploading ? 'Subiendo…' : (cfg.mapImage ? 'Reemplazar imagen del mapa' : 'Subir imagen del mapa')}
               <input type="file" accept="image/*" hidden disabled={uploading}
                 onChange={e => { const f = e.target.files?.[0]; if (f) upload(f, url => set('mapImage', url)); e.target.value = ''; }} />
             </label>
-            {cfg.mapImage && <button type="button" className="am-btn am-danger" onClick={() => set('mapImage', '')}>Use illustrated map</button>}
+            {cfg.mapImage && <button type="button" className="am-btn am-danger" onClick={() => set('mapImage', '')}>Usar mapa ilustrado</button>}
             {cfg.points.length === 0 && (
               <button type="button" className="am-btn" onClick={() => set('points', DEFAULT_MAP.points.map(p => ({ ...p, id: uid() })))}>
-                Load example points
+                Cargar puntos de ejemplo
               </button>
             )}
           </div>
         </fieldset>
 
         <fieldset className="am-fieldset">
-          <legend>Points — click the map to add, drag to move</legend>
+          <legend>Puntos: haz clic en el mapa para agregar, arrastra para mover</legend>
           <div className="am-map-layout">
             {mapMode(cfg) === 'satellite' ? (
               <div className="am-map am-map--sat">
-                <Suspense fallback={<p className="am-hint">Loading satellite…</p>}>
+                <Suspense fallback={<p className="am-hint">Cargando satélite…</p>}>
                   <SatelliteMap
                     editable
                     location={cfg.location}
@@ -325,37 +325,37 @@ export default function AdminMap() {
             )}
 
             <div className="am-points">
-              {listPoints.length === 0 && <p className="am-hint">No points yet — click anywhere on the map.</p>}
+              {listPoints.length === 0 && <p className="am-hint">Aún no hay puntos: haz clic en cualquier parte del mapa.</p>}
               {listPoints.map((p, i) => (
                 <div key={p.id} className={`am-point${p.id === selected ? ' is-selected' : ''}`}>
                   <button type="button" className="am-point-head" onClick={() => setSelected(s => (s === p.id ? null : p.id))}>
                     <span className="am-point-num">{i + 1}</span>
-                    <strong>{p.title || 'Untitled'}</strong>
+                    <strong>{p.title || 'Sin título'}</strong>
                     <span className="am-muted">{isSat ? `${Number(p.lat).toFixed(4)}, ${Number(p.lng).toFixed(4)}` : `${p.x}%, ${p.y}%`}</span>
                   </button>
                   {p.id === selected && sel && (
                     <div className="am-point-body">
-                      <label className="am-field">Title
+                      <label className="am-field">Título
                         <input value={sel.title} onChange={e => setPoint(p.id, { title: e.target.value })} />
                       </label>
-                      <label className="am-field">Text
+                      <label className="am-field">Texto
                         <textarea rows={3} value={sel.text || ''} onChange={e => setPoint(p.id, { text: e.target.value })} />
                       </label>
                       <div className="am-media-row">
                         {sel.image ? <img className="am-media-preview am-media-preview--sm" src={sel.image} alt="" /> : null}
                         <div className="am-media-actions am-media-actions--row">
                           <label className="am-btn">
-                            {sel.image ? 'Replace photo' : 'Add photo'}
+                            {sel.image ? 'Reemplazar foto' : 'Agregar foto'}
                             <input type="file" accept="image/*" hidden disabled={uploading}
                               onChange={e => { const f = e.target.files?.[0]; if (f) upload(f, url => setPoint(p.id, { image: url })); e.target.value = ''; }} />
                           </label>
-                          {sel.image && <button type="button" className="am-btn am-danger" onClick={() => setPoint(p.id, { image: '' })}>Remove photo</button>}
+                          {sel.image && <button type="button" className="am-btn am-danger" onClick={() => setPoint(p.id, { image: '' })}>Quitar foto</button>}
                         </div>
                       </div>
                       <div className="am-row-actions">
-                        <button type="button" onClick={() => movePoint(p.id, -1)} disabled={i === 0}>↑ Earlier</button>
-                        <button type="button" onClick={() => movePoint(p.id, 1)} disabled={i === listPoints.length - 1}>↓ Later</button>
-                        <button type="button" className="am-danger" onClick={() => removePoint(p.id)}>Delete point</button>
+                        <button type="button" onClick={() => movePoint(p.id, -1)} disabled={i === 0}>↑ Antes</button>
+                        <button type="button" onClick={() => movePoint(p.id, 1)} disabled={i === listPoints.length - 1}>↓ Después</button>
+                        <button type="button" className="am-danger" onClick={() => removePoint(p.id)}>Eliminar punto</button>
                       </div>
                     </div>
                   )}
@@ -365,7 +365,7 @@ export default function AdminMap() {
           </div>
         </fieldset>
 
-        <button type="submit" className="am-btn am-btn--primary am-save" disabled={saving || uploading}>{saving ? 'Saving…' : 'Save map'}</button>
+        <button type="submit" className="am-btn am-btn--primary am-save" disabled={saving || uploading}>{saving ? 'Guardando…' : 'Guardar mapa'}</button>
       </form>
     </div>
   );
