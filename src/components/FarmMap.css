@@ -86,7 +86,7 @@
 /* Detail card */
 .fmap-card {
   display: flex; flex-direction: column;
-  background: #f7f3ee; color: #111;
+  background: #f5e8d9; color: #111;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -103,7 +103,7 @@
   font-size: 1.1rem; cursor: pointer;
   transition: background .25s, color .25s;
 }
-.fmap-card-nav button:hover { background: #111; color: #f7f3ee; }
+.fmap-card-nav button:hover { background: #111; color: #f5e8d9; }
 
 /* Satellite canvas is taller; full width when there's no detail card */
 .fmap-canvas--satellite { aspect-ratio: 16 / 9; }
