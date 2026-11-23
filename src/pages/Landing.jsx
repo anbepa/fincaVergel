@@ -5,6 +5,7 @@ import { preloadImage, sizedImage, viewportWidth } from '../lib/images';
 import LazyBackground from '../components/LazyBackground';
 import Journey, { htmlExcerpt } from '../components/Journey';
 import FarmLive from '../components/FarmLive';
+import coffeePlantUrl from '../assets/coffee-plant.svg';
 import CoffeeLots from '../components/CoffeeLots';
 import FarmMap, { parseMap, directionsUrl } from '../components/FarmMap';
 import {
@@ -774,7 +775,17 @@ const Landing = () => {
       </section>
 
       {/* ═══ MANIFESTO ═══ */}
-      <section className="lp-manifesto" data-nav="dark">
+      <section className="lp-manifesto lp-manifesto--plant" data-nav="dark">
+        <img
+          className="lp-manifesto-plant"
+          src={coffeePlantUrl}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          width="900"
+          height="1100"
+        />
         <div className="lp-manifesto-inner">
           <p className="lp-manifesto-eyebrow">Our Mission</p>
           <ScrollWords

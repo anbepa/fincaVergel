@@ -24,6 +24,7 @@
 }
 .fmap-canvas {
   position: relative;
+  max-width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: 6px;
@@ -145,9 +146,11 @@
 
 /* Height fallback: browsers without aspect-ratio (Safari < 15, old Android
    WebViews) would otherwise give the map a height of 0. */
-.fmap-canvas { min-height: 300px; }
-.fmap-canvas--satellite { min-height: 360px; }
+/* (min-height only here: combined with aspect-ratio it would force the
+   canvas wider than the screen on phones) */
 @supports not (aspect-ratio: 1 / 1) {
+  .fmap-canvas { min-height: 300px; }
+  .fmap-canvas--satellite { min-height: 360px; }
   .fmap-canvas { height: 62vw; max-height: 640px; }
   .fmap-canvas--satellite { height: 56vw; }
   @media (max-width: 900px) {
